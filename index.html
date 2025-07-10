@@ -1145,7 +1145,35 @@
         background: linear-gradient(135deg, #fbbf24, #fde68a) !important;
         box-shadow: 0 0 10px #fbbf24a0;
       }
-    </style>
+  .emoji {
+    font-size: 1.4em;
+    vertical-align: middle;
+    margin: 0 0.6em;
+  }
+
+  /* Particle styles */
+  .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    animation-name: floatParticle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes floatParticle {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-15px);
+      opacity: 0.6;
+    }
+  }
+  </style>
   </head>
   <body>
     <header>
@@ -1202,7 +1230,7 @@
     </section>
 <!-- Enhanced Fancy Bar: Animated Gradient, Glow, and Responsive -->
 <!-- Replace your current fancy-bar-horizontal block and its <style> with this improved, less blur/glow version -->
-<div class="fancy-bar-horizontal" onclick="pauseAnimation()">
+<div class="fancy-bar-horizontal">
   <div class="particles"></div>
   <div class="fancy-bar-horizontal-track">
     <span class="fancy-bar-horizontal-text">
@@ -1235,8 +1263,8 @@
 <style>
 /* Update your .fancy-bar-horizontal CSS for full width */
 .fancy-bar-horizontal {
-  width: 100vw;
-  max-width: 100vw;
+  width:100%;
+  max-width: 100%;
   left: 50%;
   right: 50%;
   transform: translateX(-50%);
@@ -1248,7 +1276,6 @@
   height: 64px;
   display: flex;
   align-items: center;
-  border-radius: 12px;
   border: 2px solid rgba(255,255,255,0.7);
   box-shadow:
     0 0 8px 1px rgba(102,126,234,0.10),
@@ -1265,6 +1292,7 @@
   overflow: hidden;
   position: relative;
   height: 64px;
+  z-index: 2; /* Ensure track is above particles */
 }
 .fancy-bar-horizontal-text {
   display: inline-block;
@@ -1274,16 +1302,18 @@
   letter-spacing: 0.12em;
   padding: 0 2rem;
   opacity: 0.98;
-  min-width: 200%; /* Ensures smooth loop */
-  animation: fancyBarScrollX 12s linear infinite;
+  min-width: 50%; /* Ensures smooth loop */
+  animation: fancyBarScrollX 20s linear infinite;
   white-space: nowrap;
   filter: drop-shadow(0 1px 2px rgba(102,126,234,0.15));
   text-shadow: 0 1px 2px rgba(0,0,0,0.10);
   transition: all 0.3s ease;
+  position: relative;
+  z-index: 3; /* Ensure text is above particles */
 }
 @keyframes fancyBarScrollX {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
 }
 .fancy-bar-gradient-text span {
   background: linear-gradient(90deg, #fbbf24 0%, #10b981 25%, #06b6d4 50%, #8b5cf6 75%, #ef4444 100%);
@@ -1347,73 +1377,7 @@
   }
 }
 </style>
-<script>
-        // Theme toggle functionality
-        function toggleTheme() {
-            const body = document.body;
-            const currentTheme = body.getAttribute('data-theme');
-            
-            if (currentTheme === 'dark') {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.setAttribute('data-theme', 'dark');
-        }
-
-        // Pause animation on click
-        let isPaused = false;
-        function pauseAnimation() {
-            const text = document.querySelector('.fancy-bar-horizontal-text');
-            if (isPaused) {
-                text.style.animationPlayState = 'running';
-                isPaused = false;
-            } else {
-                text.style.animationPlayState = 'paused';
-                isPaused = true;
-            }
-        }
-
-        // Create floating particles
-        function createParticles() {
-            const particlesContainer = document.querySelector('.particles');
-            
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Initialize particles
-        createParticles();
-
-        // Add mouse interaction
-        const fancyBar = document.querySelector('.fancy-bar-horizontal');
-        fancyBar.addEventListener('mouseenter', () => {
-            fancyBar.style.filter = 'brightness(1.1) contrast(1.1)';
-        });
-
-        fancyBar.addEventListener('mouseleave', () => {
-            fancyBar.style.filter = 'brightness(1) contrast(1)';
-        });
-
-        // Add touch support for mobile
-        fancyBar.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            pauseAnimation();
-        });
-    </script>
     <section id="about" class="section about">
       <div class="container">
         <h2 class="section-title fade-in">About Me</h2>
@@ -2605,6 +2569,46 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       }, appearOptions);
       faders.forEach(fader => appearOnScroll.observe(fader));
+    </script>
+
+    <script>
+      // Create floating particles
+      function createParticles() {
+          const particlesContainer = document.querySelector('.particles');
+          if (!particlesContainer) return;
+
+          for (let i = 0; i < 20; i++) {
+              const particle = document.createElement('div');
+              particle.className = 'particle';
+              particle.style.left = Math.random() * 100 + '%';
+              particle.style.animationDelay = Math.random() * 6 + 's';
+              particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+              particlesContainer.appendChild(particle);
+          }
+      }
+
+      // Initialize particles on DOMContentLoaded
+      document.addEventListener('DOMContentLoaded', () => {
+          createParticles();
+
+          const fancyBar = document.querySelector('.fancy-bar-horizontal');
+          if (!fancyBar) return;
+
+          // Add mouse interaction
+          fancyBar.addEventListener('mouseenter', () => {
+              fancyBar.style.filter = 'brightness(1.1) contrast(1.1)';
+          });
+
+          fancyBar.addEventListener('mouseleave', () => {
+              fancyBar.style.filter = 'brightness(1) contrast(1)';
+          });
+
+          // Add touch support for mobile
+          fancyBar.addEventListener('touchstart', (e) => {
+              e.preventDefault();
+              // No pauseAnimation as per user request
+          });
+      });
     </script>
 
     <!-- Add this just before the closing </body> tag -->
