@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mohammed Musab | Web Developer</title>
+  <title>Musab | Web Developer</title>
   <style>
     :root {
       --primary-color: #6366f1;
@@ -22,6 +22,7 @@
           #6366f1 0%,
           #8b5cf6 50%,
           #06b6d4 100%);
+      --cursor-color: black;
     }
 
     [data-theme="dark"] {
@@ -37,6 +38,7 @@
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
       --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
       --gradient: linear-gradient(135deg, #63b3ed 0%, #9f7aea 50%, #4fd1c5 100%);
+      --cursor-color: white;
     }
 
 
@@ -157,12 +159,44 @@
       color: var(--text-primary);
       background: var(--bg-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: none;
+      /* Hide default cursor */
+
     }
+
+    .custom-cursor {
+      width: 20px;
+      height: 20px;
+      background-color: var(--cursor-color);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+      transform: translate(-50%, -50%);
+    }
+
+    a,
+    button,
+    [role="button"],
+    .clickable {
+      cursor: none !important;
+    }
+
+
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 20px;
+    }
+
+    body.dark-theme .custom-cursor {
+      --cursor-color: white;
+    }
+
+    body.light-theme .custom-cursor {
+      --cursor-color: black;
     }
 
     /* Header */
@@ -1339,28 +1373,206 @@
 </head>
 
 <body>
-  <header>
+  <div class="custom-cursor" id="cursor"></div>
+  <script>
+    const cursor = document.getElementById('cursor');
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+
+    // Capture mouse position
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // Smoothly move the cursor
+    function animateCursor() {
+      const speed = 0.45; // Slight smoothing but fast follow
+      cursorX += (mouseX - cursorX) * speed;
+      cursorY += (mouseY - cursorY) * speed;
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    // Efficient hover detection
+    document.body.addEventListener('mouseover', (e) => {
+      if (e.target.closest('a, button, [role="button"], .clickable')) {
+        cursor.classList.add('hovering');
+      }
+    });
+
+    document.body.addEventListener('mouseout', (e) => {
+      if (e.target.closest('a, button, [role="button"], .clickable')) {
+        cursor.classList.remove('hovering');
+      }
+    });
+
+  </script>
+ <header>
     <nav class="container">
-      <a href="#home" class="logo">Mohammed Musab</a>
-      <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#experience">Experience</a></li>
-        <li><a href="#education">Education</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li>
-          <button class="theme-toggle" id="theme-toggle">
-            <span id="theme-icon">🌙</span>
-          </button>
-        </li>
-      </ul>
-      <button class="mobile-menu-btn">☰</button>
+<div class="profile-section">
+    <a href="#home" class="avatar-link">
+        <div class="avatar-container">
+            <img src="avatar.png" id="nav-avatar" alt="Avatar" />
+            <div class="avatar-status"></div>
+        </div>
+    </a>
+    <a href="#home" class="name-link">
+        <span class="avatar-label">Musab</span>
+    </a>
+</div>
+
+        
+        
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+                <button class="theme-toggle" id="theme-toggle">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </li>
+        </ul>
+        
+        <button class="mobile-menu-btn">☰</button>
     </nav>
-  </header>
+</header>
+<style>
+    /* Profile section container */
+    .profile-section {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        height: 35px;
+    }
 
+    /* Avatar container for proper positioning */
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+    }
 
+    /* Avatar link - no background */
+    .avatar-link {
+        display: inline-block;
+        text-decoration: none;
+        transition: transform 0.3s ease;
+    }
+
+    .avatar-link:hover {
+        transform: scale(1.1);
+    }
+
+    /* Avatar image */
+    #nav-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: block;
+    }
+
+    .avatar-link:hover #nav-avatar {
+        border-color: #3b82f6;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    /* Online status indicator */
+    .avatar-status {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        width: 16px;
+        height: 16px;
+        background: linear-gradient(45deg, #10b981, #22c55e);
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    /* Name link - no background */
+    .name-link {
+        display: inline-block;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .name-link:hover {
+        transform: translateY(-2px);
+    }
+
+    /* Avatar label */
+    .avatar-label {
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: #1f2937;
+        transition: color 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .name-link:hover .avatar-label {
+        color: #3b82f6;
+    }
+
+    [data-theme="dark"] .avatar-label {
+        color: var(--text-primary);
+    }
+
+    [data-theme="dark"] .name-link:hover .avatar-label {
+        color: var(--primary-color);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .profile-section {
+            gap: 8px;
+            height: 44px;
+        }
+        
+        #nav-avatar {
+            width: 44px;
+            height: 44px;
+        }
+        
+        .avatar-status {
+            width: 14px;
+            height: 14px;
+            bottom: 1px;
+            right: 1px;
+            border-width: 2px;
+        }
+        
+        .avatar-label {
+            font-size: 1.1rem;
+        }
+    }
+</style>
   <section id="home" class="hero">
     <div class="floating-elements">
       <div class="floating-element"></div>
@@ -1379,7 +1591,7 @@
     <div class="container">
       <div class="hero-content intro-vertical-text">
         <div class="line large-text animate-slide-up">
-          Hi! I'm <span class="pill white-pill glow-effect">Mohammed Musab</span>
+          Hi! I'm <span class="pill white-pill glow-effect">Musab</span>
         </div>
         <div class="line large-text animate-slide-up" style="animation-delay: 0.2s;">
           a <span class="pill black-pill pulse-effect">Web Developer</span>
@@ -1388,7 +1600,7 @@
           from <span class="pill white-pill bordered-pill hover-lift">Mumbai</span>
         </div>
         <div class="line extra-large-text gradient-text animate-slide-up" style="animation-delay: 0.6s;">
-          turning ideas into pixel-perfect realities
+          Design so clean, it <del class="strike-animate"> HURTS YOU'RE EGO</del> clears your cache.
         </div>
       </div>
     </div>
@@ -1587,7 +1799,7 @@
     }
 
     .extra-large-text {
-      font-size: 2.8rem;
+      font-size: 2rem;
       line-height: 1.3;
       margin-top: 1.5rem;
       font-weight: 400;
@@ -1598,52 +1810,23 @@
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, #ffd700 0%, #ffb347 25%, #ff69b4 50%, #87ceeb 75%, #98fb98 100%);
-      background-size: 200% 200%;
+      background: linear-gradient(135deg,
+          #ffd700 0%,
+          #ffb347 15%,
+          #ff69b4 30%,
+          #9b59b6 45%,
+          #87ceeb 60%,
+          #00d4aa 75%,
+          #98fb98 90%,
+          #ffd700 100%);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: gradientShift 4s ease-in-out infinite;
+      animation: gradientShift 6s ease-in-out infinite;
       position: relative;
-    }
-
-    .gradient-text::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
-      border-radius: 10px;
-      z-index: -1;
-      animation: shimmer 3s ease-in-out infinite;
-    }
-
-    @keyframes gradientShift {
-
-      0%,
-      100% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-
-    @keyframes shimmer {
-
-      0%,
-      100% {
-        opacity: 0;
-        transform: translateX(-100%);
-      }
-
-      50% {
-        opacity: 1;
-        transform: translateX(100%);
-      }
+      filter: drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3));
+      transition: all 0.3s ease;
     }
 
     /* Enhanced Pills */
@@ -1873,178 +2056,686 @@
         font-size: 0.9rem;
       }
     }
-  </style>
 
-
-  <div class="fancy-bar-horizontal">
-    <div class="particles"></div>
-    <div class="fancy-bar-horizontal-track">
-      <span class="fancy-bar-horizontal-text">
-        <span class="emoji">💡</span>
-        <span class="fancy-bar-gradient-text">
-          <span>Dream</span>
-          <span class="arrow">→</span>
-          <span>Build</span>
-          <span class="arrow">→</span>
-          <span>Code</span>
-          <span class="arrow">→</span>
-          <span>Repeat</span>
-        </span>
-        <span class="emoji">✨</span>
-        <!-- Duplicate for seamless loop -->
-        &nbsp;&nbsp;&nbsp;
-        <span class="emoji">🚀</span>
-        <span class="fancy-bar-gradient-text">
-          <span>Learn</span>
-          <span class="arrow">→</span>
-          <span>Innovate</span>
-          <span class="arrow">→</span>
-          <span>Inspire</span>
-        </span>
-        <span class="emoji">🌟</span>
-      </span>
-    </div>
-  </div>
-
-
-  <style>
-    /* Update your .fancy-bar-horizontal CSS for full width */
-    .fancy-bar-horizontal {
-      width: 100%;
-      max-width: 100%;
-      left: 50%;
-      right: 50%;
-      transform: translateX(-50%);
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-      margin: 0;
-      z-index: 2;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      border: 2px solid rgba(255, 255, 255, 0.7);
-      box-shadow:
-        0 0 8px 1px rgba(102, 126, 234, 0.10),
-        0 2px 8px 0 rgba(118, 75, 162, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.10);
-      backdrop-filter: blur(2px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    .line del {
+      text-decoration: none;
+      color: transparent;
     }
 
-    .fancy-bar-horizontal-track {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      white-space: nowrap;
-      overflow: hidden;
+    .strike-animate {
       position: relative;
-      height: 64px;
-      z-index: 2;
-      /* Ensure track is above particles */
-    }
-
-    .fancy-bar-horizontal-text {
-      display: inline-block;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: 0.12em;
-      padding: 0 2rem;
-      opacity: 0.98;
-      min-width: 50%;
-      /* Ensures smooth loop */
-      animation: fancyBarScrollX 20s linear infinite;
-      white-space: nowrap;
-      filter: drop-shadow(0 1px 2px rgba(102, 126, 234, 0.15));
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+      display: inline;
+      margin: 0 0.2em;
+      background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 25%, #ff6b6b 50%, #ee5a24 75%, #ff3838 100%);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite, textGlow 2s ease-in-out infinite alternate;
+      text-decoration: none;
       transition: all 0.3s ease;
-      position: relative;
-      z-index: 3;
-      /* Ensure text is above particles */
+      filter: drop-shadow(0 0 10px rgba(255, 65, 108, 0.3));
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.85em;
+      line-height: 1;
+      vertical-align: baseline;
     }
 
-    @keyframes fancyBarScrollX {
+    .strike-animate:hover {
+      transform: scale(1.02);
+      filter: drop-shadow(0 0 20px rgba(255, 65, 108, 0.5));
+    }
+
+    /* Primary strike line */
+    .strike-animate::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.8) 20%,
+          rgba(255, 255, 255, 0.9) 50%,
+          rgba(255, 255, 255, 0.8) 80%,
+          transparent 100%);
+      transform: translateY(-50%);
+      animation: strikeThrough 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      animation-delay: 1.2s;
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+
+    /* Secondary strike line for depth */
+    .strike-animate::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.6) 50%,
+          transparent 100%);
+      transform: translateY(-50%) translateY(-1px);
+      animation: strikeThrough 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      animation-delay: 1.4s;
+    }
+
+    @keyframes strikeThrough {
       0% {
-        transform: translateX(100%);
+        width: 0%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
       }
 
       100% {
-        transform: translateX(-100%);
+        width: 100%;
+        opacity: 1;
       }
     }
 
-    .fancy-bar-gradient-text span {
-      background: linear-gradient(90deg, #fbbf24 0%, #10b981 25%, #06b6d4 50%, #8b5cf6 75%, #ef4444 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-weight: 800;
-      margin: 0 0.25em;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .fancy-bar-gradient-text .arrow {
-      color: #fff;
-      opacity: 0.8;
-      background: none;
-      -webkit-text-fill-color: #fff;
-      font-weight: 700;
-      margin: 0 0.3em;
-      font-size: 1.1em;
-    }
-
-    .emoji {
-      font-size: 1.4em;
-      vertical-align: middle;
-      margin: 0 0.6em;
-    }
-
-    [data-theme="dark"] .fancy-bar-horizontal {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      border: 2px solid #fbbf24;
-      box-shadow:
-        0 0 10px 2px rgba(251, 191, 36, 0.10),
-        0 2px 8px 0 rgba(15, 52, 96, 0.08),
-        inset 0 1px 0 rgba(251, 191, 36, 0.10);
-    }
-
-    [data-theme="dark"] .fancy-bar-horizontal-text {
-      color: #fbbf24;
-      filter: drop-shadow(0 1px 2px rgba(251, 191, 36, 0.15));
-      text-shadow: 0 1px 2px rgba(251, 191, 36, 0.10);
-    }
-
-    [data-theme="dark"] .fancy-bar-gradient-text span {
-      background: linear-gradient(90deg, #fbbf24 0%, #10b981 25%, #06b6d4 50%, #8b5cf6 75%, #ef4444 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    @media (max-width: 600px) {
-      .fancy-bar-horizontal {
-        height: 44px;
-        border-radius: 8px;
-        max-width: 98vw;
+    @keyframes textGlow {
+      0% {
+        filter: drop-shadow(0 0 10px rgba(255, 65, 108, 0.3));
       }
 
-      .fancy-bar-horizontal-text {
-        font-size: 1rem;
-        padding: 0 1rem;
+      100% {
+        filter: drop-shadow(0 0 20px rgba(255, 65, 108, 0.6));
+      }
+    }
+
+    @keyframes strikeGradientShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
       }
 
-      .fancy-bar-horizontal-track {
-        height: 44px;
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    @keyframes gradientShift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
       }
 
-      .emoji {
-        font-size: 1em;
-        margin: 0 0.3em;
+      50% {
+        background-position: 100% 50%;
       }
     }
   </style>
+
+
+
+  <div class="enhanced-scrolling-bar" aria-label="Continuously scrolling development workflow showcase">
+    <div class="edge-fade-left"></div>
+    <div class="edge-fade-right"></div>
+    <div class="floating-particles">
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+      <div class="particle"></div>
+    </div>
+    <div class="scrolling-track">
+      <div class="scrolling-content">
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('build')">
+          <span class="icon">⚡</span>
+          <span class="text">Build</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('deploy')">
+          <span class="icon">🚀</span>
+          <span class="text">Deploy</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('scale')">
+          <span class="icon">✨</span>
+          <span class="text">Scale</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('optimize')">
+          <span class="icon">🎯</span>
+          <span class="text">Optimize</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('innovate')">
+          <span class="icon">💡</span>
+          <span class="text">Innovate</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('inspire')">
+          <span class="icon">🌟</span>
+          <span class="text">Inspire</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('build')">
+          <span class="icon">⚡</span>
+          <span class="text">Build</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('deploy')">
+          <span class="icon">🚀</span>
+          <span class="text">Deploy</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('scale')">
+          <span class="icon">✨</span>
+          <span class="text">Scale</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('optimize')">
+          <span class="icon">🎯</span>
+          <span class="text">Optimize</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('innovate')">
+          <span class="icon">💡</span>
+          <span class="text">Innovate</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('inspire')">
+          <span class="icon">🌟</span>
+          <span class="text">Inspire</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('build')">
+          <span class="icon">⚡</span>
+          <span class="text">Build</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('deploy')">
+          <span class="icon">🚀</span>
+          <span class="text">Deploy</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('scale')">
+          <span class="icon">✨</span>
+          <span class="text">Scale</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('optimize')">
+          <span class="icon">🎯</span>
+          <span class="text">Optimize</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('innovate')">
+          <span class="icon">💡</span>
+          <span class="text">Innovate</span>
+        </span>
+        <span class="content-item" tabindex="0" role="button" onclick="handleItemClick('inspire')">
+          <span class="icon">🌟</span>
+          <span class="text">Inspire</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .enhanced-scrolling-bar {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      height: 60px;
+      background: rgba(15, 15, 35, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      margin: 0;
+      opacity: 0;
+      animation: fadeInWithPulse 0.5s ease-in-out 0.3s forwards;
+    }
+
+    .enhanced-scrolling-bar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg,
+          transparent 0%,
+          rgba(139, 92, 246, 0.05) 25%,
+          rgba(59, 130, 246, 0.05) 50%,
+          rgba(139, 92, 246, 0.05) 75%,
+          transparent 100%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    /* Pulse border effect */
+    .enhanced-scrolling-bar::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg,
+          rgba(139, 92, 246, 0.3),
+          rgba(59, 130, 246, 0.3),
+          rgba(139, 92, 246, 0.3));
+      border-radius: 14px;
+      z-index: -1;
+      animation: borderPulse 2s ease-in-out infinite;
+      opacity: 0.6;
+    }
+
+    /* Edge fade effects */
+    .edge-fade-left,
+    .edge-fade-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .edge-fade-left {
+      left: 0;
+      background: linear-gradient(90deg,
+          rgba(15, 15, 35, 0.95) 0%,
+          rgba(15, 15, 35, 0.7) 50%,
+          transparent 100%);
+    }
+
+    .edge-fade-right {
+      right: 0;
+      background: linear-gradient(270deg,
+          rgba(15, 15, 35, 0.95) 0%,
+          rgba(15, 15, 35, 0.7) 50%,
+          transparent 100%);
+    }
+
+    /* Floating particles */
+    .floating-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(139, 92, 246, 0.6);
+      border-radius: 50%;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) {
+      left: 10%;
+      animation-delay: 0s;
+      animation-duration: 3s;
+    }
+
+    .particle:nth-child(2) {
+      left: 30%;
+      animation-delay: 1s;
+      animation-duration: 4s;
+    }
+
+    .particle:nth-child(3) {
+      left: 50%;
+      animation-delay: 2s;
+      animation-duration: 3.5s;
+    }
+
+    .particle:nth-child(4) {
+      left: 70%;
+      animation-delay: 0.5s;
+      animation-duration: 4.5s;
+    }
+
+    .particle:nth-child(5) {
+      left: 90%;
+      animation-delay: 1.5s;
+      animation-duration: 3.2s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+
+      50% {
+        transform: translateY(10px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInWithPulse {
+      0% {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      50% {
+        opacity: 0.7;
+        transform: scale(1.02);
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes shimmer {
+
+      0%,
+      100% {
+        opacity: 0.3;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    @keyframes borderPulse {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.6;
+        transform: scale(1.01);
+      }
+    }
+
+    .scrolling-track {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      z-index: 2;
+      padding: 0 1rem;
+    }
+
+    .scrolling-content {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: scroll-smooth 12s linear infinite;
+      animation-delay: 0.8s;
+      gap: 2rem;
+      min-width: fit-content;
+      flex-shrink: 0;
+      opacity: 0;
+      animation-fill-mode: forwards;
+      will-change: transform;
+      transform: translate3d(0, 0, 0);
+    }
+
+    .enhanced-scrolling-bar:hover .scrolling-content {
+      animation-play-state: paused;
+    }
+
+    @keyframes scroll-smooth {
+      0% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translate3d(-33.33%, 0, 0);
+      }
+    }
+
+    .content-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+    }
+
+    .content-item:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .content-item:focus {
+      outline: 2px solid rgba(139, 92, 246, 0.5);
+      outline-offset: 2px;
+    }
+
+    .content-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(139, 92, 246, 0.1),
+          transparent);
+      transition: left 0.5s ease;
+    }
+
+    .content-item:hover::before {
+      left: 100%;
+    }
+
+    .icon {
+      font-size: 1.2rem;
+      filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.3));
+      transition: all 0.3s ease;
+    }
+
+    .content-item:hover .icon {
+      filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.6));
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .text {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      letter-spacing: 0.025em;
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: all 0.3s ease;
+    }
+
+    .content-item:hover .text {
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Active item glow effect */
+    .content-item.active {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+
+    /* Dark theme support */
+    [data-theme="dark"] .enhanced-scrolling-bar {
+      background: rgba(10, 10, 20, 0.98);
+      border-color: rgba(139, 92, 246, 0.2);
+      box-shadow:
+        0 4px 20px rgba(139, 92, 246, 0.1),
+        inset 0 1px 0 rgba(139, 92, 246, 0.05);
+    }
+
+    [data-theme="dark"] .edge-fade-left {
+      background: linear-gradient(90deg,
+          rgba(10, 10, 20, 0.98) 0%,
+          rgba(10, 10, 20, 0.7) 50%,
+          transparent 100%);
+    }
+
+    [data-theme="dark"] .edge-fade-right {
+      background: linear-gradient(270deg,
+          rgba(10, 10, 20, 0.98) 0%,
+          rgba(10, 10, 20, 0.7) 50%,
+          transparent 100%);
+    }
+
+    [data-theme="dark"] .content-item {
+      background: rgba(139, 92, 246, 0.05);
+      border-color: rgba(139, 92, 246, 0.1);
+    }
+
+    [data-theme="dark"] .content-item:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    [data-theme="dark"] .text {
+      background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Accessibility - Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      .enhanced-scrolling-bar,
+      .scrolling-content,
+      .content-item,
+      .particle,
+      .enhanced-scrolling-bar::before,
+      .enhanced-scrolling-bar::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .scrolling-content {
+        opacity: 1;
+        transform: none;
+      }
+
+      .enhanced-scrolling-bar {
+        opacity: 1;
+      }
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .enhanced-scrolling-bar {
+        height: 50px;
+        border-radius: 10px;
+      }
+
+      .scrolling-content {
+        gap: 1.5rem;
+        animation-duration: 8s;
+      }
+
+      .content-item {
+        padding: 0.4rem 0.8rem;
+        gap: 0.5rem;
+      }
+
+      .icon {
+        font-size: 1rem;
+      }
+
+      .text {
+        font-size: 0.85rem;
+      }
+
+      .edge-fade-left,
+      .edge-fade-right {
+        width: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .enhanced-scrolling-bar {
+        height: 44px;
+        border-radius: 8px;
+      }
+
+      .scrolling-content {
+        gap: 1rem;
+        animation-duration: 6s;
+      }
+
+      .content-item {
+        padding: 0.3rem 0.6rem;
+      }
+
+      .icon {
+        font-size: 0.9rem;
+      }
+
+      .text {
+        font-size: 0.8rem;
+      }
+
+      .edge-fade-left,
+      .edge-fade-right {
+        width: 25px;
+      }
+    }
+  </style>
+
+  <script>
+    function handleItemClick(item) {
+      console.log(`Clicked on: ${item}`);
+
+      // Add active class temporarily
+      const clickedElement = event.target.closest('.content-item');
+      clickedElement.classList.add('active');
+
+      // Remove active class after animation
+      setTimeout(() => {
+        clickedElement.classList.remove('active');
+      }, 1000);
+
+      // You can add your custom logic here
+      // For example: navigate to a section, open a modal, etc.
+    }
+
+    // Optional: Add keyboard support
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const focusedItem = document.activeElement;
+        if (focusedItem.classList.contains('content-item')) {
+          e.preventDefault();
+          focusedItem.click();
+        }
+      }
+    });
+  </script>
+
 
   <section id="about" class="section about">
     <div class="container">
@@ -2167,7 +2858,7 @@
           </div>
         </div>
 
-        <!-- Completed Portfolio Code for Mohammed Musab -->
+        <!-- Completed Portfolio Code for Musab -->
         <!-- Sections already provided: Head, Header, Hero, About, Skills, Projects -->
 
         <!-- Continuing from the last provided section -->
@@ -3613,8 +4304,8 @@
   <footer>
     <div class="container">
       <p>
-        &copy; 2025 Mohammed Musab. All rights reserved.
-        <span style="margin-left:1em;">Made with <span style="color:#f59e0b;">&#10084;&#65039;</span> in India</span>
+        &copy; 2025 Musab. All rights reserved.
+        <span style="margin-left:1em;">Made with<span style="color:#f59e0b;">&#10084;&#65039;</span>in India</span>
       </p>
       <p style="font-size:0.95rem; color:var(--text-secondary); margin-top:0.5em;">
         Connect on
