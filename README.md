@@ -37,16 +37,12 @@ I am Musab, a passionate web developer based in Mumbai. I am a final-year Comput
 
 ## Tech Stack
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+The portfolio website is built using the following technologies:
+
+- HTML5
+- CSS3 (including CSS variables and animations)
+- JavaScript (for interactivity and animations)
+
 
 ---
 
@@ -68,7 +64,7 @@ I am Musab, a passionate web developer based in Mumbai. I am a final-year Comput
 
 ## Usage
 
-*Describe how to use the portfolio website or any interactive features.*
+This portfolio website is a static site that can be opened directly in any modern web browser. Navigate through the sections using the navigation menu to view About Me, Skills, Projects, Experience, Education, and Contact information. Use the theme toggle button to switch between light and dark modes.
 
 ---
 
@@ -86,7 +82,7 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 
 ## License
 
-*Specify the license under which the project is distributed.*
+This project is currently unlicensed. Please contact me if you would like to use any part of this portfolio or if you have questions about licensing.
 
 ---
 
