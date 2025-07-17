@@ -68,12 +68,6 @@ This portfolio website is a static site that can be opened directly in any moder
 
 ---
 
-## Screenshots
-
-*Add screenshots or demo GIFs here to showcase the portfolio.*
-
----
-
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
