@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,6 +24,12 @@
           #8b5cf6 50%,
           #06b6d4 100%);
       --cursor-color: black;
+      /* New color from image */
+      --image-bg-color: #e1f4f5;
+      --image-text-color: #4CAF50;
+      --image-text-dark: #37474F;
+      --image-button-bg: #4CAF50;
+      --image-button-hover-bg: #45a049;
     }
 
     [data-theme="dark"] {
@@ -39,6 +46,12 @@
       --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
       --gradient: linear-gradient(135deg, #63b3ed 0%, #9f7aea 50%, #4fd1c5 100%);
       --cursor-color: white;
+      /* New color from image */
+      --image-bg-color: #2d3748;
+      --image-text-color: #4fd1c5;
+      --image-text-dark: #e2e8f0;
+      --image-button-bg: #4fd1c5;
+      --image-button-hover-bg: #38b2ac;
     }
 
 
@@ -293,6 +306,7 @@
       font-size: 1.5rem;
       color: var(--text-primary);
       cursor: pointer;
+      z-index: 1001; /* Ensure button is above menu when open */
     }
 
     /* Hero Section */
@@ -589,6 +603,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
       gap: 2rem;
+      justify-items: center;
     }
 
     .project-card {
@@ -688,11 +703,11 @@
     .education-cert {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 4rem;
+      gap: 2rem;
     }
 
     .education-card,
-    .cert-list {
+    .cert-container {
       background: var(--bg-primary);
       padding: 2.5rem;
       border-radius: 24px;
@@ -701,7 +716,7 @@
     }
 
     .education-card h3,
-    .cert-list h3 {
+    .cert-container h3 {
       color: var(--primary-color);
       margin-bottom: 1.5rem;
       font-size: 1.5rem;
@@ -719,29 +734,69 @@
       margin-bottom: 0.5rem;
     }
 
-    .cert-item {
+    /* Certifications Grid Styling (New) */
+    .certifications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem; /* Space below the Certifications heading */
+    }
+
+    .cert-card-new {
+      background: var(--image-bg-color); /* Light green/teal from image */
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* Ensure cards are same height in a row */
+    }
+
+    .cert-card-new:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .cert-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: var(--image-text-color); /* Green/teal color for icons */
+    }
+
+    .cert-card-new h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--image-text-dark); /* Darker text color from image */
+      margin-bottom: 0.75rem;
+    }
+
+    .cert-card-new p.cert-description {
+      font-size: 0.95rem;
+      color: var(--image-text-dark); /* Darker text color from image */
+      line-height: 1.6;
       margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: var(--bg-secondary);
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      flex-grow: 1; /* Allows description to take up available space */
     }
 
-    .cert-item:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow);
-    }
-
-    .cert-name {
+    .cert-card-new .btn-cert-view {
+      display: inline-block;
+      background: var(--image-button-bg); /* Green button from image */
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 8px;
+      text-decoration: none;
       font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.25rem;
+      transition: background-color 0.3s ease;
+      align-self: center; /* Center the button */
     }
 
-    .cert-org {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
+    .cert-card-new .btn-cert-view:hover {
+      background: var(--image-button-hover-bg); /* Darker green on hover */
     }
+
 
     /* Contact Section */
     .contact {
@@ -882,11 +937,36 @@
     /* Responsive Design */
     @media (max-width: 768px) {
       .mobile-menu-btn {
-        display: block;
+        display: block; /* Show hamburger icon */
       }
 
       .nav-links {
+        /* Hide by default on mobile */
         display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Adjust based on header height */
+        left: 0;
+        width: 100%;
+        background: var(--bg-primary); /* Same as header or different */
+        border-top: 1px solid var(--border-color);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        padding: 1rem 0;
+        z-index: 999;
+      }
+
+      .nav-links.active {
+        display: flex; /* Show when active */
+      }
+      
+      .nav-links li {
+        text-align: center;
+        margin: 0.5rem 0;
+      }
+
+      .nav-links a {
+        padding: 0.75rem 1rem;
+        display: block;
       }
 
       .hero h1 {
@@ -905,6 +985,10 @@
         grid-template-columns: 1fr;
       }
 
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
       .contact-info {
         grid-template-columns: 1fr;
       }
@@ -912,6 +996,15 @@
       .cta-buttons {
         flex-direction: column;
         align-items: center;
+      }
+
+      .certifications-grid {
+        grid-template-columns: 1fr; /* Single column for mobile */
+      }
+    }
+    @media (max-width: 400px) {
+      .nav-links {
+        gap: 1rem;
       }
     }
 
@@ -1369,6 +1462,34 @@
         opacity: 0.6;
       }
     }
+
+    /* Dark theme for new cert cards */
+    [data-theme="dark"] .cert-card-new {
+      background: var(--image-bg-color);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="dark"] .cert-card-new:hover {
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    [data-theme="dark"] .cert-icon {
+      color: var(--image-text-color);
+    }
+
+    [data-theme="dark"] .cert-card-new h4,
+    [data-theme="dark"] .cert-card-new p.cert-description {
+      color: var(--image-text-dark);
+    }
+
+    [data-theme="dark"] .cert-card-new .btn-cert-view {
+      background: var(--image-button-bg);
+    }
+
+    [data-theme="dark"] .cert-card-new .btn-cert-view:hover {
+      background: var(--image-button-hover-bg);
+    }
+
   </style>
 </head>
 
@@ -1426,7 +1547,7 @@
 
         
         
-        <ul class="nav-links">
+        <ul class="nav-links" id="navLinks">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
@@ -1441,7 +1562,7 @@
             </li>
         </ul>
         
-        <button class="mobile-menu-btn">☰</button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
     </nav>
 </header>
 <style>
@@ -2858,12 +2979,6 @@
           </div>
         </div>
 
-        <!-- Completed Portfolio Code for Musab -->
-        <!-- Sections already provided: Head, Header, Hero, About, Skills, Projects -->
-
-        <!-- Continuing from the last provided section -->
-
-        <!-- Additional Project Card -->
         <div class="project-card fade-in">
           <div class="project-header">
             <h3 class="project-title">TalkSphere</h3>
@@ -3204,7 +3319,7 @@
 
       .card-left .achievement-item {
         flex-direction: row-reverse;
-        text-align: right;
+        text-align: left;
       }
 
       .achievement-bullet {
@@ -3281,19 +3396,19 @@
         }
 
         .animated-timeline {
-          left: 2rem;
+          left: 1rem; /* Moved timeline to the left */
           width: 60px;
           transform: none;
         }
 
         .experience-card {
-          margin-bottom: 3rem;
+          margin-bottom: 4rem; /* Increased space between cards */
         }
 
         .card-left,
         .card-right {
-          padding-left: 4rem;
-          padding-right: 0;
+          padding-left: 5rem; /* Increased left padding to avoid overlap */
+          padding-right: 1rem; /* Added right padding for small screens */
         }
 
         .card-left .card-content,
@@ -3329,7 +3444,6 @@
   </head>
 
   <body>
-    <!-- Place this after the Projects section and before Education -->
     <section id="experience" class="experience-section">
       <div class="container">
         <h2 class="section-title fade-in">Professional Experience</h2>
@@ -3338,19 +3452,13 @@
           work
         </div>
         <div class="timeline-container" style="position:relative;">
-          <!-- Animated curved timeline -->
           <svg class="animated-timeline" viewBox="0 0 100 800" preserveAspectRatio="none" height="800">
-            <!-- Background path -->
             <path d="M50 0 Q20 100 50 200 Q80 300 50 400 Q20 500 50 600 Q80 700 50 800" class="timeline-path" />
-            <!-- Animated path -->
             <path d="M50 0 Q20 100 50 200 Q80 300 50 400 Q20 500 50 600 Q80 700 50 800"
               class="timeline-animated-path" />
-            <!-- Ball -->
             <circle id="timeline-ball" class="timeline-ball" cx="50" cy="0" r="8" />
-            <!-- Hidden path for JS -->
             <path id="timeline-path" d="M50 0 Q20 100 50 200 Q80 300 50 400 Q20 500 50 600 Q80 700 50 800" fill="none"
               opacity="0" />
-            <!-- Gradients -->
             <defs>
               <lineargradient id="timelineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#3b82f6" />
@@ -3364,7 +3472,6 @@
               </radialgradient>
             </defs>
           </svg>
-          <!-- Experience Cards -->
           <div class="experience-card card-left">
             <div class="card-content">
               <div class="experience-badge badge-work">Professional</div>
@@ -3498,163 +3605,53 @@
           <p>Mumbai | Graduated: May 2023</p>
           <p>83.20%</p>
         </div>
-        <div class="cert-list fade-in">
+        <div class="cert-container fade-in">
           <h3>Certifications</h3>
-          <div class="cert-carousel-container"
-            style="position: relative; display: flex; align-items: center; gap: 1rem;">
-            <button class="carousel-btn left-btn" aria-label="Scroll Left" style="flex-shrink: 0;">←</button>
-            <div class="cert-carousel" id="certCarousel"
-              style="display: flex; overflow: hidden; gap: 1rem; width: 100%;">
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a
-                    href="https://www.credly.com/badges/06cb6f51-843b-48ee-8398-89ab1948a18f/linked_in_profile"
-                    target="_blank" rel="noopener noreferrer">AWS Cloud Foundations (2024, 2025)</a></div>
-                <div class="cert-org">Amazon Web Services</div>
+          <div class="certifications-grid">
+              <div class="cert-card-new">
+                  <div class="cert-icon">☁️</div>
+                  <h4>AWS Cloud Foundations</h4>
+                  <p class="cert-description">Demonstrates a foundational understanding of AWS cloud concepts and services.</p>
+                  <a href="https://www.credly.com/badges/06cb6f51-843b-48ee-8398-89ab1948a18f/linked_in_profile" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a
-                    href="https://www.credly.com/badges/438571e8-3806-43b9-b9f7-9fbf30c8679a/print" target="_blank"
-                    rel="noopener noreferrer">Cloud Architecting</a></div>
-                <div class="cert-org">Amazon Web Services</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">🏗️</div>
+                  <h4>Cloud Architecting</h4>
+                  <p class="cert-description">Covers principles and practices for designing scalable, resilient, and high-performing cloud architectures on AWS.</p>
+                  <a href="https://www.credly.com/badges/438571e8-3806-43b9-b9f7-9fbf30c8679a/print" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a
-                    href="https://www.linkedin.com/in/mohammed-musab-ba6b24250/details/certifications/1725127758257/single-media-viewer/?profileId=ACoAAD4aR64B95XJYaaCWByOSS3SCTXjMscxA0Y"
-                    target="_blank" rel="noopener noreferrer">Android Developer Internship</a></div>
-                <div class="cert-org">Google</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">📱</div>
+                  <h4>Android Developer Internship</h4>
+                  <p class="cert-description">Practical experience in Android app development, building functional and user-friendly mobile applications.</p>
+                  <a href="https://www.linkedin.com/in/mohammed-musab-ba6b24250/details/certifications/1725127758257/single-media-viewer/?profileId=ACoAAD4aR64B95XJYaaCWByOSS3SCTXjMscxA0Y" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a
-                    href="https://www.linkedin.com/in/mohammed-musab-ba6b24250/details/certifications/1725128897545/single-media-viewer/?profileId=ACoAAD4aR64B9"
-                    target="_blank" rel="noopener noreferrer">Cybersecurity Internship</a></div>
-                <div class="cert-org">Palo Alto Networks</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">🔒</div>
+                  <h4>Cybersecurity Internship</h4>
+                  <p class="cert-description">Hands-on training in cybersecurity fundamentals, threat detection, and secure system practices.</p>
+                  <a href="https://www.linkedin.com/in/mohammed-musab-ba6b24250/details/certifications/1725128897545/single-media-viewer/?profileId=ACoAAD4aR64B9" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a href="https://verify.skilljar.com/c/cnj7oj7i2xuu" target="_blank"
-                    rel="noopener noreferrer">Networking for Cyber Professionals</a></div>
-                <div class="cert-org">Zscaler</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">🌐</div>
+                  <h4>Networking for Cyber Professionals</h4>
+                  <p class="cert-description">Focuses on network security principles and technologies relevant to cybersecurity roles.</p>
+                  <a href="https://verify.skilljar.com/c/cnj7oj7i2xuu" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a href="https://badgr.com/public/assertions/dRBudKiVQBmCiK8RM2jR-Q"
-                    target="_blank" rel="noopener noreferrer">GenAI 101 with Pieces</a></div>
-                <div class="cert-org">Pieces</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">🧠</div>
+                  <h4>GenAI 101 with Pieces</h4>
+                  <p class="cert-description">Introduction to Generative AI concepts and practical application using Pieces platform.</p>
+                  <a href="https://badgr.com/public/assertions/dRBudKiVQBmCiK8RM2jR-Q" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-              <div class="cert-card" style="flex: 0 0 calc((100% - 2rem) / 3);">
-                <div class="cert-name"><a
-                    href="https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b"
-                    target="_blank" rel="noopener noreferrer">Soft Skills Training</a></div>
-                <div class="cert-org">Wadhwani Foundation</div>
+              <div class="cert-card-new">
+                  <div class="cert-icon">🤝</div>
+                  <h4>Soft Skills Training</h4>
+                  <p class="cert-description">Enhances interpersonal, communication, and professional skills essential for career success.</p>
+                  <a href="https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b" target="_blank" rel="noopener noreferrer" class="btn-cert-view">View Credential</a>
               </div>
-            </div>
-            <button class="carousel-btn right-btn" aria-label="Scroll Right" style="flex-shrink: 0;">→</button>
           </div>
         </div>
-        <style>
-          .cert-carousel-container {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-          }
-
-          .cert-carousel {
-            display: flex;
-            overflow: hidden;
-            scroll-behavior: smooth;
-            gap: 1rem;
-            padding: 1rem 0;
-            width: 100%;
-          }
-
-          .cert-card {
-            flex: 0 0 calc((100% - 2rem) / 3);
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            transition: transform 0.3s ease;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-          }
-
-          .cert-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-          }
-
-          .cert-name {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-          }
-
-          .cert-name a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-          }
-
-          .cert-name a:hover {
-            color: var(--secondary-color);
-          }
-
-          .cert-org {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-          }
-
-          .carousel-btn {
-            background: var(--primary-color);
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            user-select: none;
-            transition: background-color 0.3s ease;
-            flex-shrink: 0;
-          }
-
-          .carousel-btn:hover {
-            background: var(--secondary-color);
-          }
-
-          @media (prefers-color-scheme: dark) {
-            .cert-card {
-              background: var(--bg-tertiary);
-              color: var(--text-primary);
-              border-color: var(--border-color);
-            }
-
-            .cert-name a {
-              color: var(--primary-color);
-            }
-
-            .carousel-btn {
-              background: var(--primary-color);
-              color: var(--bg-primary);
-            }
-
-            .carousel-btn:hover {
-              background: var(--secondary-color);
-            }
-          }
-        </style>
-        <script>
-          const carousel = document.getElementById('certCarousel');
-          const leftBtn = document.querySelector('.left-btn');
-          const rightBtn = document.querySelector('.right-btn');
-          const scrollAmount = carousel.querySelector('.cert-card').offsetWidth * 3 + 2 * 16; // 3 cards width + 2 gaps (1rem = 16px)
-
-          leftBtn.addEventListener('click', () => {
-            carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-          });
-
-          rightBtn.addEventListener('click', () => {
-            carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-          });
-        </script>
       </div>
     </div>
   </section>
@@ -3750,7 +3747,6 @@
           </div>
         </div>
       </div>
-      <!-- Resume Preview Modal -->
       <div id="resumeModal" class="resume-modal enhanced-resume-modal">
         <div class="resume-modal-content enhanced-resume-modal-content"
           style="max-width: 95vw; width: 80%; padding: 1rem;">
@@ -3856,7 +3852,6 @@
     }
   </style>
 
-  <!-- Minimalistic Contact Form at the end of the page -->
   <section class="section" style="background: var(--bg-primary); color: var(--text-primary); padding-top: 40px;">
     <div class="container" style="max-width: 500px">
       <h2 class="section-title" style="font-size: 2rem; margin-bottom: 2rem; color: var(--primary-color);">Contact
@@ -4245,6 +4240,32 @@
       }
     });
 
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        // Optional: Toggle a class on the body to prevent scrolling when menu is open
+        document.body.classList.toggle('no-scroll');
+    });
+
+    // Close mobile menu when a link is clicked
+    navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        });
+    });
+
+    // Close mobile menu when clicking outside (optional)
+    document.addEventListener('click', (event) => {
+        if (!navLinks.contains(event.target) && !mobileMenuBtn.contains(event.target) && navLinks.classList.contains('active')) {
+            navLinks.classList.remove('active');
+            document.body.classList.remove('no-scroll');
+        }
+    });
+
     // Scroll animation
     const faders = document.querySelectorAll('.fade-in');
     const appearOptions = {
@@ -4300,7 +4321,6 @@
     });
   </script>
 
-  <!-- Add this just before the closing </body> tag -->
   <footer>
     <div class="container">
       <p>
