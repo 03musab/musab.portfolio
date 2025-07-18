@@ -58,7 +58,6 @@ The portfolio website is built using the following technologies:
    ```
 3. Open `index.html` in your preferred browser.
 
-*Note: Add any additional setup instructions here if applicable.*
 
 ---
 
