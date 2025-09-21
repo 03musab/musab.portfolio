@@ -83,7 +83,7 @@ This project is currently unlicensed. Please contact me if you would like to use
 
 - Phone: +91-9152921715  
 - Email: musabimp.0@gmail.com  
-- [LinkedIn](https://www.linkedin.com/in/mohammed-musab-ba6b24250/)  
+- [LinkedIn](https://www.linkedin.com/in/devmusab/)  
 - [GitHub](https://github.com/03musab)  
 - [Portfolio](https://invisible-series-421568.framer.app/)  
 - [Resume Preview & Download](https://drive.google.com/file/d/1U6Nb40L657YNmlj0o6EvJDkpYChPkpOU/preview)
