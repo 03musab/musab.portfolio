@@ -1,93 +1,36 @@
-# Musab | Web Developer Portfolio
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Welcome to my professional portfolio website showcasing my skills, projects, and experience as a web developer.
+## Getting Started
 
----
+First, run the development server:
 
-## Table of Contents
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- [About Me](#about-me)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
----
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## About Me
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-I am Musab, a passionate web developer based in Mumbai. I am a final-year Computer Engineering student with expertise in full-stack development, cloud computing, cybersecurity, and team leadership. I build secure, scalable applications that solve real-world problems.
+## Learn More
 
----
+To learn more about Next.js, take a look at the following resources:
 
-## Features
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Clean, modern, and responsive design
-- Showcases technical skills including Python, JavaScript, PHP, SQL, React, Node.js, and more
-- Highlights featured projects with descriptions and GitHub links
-- Displays professional experience and education
-- Provides easy contact options including email, phone, LinkedIn, and GitHub
-- Dark mode toggle for better user experience
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
----
+## Deploy on Vercel
 
-## Tech Stack
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-The portfolio website is built using the following technologies:
-
-- HTML5
-- CSS3 (including CSS variables and animations)
-- JavaScript (for interactivity and animations)
-
-
----
-
-## Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/03musab/your-portfolio-repo.git
-   ```
-2. Navigate to the project directory:
-   ```bash
-   cd your-portfolio-repo
-   ```
-3. Open `index.html` in your preferred browser.
-
-
----
-
-## Usage
-
-This portfolio website is a static site that can be opened directly in any modern web browser. Navigate through the sections using the navigation menu to view About Me, Skills, Projects, Experience, Education, and Contact information. Use the theme toggle button to switch between light and dark modes.
-
----
-
-## Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or bug fixes.
-
----
-
-## License
-
-This project is currently unlicensed. Please contact me if you would like to use any part of this portfolio or if you have questions about licensing.
-
----
-
-## Contact
-
-- Phone: +91-9152921715  
-- Email: musabimp.0@gmail.com  
-- [LinkedIn](https://www.linkedin.com/in/devmusab/)  
-- [GitHub](https://github.com/03musab)  
-- [Portfolio](https://invisible-series-421568.framer.app/)  
-- [Resume Preview & Download](https://drive.google.com/file/d/1U6Nb40L657YNmlj0o6EvJDkpYChPkpOU/preview)
-
----
-
-Thank you for visiting my portfolio!
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
