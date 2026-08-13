@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Cpu, Play, Pause, Terminal as TerminalIcon, Sparkles } from "lucide-react";
+import { Play, Pause, Terminal as TerminalIcon, Sparkles } from "lucide-react";
 
 interface LogItem {
   timestamp: string;
@@ -9,14 +9,7 @@ interface LogItem {
   message: string;
 }
 
-export default function AIEngineeringLab() {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [logs, setLogs] = useState<LogItem[]>([]);
-  const [queriesCount, setQueriesCount] = useState(1482);
-  const [successRate, setSuccessRate] = useState(99.4);
-  const logsContainerRef = useRef<HTMLDivElement>(null);
-
-  const mockLogPool: Omit<LogItem, "timestamp">[] = [
+const mockLogPool: Omit<LogItem, "timestamp">[] = [
     { level: "INFO", message: "Fetching jobs from Indeed API gateway..." },
     { level: "SUCCESS", message: "Successfully ingested 24 job postings." },
     { level: "INFO", message: "Parsing uploaded resumes queue (size: 3)..." },
@@ -33,8 +26,7 @@ export default function AIEngineeringLab() {
     { level: "INFO", message: "TalkSphere message key rotation complete: AES-GCM-256" },
   ];
 
-  useEffect(() => {
-    // Initial logs setup
+  function createInitialLogs(): LogItem[] {
     const initialLogs: LogItem[] = [];
     for (let i = 0; i < 6; i++) {
       const time = new Date(Date.now() - (6 - i) * 5000);
@@ -43,8 +35,15 @@ export default function AIEngineeringLab() {
         ...mockLogPool[i % mockLogPool.length],
       });
     }
-    setLogs(initialLogs);
-  }, []);
+    return initialLogs;
+  }
+
+export default function AIEngineeringLab() {
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [logs, setLogs] = useState<LogItem[]>(() => createInitialLogs());
+  const [queriesCount, setQueriesCount] = useState(1482);
+  const [successRate, setSuccessRate] = useState(99.4);
+  const logsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isPlaying) return;
@@ -62,7 +61,7 @@ export default function AIEngineeringLab() {
 
       setQueriesCount((prev) => prev + Math.floor(Math.random() * 2) + 1);
       if (Math.random() > 0.8) {
-        setSuccessRate((prev) => parseFloat((99.0 + Math.random() * 0.9).toFixed(1)));
+        setSuccessRate(() => parseFloat((99.0 + Math.random() * 0.9).toFixed(1)));
       }
     }, 3000);
 
@@ -93,6 +92,7 @@ export default function AIEngineeringLab() {
           </p>
         </div>
         <button
+          type="button"
           onClick={togglePlayback}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono transition-colors border ${
             isPlaying
@@ -152,7 +152,8 @@ export default function AIEngineeringLab() {
         <div ref={logsContainerRef} className="flex-1 overflow-y-auto space-y-1.5 pr-2">
           {logs.map((log, idx) => (
             <div key={idx} className="flex gap-2 items-start leading-relaxed">
-              <span className="text-gray-500">[{log.timestamp}]</span>
+              {/* timestamps derive from Date.now() (volatile between SSR & hydration) */}
+              <span className="text-gray-500" suppressHydrationWarning>[{log.timestamp}]</span>
               <span
                 className={`font-semibold ${
                   log.level === "SUCCESS"

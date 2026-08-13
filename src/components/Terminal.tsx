@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Terminal as TerminalIcon, Shield, Cpu, RefreshCw } from "lucide-react";
+import { Terminal as TerminalIcon } from "lucide-react";
 
 interface HistoryItem {
   command: string;
@@ -26,16 +26,16 @@ export default function Terminal() {
   const bodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [history]);
-
   const scrollToBottom = () => {
     const body = bodyRef.current;
     if (body) {
       body.scrollTop = body.scrollHeight;
     }
   };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [history]);
 
   const focusInput = () => {
     inputRef.current?.focus();
@@ -126,7 +126,7 @@ export default function Terminal() {
               <p className="text-gray-400 text-xs mt-0.5">Focus: AI Job Matching, Resume Parsing, ATS Automation & Background Processing</p>
               <p className="mt-1">Built an automated engine that aggregates jobs, parses CVs, runs intelligent score matching, and fires detailed digest reports automatically.</p>
               <p className="mt-1 text-xs text-gray-500 font-mono">
-                Code: <a href="https://github.com/03musab/ai_job_agent" target="_blank" className="text-blue-300 hover:underline">github.com/03musab/ai_job_agent</a> | Live: <a href="https://aijobsnap.vercel.app/" target="_blank" className="text-blue-300 hover:underline">aijobsnap.vercel.app</a>
+                Code: <a href="https://github.com/03musab/ai_job_agent" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">github.com/03musab/ai_job_agent</a> | Live: <a href="https://aijobsnap.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">aijobsnap.vercel.app</a>
               </p>
             </div>
             <div>
@@ -134,7 +134,7 @@ export default function Terminal() {
               <p className="text-gray-400 text-xs mt-0.5">Focus: WebSockets, Live Coding, React & Secured Collaboration</p>
               <p className="mt-1">Architected a multi-user collaborative workspace allowing developers to code together instantly in real time with built-in sandbox security.</p>
               <p className="mt-1 text-xs text-gray-500 font-mono">
-                Code: <a href="https://github.com/03musab/togcode" target="_blank" className="text-blue-300 hover:underline">github.com/03musab/togcode</a> | Live: <a href="https://togcode.vercel.app" target="_blank" className="text-blue-300 hover:underline">togcode.vercel.app</a>
+                Code: <a href="https://github.com/03musab/togcode" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">github.com/03musab/togcode</a> | Live: <a href="https://togcode.vercel.app" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">togcode.vercel.app</a>
               </p>
             </div>
             <div>
@@ -142,7 +142,7 @@ export default function Terminal() {
               <p className="text-gray-400 text-xs mt-0.5">Focus: Cryptography, End-to-End Encryption, Cyber-Sec</p>
               <p className="mt-1">Engineered a highly secure, tamper-detected chat application utilizing advanced encryption keys and verified file transfers.</p>
               <p className="mt-1 text-xs text-gray-500 font-mono">
-                Code: <a href="https://github.com/03musab/APSIT-Chat-app" target="_blank" className="text-blue-300 hover:underline">github.com/03musab/APSIT-Chat-app</a> | Live: <a href="https://apsit-chat-frontend.onrender.com/" target="_blank" className="text-blue-300 hover:underline">apsit-chat-frontend.onrender.com</a>
+                Code: <a href="https://github.com/03musab/APSIT-Chat-app" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">github.com/03musab/APSIT-Chat-app</a> | Live: <a href="https://apsit-chat-frontend.onrender.com/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">apsit-chat-frontend.onrender.com</a>
               </p>
             </div>
           </div>
@@ -182,17 +182,17 @@ export default function Terminal() {
           <div className="text-sm text-gray-300 space-y-2">
             <p className="text-purple-400 font-bold">Verified Credentials:</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-xs">
-              <p>• AWS Cloud Foundations: <a href="https://www.credly.com/badges/06cb6f51-843b-48ee-8398-89ab1948a18f/linked_in_profile" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• AWS Cloud Architecting: <a href="https://www.credly.com/badges/438571e8-3806-43b9-b9f7-9fbf30c8679a/print" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Oracle Multicloud Architect: <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=7496B34650FE9CF00F5504986C047DB8C91ABE28B7E8699EC404E5A1318AF8FA" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Google Android Internship: <a href="https://www.linkedin.com/in/devmusab/details/certifications/1725127758257/single-media-viewer/?profileId=ACoAAD4aR64B95XJYaaCWByOSS3SCTXjMscxA0Y" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Palo Alto Cybersecurity: <a href="https://www.linkedin.com/in/devmusab/details/certifications/1725128897545/single-media-viewer/?profileId=ACoAAD4aR64B9" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Zscaler Networking: <a href="https://verify.skilljar.com/c/cnj7oj7i2xuu" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Zscaler Fundamentals: <a href="https://badgr.com/public/assertions/dRBudKiVQBmCiK8RM2jR-Q" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Zscaler ZTCA: <a href="https://www.credly.com/badges/340bbf41-97ee-4ae2-89fa-05b641bd10b3/public_url" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• Wadhwani Softskills: <a href="https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b" target="_blank" className="text-blue-300 hover:underline">Verify</a></p>
-              <p>• GenAI 101 Pieces: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" className="text-blue-300 hover:underline">Profile</a></p>
-              <p>• Flipkart E-commerce: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" className="text-blue-300 hover:underline">Profile</a></p>
+              <p>• AWS Cloud Foundations: <a href="https://www.credly.com/badges/06cb6f51-843b-48ee-8398-89ab1948a18f/linked_in_profile" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• AWS Cloud Architecting: <a href="https://www.credly.com/badges/438571e8-3806-43b9-b9f7-9fbf30c8679a/print" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Oracle Multicloud Architect: <a href="https://catalog-education.oracle.com/ords/certview/sharebadge?id=7496B34650FE9CF00F5504986C047DB8C91ABE28B7E8699EC404E5A1318AF8FA" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Google Android Internship: <a href="https://www.linkedin.com/in/devmusab/details/certifications/1725127758257/single-media-viewer/?profileId=ACoAAD4aR64B95XJYaaCWByOSS3SCTXjMscxA0Y" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Palo Alto Cybersecurity: <a href="https://www.linkedin.com/in/devmusab/details/certifications/1725128897545/single-media-viewer/?profileId=ACoAAD4aR64B9" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Zscaler Networking: <a href="https://verify.skilljar.com/c/cnj7oj7i2xuu" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Zscaler Fundamentals: <a href="https://badgr.com/public/assertions/dRBudKiVQBmCiK8RM2jR-Q" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Zscaler ZTCA: <a href="https://www.credly.com/badges/340bbf41-97ee-4ae2-89fa-05b641bd10b3/public_url" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• Wadhwani Softskills: <a href="https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
+              <p>• GenAI 101 Pieces: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Profile</a></p>
+              <p>• Flipkart E-commerce: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Profile</a></p>
             </div>
           </div>
         );
@@ -267,7 +267,7 @@ export default function Terminal() {
       default:
         output = (
           <p className="text-red-400 font-mono text-sm">
-            Command not found: "{cmd}". Type <span className="text-white underline font-semibold">help</span> to list commands.
+            Command not found: &quot;{cmd}&quot;. Type <span className="text-white underline font-semibold">help</span> to list commands.
           </p>
         );
     }
@@ -322,7 +322,7 @@ export default function Terminal() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent text-white focus:outline-none border-none outline-none font-mono text-sm caret-transparent terminal-cursor w-full min-w-0"
+          className="flex-1 bg-transparent text-white focus:outline-none border-none outline-none font-mono text-sm caret-blue-500 w-full min-w-0"
           autoFocus
           placeholder="type a command..."
           autoComplete="off"
