@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -39,35 +39,55 @@ const SECTIONS: { title: string; body: string }[] = [
 export default function PrivacyPage() {
   return (
     <SubPageShell>
-      <div className="space-y-10">
-        <Breadcrumbs items={[{ label: "Privacy Policy" }]} />
-
-        <div className="space-y-3">
-          <p className="text-[10px] text-blue-400 font-mono font-bold tracking-widest uppercase">Legal — Document 001</p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-white font-sans">Privacy Policy</h1>
-          <p className="text-gray-400 text-sm font-sans max-w-2xl leading-relaxed">
-            Last updated: August 2026. This policy explains what happens to the information you share with me through
-            this portfolio.
+      <div className="space-y-12">
+        <div className="space-y-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
+            Legal — Document 001
+          </p>
+          <h1 className="heading-glow font-display text-4xl tracking-tight lg:text-5xl">
+            Privacy <em className="text-colorfull animate-gradient-x italic">policy</em>
+          </h1>
+          <p className="max-w-2xl leading-relaxed text-foreground/60">
+            Last updated: August 2026. This policy explains what happens to the
+            information you share with me through this portfolio.
           </p>
         </div>
 
         <div className="space-y-4">
           {SECTIONS.map((s) => (
-            <section key={s.title} className="bg-[#0a0a0c]/60 border border-white/5 rounded-xl p-5 sm:p-6">
-              <h2 className="text-sm font-bold text-white font-mono mb-2">{s.title}</h2>
-              <p className="text-sm text-gray-400 leading-relaxed font-sans">{s.body}</p>
+            <section
+              key={s.title}
+              className="rounded-2xl border border-line bg-surface p-6"
+            >
+              <h2 className="mb-2 font-mono text-sm font-semibold tracking-wide">
+                {s.title}
+              </h2>
+              <p className="text-sm leading-relaxed text-foreground/60">{s.body}</p>
             </section>
           ))}
         </div>
 
-        <div className="bg-[#0a0a0c]/60 border border-blue-500/20 rounded-xl p-5 sm:p-6">
-          <h2 className="text-sm font-bold text-white font-mono mb-2">7. Contact</h2>
-          <p className="text-sm text-gray-400 leading-relaxed font-sans">
+        <div className="rounded-2xl border border-foreground/20 bg-surface p-6">
+          <h2 className="mb-2 font-mono text-sm font-semibold tracking-wide">
+            7. Contact
+          </h2>
+          <p className="text-sm leading-relaxed text-foreground/60">
             Questions about this policy? Reach out at{" "}
-            <a href={`mailto:${SITE.email}`} className="text-blue-400 hover:text-blue-300 transition-colors font-mono break-all">
+            <a
+              href={`mailto:${SITE.email}`}
+              className="font-mono text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
+            >
               {SITE.email}
             </a>{" "}
-            or via the <Link href="/#contact" className="text-blue-400 hover:text-blue-300 transition-colors">contact section</Link>.
+            or via the{" "}
+            <Link
+              href="/#contact"
+              className="inline-flex items-center gap-1 text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
+            >
+              contact section
+              <ArrowRight size={12} />
+            </Link>
+            .
           </p>
         </div>
       </div>

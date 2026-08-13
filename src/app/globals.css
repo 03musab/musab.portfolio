@@ -1,25 +1,49 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Design tokens (warm-neutral dual theme, inspired by the reference) ─── */
 :root {
-  --background: #030303;
-  --foreground: #f5f5f7;
-  --primary-glow: rgba(59, 130, 246, 0.15);
-  --accent-glow: rgba(168, 85, 247, 0.15);
-  --card-bg: rgba(10, 10, 12, 0.7);
-  --border-color: rgba(255, 255, 255, 0.08);
+  --background: #f2f3f5;
+  --surface: #f9f9fa;
+  --surface-muted: #eeeef1;
+  --foreground: #0a0a0a;
+  --card: #f2f3f5;
+  --border: #d4d4d4;
+  --hairline: #d1d5db;
+  --colorfull: linear-gradient(288deg, #ff8000 0%, #f0c 53.24%, #04f 100%);
+  color-scheme: light;
 }
 
-@theme {
-  --color-bg-primary: #030303;
-  --color-bg-secondary: #0a0a0c;
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-text-primary: #f5f5f7;
-  --color-text-secondary: #8e8e93;
+.dark {
+  --background: #121212;
+  --surface: #171717;
+  --surface-muted: #0f0f0f;
+  --foreground: #fafafa;
+  --card: #171717;
+  --border: #262626;
+  --hairline: rgba(255, 255, 255, 0.16);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-line: var(--border);
+  --color-hairline: var(--hairline);
+
+  --spacing-pagebuilder: 4rem;
 }
 
 html {
   scroll-behavior: smooth;
-  /* keep anchored sections clear of the sticky header */
   scroll-padding-top: 96px;
 }
 
@@ -28,278 +52,184 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* ─── Animated aurora backdrop ──────────────────────────────────────────────
-   Dark base with a fine blueprint grid and an edge vignette (static), plus
-   slowly drifting colour blooms (.aurora-blob-*) layered on top for a subtle
-   aurora effect. Blobs animate transform/opacity only, so motion stays on
-   the GPU compositor — no per-frame repaints, no canvas, no shaders. */
-.bg-static-aurora {
-  background-color: #030303;
-  background-image:
-    /* Fine blueprint grid */
-    linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-    /* Edge vignette — keeps text readable, blends into the dark page */
-    radial-gradient(ellipse 120% 100% at 50% 35%, transparent 55%, rgba(3, 3, 3, 0.55) 100%);
-  background-size: 42px 42px, 42px 42px, auto;
-  background-repeat: repeat, repeat, no-repeat;
+::selection {
+  background: rgba(255, 0, 204, 0.25);
 }
 
-.aurora-blob {
-  position: absolute;
-  border-radius: 9999px;
-  will-change: transform, opacity;
-  pointer-events: none;
-}
-
-.aurora-blob-1 {
-  top: -24vmax;
-  left: -20vmax;
-  width: 80vmax;
-  height: 80vmax;
-  background: radial-gradient(circle, rgba(225, 0, 255, 0.42) 0%, transparent 60%);
-  animation: aurora-drift-a 18s ease-in-out infinite alternate;
-}
-
-.aurora-blob-2 {
-  top: -30vmax;
-  right: -22vmax;
-  width: 84vmax;
-  height: 84vmax;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 60%);
-  animation: aurora-drift-b 22s ease-in-out infinite alternate;
-}
-
-.aurora-blob-3 {
-  top: -16vmax;
-  left: 24%;
-  width: 62vmax;
-  height: 62vmax;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.34) 0%, transparent 56%);
-  animation: aurora-drift-c 26s ease-in-out infinite alternate;
-}
-
-.aurora-blob-4 {
-  top: 4vmax;
-  left: 8%;
-  width: 48vmax;
-  height: 48vmax;
-  background: radial-gradient(circle, rgba(247, 247, 247, 0.14) 0%, transparent 58%);
-  animation: aurora-shimmer 9s ease-in-out infinite alternate;
-}
-
-.aurora-blob-5 {
-  top: 6vmax;
-  right: 6%;
-  width: 50vmax;
-  height: 50vmax;
-  background: radial-gradient(circle, rgba(34, 211, 238, 0.28) 0%, transparent 58%);
-  animation: aurora-drift-c 30s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes aurora-drift-a {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.45; }
-  50%  { transform: translate3d(18vmax, 12vmax, 0) scale(1.25); opacity: 0.85; }
-  100% { transform: translate3d(8vmax, 24vmax, 0) scale(0.9); opacity: 0.5; }
-}
-
-@keyframes aurora-drift-b {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.5; }
-  50%  { transform: translate3d(-16vmax, 16vmax, 0) scale(1.2); opacity: 0.9; }
-  100% { transform: translate3d(-6vmax, 26vmax, 0) scale(0.95); opacity: 0.5; }
-}
-
-@keyframes aurora-drift-c {
-  0%   { transform: translate3d(0, 0, 0) scale(1); opacity: 0.4; }
-  50%  { transform: translate3d(14vmax, -8vmax, 0) scale(1.3); opacity: 0.8; }
-  100% { transform: translate3d(20vmax, 8vmax, 0) scale(0.85); opacity: 0.45; }
-}
-
-@keyframes aurora-shimmer {
-  0%   { opacity: 0.3; }
-  100% { opacity: 0.6; }
-}
-
-/* Reduced-motion / battery-sensitive users still get a rich (static) aurora */
-@media (prefers-reduced-motion: reduce) {
-  .aurora-blob {
-    animation: none;
-    opacity: 0.6;
-  }
-}
-
-/* Custom glow borders and terminal lines */
-.glow-border {
-  border: 1px solid var(--border-color);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s ease;
-}
-
-.glow-border:hover {
-  border-color: rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.1);
-}
-
-.glow-border-purple:hover {
-  border-color: rgba(168, 85, 247, 0.3);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.1);
-}
-
-/* Scrollbar styles */
+/* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #030303;
+  background: var(--background);
 }
 ::-webkit-scrollbar-thumb {
-  background: #222;
-  border-radius: 4px;
+  background: var(--border);
+  border-radius: 6px;
+  border: 2px solid var(--background);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #333;
+  background: #a3a3a3;
 }
 
-/* Animations */
-@keyframes pulse-slow {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+/* ─── Signature "colorfull" gradient accent ────────────────────────────────
+   Orange → magenta → blue. Applied to clipped italic text on one word per
+   section heading. Paired with animate-gradient-x for a slow sweep. */
+.text-colorfull {
+  background: var(--colorfull);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-@keyframes grid-move {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(40px); }
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 6s ease-in-out infinite;
 }
 
-.animate-grid-move {
-  animation: grid-move 20s linear infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 8s ease-in-out infinite;
-}
-
-/* Premium SaaS Blueprint Grid Background */
-.bg-grid-blueprint {
-  background-image: 
-    linear-gradient(to right, rgba(59, 130, 246, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
-  background-size: 14px 14px;
-}
-
-/* SVG Line Flow Animations */
-@keyframes flow-x {
-  from {
-    stroke-dashoffset: 24;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes flow-y {
-  from {
-    stroke-dashoffset: 24;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.animate-flow-x {
-  animation: flow-x 1.2s linear infinite;
-}
-
-.animate-flow-y {
-  animation: flow-y 1.2s linear infinite;
-}
-
-/* Custom Status Indicator Animations */
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.65);
-    opacity: 0;
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
   }
   50% {
-    opacity: 0.5;
+    background-position: 100% 50%;
+  }
+}
+
+/* Zinc gradient used for the giant name in the hero */
+.text-name-gradient {
+  background: linear-gradient(to bottom, #a1a1aa 0%, #52525b 50%, #18181b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .text-name-gradient {
+  background: linear-gradient(to bottom, #3f3f46 0%, #e4e4e7 50%, #fafafa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Soft white glow behind section titles */
+.heading-glow {
+  text-shadow:
+    0px 4px 8px rgba(255, 255, 255, 0.05),
+    0px 8px 30px rgba(255, 255, 255, 0.2);
+}
+
+/* ─── Hero entry animations ─────────────────────────────────────────────── */
+.fade-rise {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: fade-rise 0.8s cubic-bezier(0.2, 0.65, 0.3, 0.9) forwards;
+}
+
+@keyframes fade-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Words wipe in from a left mask gradient */
+.mask-reveal {
+  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  -webkit-mask-size: 0% 100%;
+  mask-size: 0% 100%;
+  animation: mask-reveal 1.8s cubic-bezier(0.2, 0.65, 0.3, 0.9) forwards;
+}
+
+@keyframes mask-reveal {
+  to {
+    -webkit-mask-size: 200% 100%;
+    mask-size: 200% 100%;
+  }
+}
+
+/* Shiny sweep for the hero "new launch" pill text */
+.shiny-text {
+  background: linear-gradient(
+    110deg,
+    var(--foreground) 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    var(--foreground) 65%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shiny-text 4.5s ease-in-out infinite;
+}
+
+@keyframes shiny-text {
+  0% {
+    background-position: 180% 0;
   }
   100% {
-    transform: scale(1.3);
-    opacity: 0;
+    background-position: -180% 0;
   }
 }
 
-.animate-pulse-ring {
-  animation: pulse-ring 2s cubic-bezier(0.215, 0.610, 0.355, 1) infinite;
-}
-
-/* ─── Tech Constellation Radar (homepage centerpiece) ───────────────────────
-   A radar sweep that rotates over the stack: nodes "ping" exactly as the
-   beam passes them (ping cycle matches the sweep cycle), dashed orbit rings
-   counter-rotate slowly, and the core monogram emits expanding pulse rings. */
-@keyframes radar-rotate {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes radar-rotate-rev {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-@keyframes radar-ping {
-  0%   { transform: scale(0.4); opacity: 0; box-shadow: 0 0 0 0 rgba(125, 211, 252, 0.5); }
-  5%   { transform: scale(1.2); opacity: 1; box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.35); }
-  11%  { transform: scale(1); opacity: 0.9; box-shadow: 0 0 0 16px rgba(125, 211, 252, 0); }
-  17%  { opacity: 0; }
-  100% { transform: scale(1); opacity: 0; box-shadow: 0 0 0 0 rgba(125, 211, 252, 0); }
-}
-
-@keyframes radar-core-ring {
-  0%   { transform: scale(0.6); opacity: 0.7; }
-  100% { transform: scale(2.6); opacity: 0; }
-}
-
-.radar-sweep {
-  animation: radar-rotate 6s linear infinite;
-  background: conic-gradient(
-    rgba(96, 165, 250, 0.5) 0deg,
-    rgba(59, 130, 246, 0.28) 40deg,
-    rgba(59, 130, 246, 0.1) 90deg,
-    rgba(59, 130, 246, 0.03) 160deg,
-    transparent 240deg
+/* ─── Hatched diagonal stripe divider ───────────────────────────────────── */
+.hatched-divider {
+  height: 1.75rem;
+  border-top: 1px solid var(--border);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--hairline) 0px,
+    var(--hairline) 1px,
+    transparent 1px,
+    transparent 6px
   );
 }
 
-.radar-ring-cw {
-  animation: radar-rotate 30s linear infinite;
+/* ─── Marquee (contact section) ─────────────────────────────────────────── */
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-.radar-ring-ccw {
-  animation: radar-rotate-rev 38s linear infinite;
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
 }
 
-.radar-node-ping {
-  animation: radar-ping 6s linear infinite;
-  animation-delay: var(--delay, 0s);
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-.radar-core-ring {
-  animation: radar-core-ring 4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-/* Reduced-motion users get a calm, static scan instead of the live one */
 @media (prefers-reduced-motion: reduce) {
-  .radar-sweep,
-  .radar-ring-cw,
-  .radar-ring-ccw,
-  .radar-node-ping,
-  .radar-core-ring {
+  .marquee-track {
     animation: none;
   }
-  .radar-node-ping {
-    opacity: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .fade-rise,
+  .mask-reveal,
+  .shiny-text,
+  .animate-gradient-x {
+    animation: none;
+  }
+  .fade-rise {
+    opacity: 1;
+    transform: none;
+  }
+  .mask-reveal {
+    -webkit-mask-size: 200% 100%;
+    mask-size: 200% 100%;
   }
 }

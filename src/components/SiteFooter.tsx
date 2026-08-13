@@ -1,117 +1,160 @@
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { ArrowUpRight, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
-import { SITE, SECTION_LINKS } from "@/lib/site";
+import { SITE } from "@/lib/site";
+
+const LINK_CARDS = [
+  {
+    label: "Case studies",
+    note: "Three systems built end-to-end",
+    href: "/#work",
+    external: false,
+  },
+  {
+    label: "Resume",
+    note: "Grab my latest CV as PDF",
+    href: SITE.resume,
+    external: true,
+  },
+  {
+    label: "GitHub",
+    note: "Explore my open-source code",
+    href: SITE.github,
+    external: true,
+  },
+  {
+    label: "Get in touch",
+    note: "Let me know you were here",
+    href: "/#contact",
+    external: false,
+  },
+];
+
+const COLUMNS = [
+  {
+    title: "General",
+    links: [
+      { label: "/", href: "/" },
+      { label: "/about", href: "/#about" },
+      { label: "/work", href: "/#work" },
+      { label: "/contact", href: "/#contact" },
+    ],
+  },
+  {
+    title: "Pages",
+    links: [
+      { label: "/privacy", href: "/privacy" },
+      { label: "/thanks", href: "/thanks" },
+    ],
+  },
+  {
+    title: "Elsewhere",
+    links: [
+      { label: SITE.github.replace("https://", "github/"), href: SITE.github, external: true },
+      { label: SITE.linkedin.replace("https://", "linkedin/"), href: SITE.linkedin, external: true },
+      { label: "email", href: `mailto:${SITE.email}` },
+    ],
+  },
+];
 
 export default function SiteFooter() {
   return (
-    <footer className="relative z-[1] w-full border-t border-white/5 pb-28 md:pb-10">
-      <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-        <div className="space-y-3">
-          <p className="font-mono text-sm font-bold text-white">{SITE.name}</p>
-          <p className="text-xs text-gray-500 font-mono leading-relaxed">
-            {SITE.tagline} based in {SITE.location}. Building AI-powered products and scalable software.
+    <footer className="relative overflow-hidden">
+      <div className="mx-auto max-w-6xl space-y-pagebuilder px-6 pb-16 pt-pagebuilder lg:px-8">
+        <div className="space-y-6">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
+            My Site
           </p>
-          <div className="flex items-center gap-2 pt-1">
+          <h2 className="heading-glow font-display text-4xl leading-tight tracking-tight lg:text-6xl">
+            Explore, experiment{" "}
+            <em className="text-colorfull animate-gradient-x italic">
+              {"&&"} say hello
+            </em>
+          </h2>
+        </div>
+
+        {/* Link-card grid */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {LINK_CARDS.map((card) => (
             <a
-              href={SITE.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              title="GitHub"
+              key={card.label}
+              href={card.href}
+              target={card.external ? "_blank" : undefined}
+              rel={card.external ? "noopener noreferrer" : undefined}
+              className="group relative overflow-hidden rounded-2xl border border-line bg-surface p-5 transition-colors duration-300 hover:border-foreground/30"
             >
-              <GithubIcon size={15} />
+              <div className="absolute inset-0 bg-[radial-gradient(60%_80%_at_80%_10%,rgba(99,102,241,0.12),transparent_70%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative z-10 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="font-display text-lg tracking-tight">
+                    {card.label}
+                  </p>
+                  <ArrowUpRight
+                    size={14}
+                    className="translate-x-1 -translate-y-1 text-foreground/40 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:translate-y-0 group-hover:opacity-100"
+                  />
+                </div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/50">
+                  {card.note}
+                </p>
+              </div>
             </a>
-            <a
-              href={SITE.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              title="LinkedIn"
-            >
-              <LinkedinIcon size={15} />
+          ))}
+        </div>
+
+        {/* Link columns */}
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+          {COLUMNS.map((col) => (
+            <div key={col.title} className="space-y-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/50">
+                {col.title}
+              </p>
+              <ul className="space-y-2.5">
+                {col.links.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                      className="group relative font-mono text-xs text-foreground/60 transition-colors hover:text-foreground"
+                    >
+                      {link.label}
+                      <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-foreground/50 transition-all duration-300 group-hover:w-full" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Copyright bar */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-line pt-6 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/50 sm:flex-row">
+          <p>© 2026 {SITE.fullName}</p>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" className="transition-colors hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link href="/thanks" className="transition-colors hover:text-foreground">
+              Sitemap
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <a href={SITE.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-foreground/50 transition-colors hover:text-foreground">
+              <GithubIcon size={14} />
             </a>
-            <a
-              href={`mailto:${SITE.email}`}
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-              title="Email"
-            >
-              <Mail size={15} />
+            <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-foreground/50 transition-colors hover:text-foreground">
+              <LinkedinIcon size={14} />
+            </a>
+            <a href={`mailto:${SITE.email}`} aria-label="Email" className="text-foreground/50 transition-colors hover:text-foreground">
+              <Mail size={14} />
             </a>
           </div>
         </div>
-
-        <div>
-          <p className="text-[10px] text-gray-500 font-mono font-bold uppercase tracking-widest mb-3">Navigate</p>
-          <ul className="space-y-2">
-            {SECTION_LINKS.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-[10px] text-gray-500 font-mono font-bold uppercase tracking-widest mb-3">Pages</p>
-          <ul className="space-y-2">
-            <li>
-              <Link href="/privacy" className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
-                Privacy Policy
-              </Link>
-            </li>
-            <li>
-              <Link href="/thanks" className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
-                Thank You
-              </Link>
-            </li>
-            <li>
-              <a
-                href={SITE.resume}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors"
-              >
-                Resume (PDF)
-              </a>
-            </li>
-            <li>
-              <Link href="/" className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
-                Back to Top ↑
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-[10px] text-gray-500 font-mono font-bold uppercase tracking-widest mb-3">Contact</p>
-          <ul className="space-y-2">
-            <li>
-              <a
-                href={`mailto:${SITE.email}`}
-                className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors break-all"
-              >
-                {SITE.email}
-              </a>
-            </li>
-            <li>
-              <Link href="/#contact" className="text-xs font-mono text-gray-400 hover:text-blue-400 transition-colors">
-                Start a Project
-              </Link>
-            </li>
-          </ul>
-        </div>
       </div>
 
-      <div className="border-t border-white/5 py-6 text-center text-xs font-mono text-gray-500 space-y-2">
-        <p>© 2026 {SITE.fullName}. All systems online.</p>
-        <p className="text-[10px] text-gray-600">Built with Next.js 16, React 19, TypeScript, Tailwind CSS &amp; Lucide Icons.</p>
-      </div>
+      {/* Hatched stripe divider */}
+      <div className="hatched-divider" />
     </footer>
   );
 }

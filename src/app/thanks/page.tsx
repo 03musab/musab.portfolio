@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { CheckCircle, ChevronRight, Clock, Mail } from "lucide-react";
+import { ArrowRight, CheckCircle, Mail } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -21,51 +20,39 @@ export default async function ThanksPage({
 
   return (
     <SubPageShell>
-      <div className="space-y-10">
-        <Breadcrumbs items={[{ label: "Thank You" }]} />
+      <div className="mx-auto max-w-xl space-y-8 text-center">
+        <div className="mx-auto grid size-16 place-items-center rounded-full bg-emerald-500/10 text-emerald-500">
+          <CheckCircle size={30} />
+        </div>
 
-        <div className="bg-[#0a0a0c]/60 border border-white/10 rounded-2xl glow-border p-8 sm:p-12 text-center space-y-6 max-w-2xl mx-auto">
-          <div className="mx-auto w-14 h-14 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-            <CheckCircle className="text-green-400" size={28} />
-          </div>
+        <div className="space-y-3">
+          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
+            Message Received
+          </p>
+          <h1 className="heading-glow font-display text-4xl tracking-tight lg:text-5xl">
+            Thank you{firstName !== "there" ? `, ${firstName}` : ""}!
+          </h1>
+          <p className="mx-auto max-w-md leading-relaxed text-foreground/60">
+            Your message made it through. I&apos;ll review it and get back to
+            you shortly — usually within 24 hours.
+          </p>
+        </div>
 
-          <div className="space-y-2">
-            <p className="text-[10px] text-blue-400 font-mono font-bold tracking-widest uppercase">Transmission Received</p>
-            <h1 className="text-3xl sm:text-4xl font-bold text-white font-sans">
-              Thank you{firstName !== "there" ? `, ${firstName}` : ""}!
-            </h1>
-            <p className="text-gray-400 text-sm max-w-md mx-auto leading-relaxed font-sans">
-              Your packet made it through the tunnel. I&apos;ll review your message and get back to you shortly.
-            </p>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-400 bg-black border border-white/5 rounded-lg p-3 max-w-sm mx-auto">
-            <Clock size={13} className="text-green-400" />
-            <span>{SITE.responsePromise}</span>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            <Link
-              href="/"
-              className="px-5 py-3 rounded-lg text-xs font-mono font-bold bg-white text-black hover:bg-gray-200 transition-colors flex items-center gap-1.5"
-            >
-              <span>Back to Command Center</span>
-              <ChevronRight size={14} />
-            </Link>
-            <Link
-              href="/#projects"
-              className="px-5 py-3 rounded-lg text-xs font-mono font-bold bg-[#0e0e11] text-gray-300 hover:text-white border border-white/10 hover:border-white/20 transition-all flex items-center gap-1.5"
-            >
-              <span>View Projects</span>
-            </Link>
-            <a
-              href={`mailto:${SITE.email}`}
-              className="px-5 py-3 rounded-lg text-xs font-mono font-bold bg-[#0e0e11] text-gray-300 hover:text-white border border-white/10 hover:border-white/20 transition-all flex items-center gap-1.5"
-            >
-              <Mail size={14} />
-              <span>Email Me Directly</span>
-            </a>
-          </div>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link
+            href="/"
+            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-85"
+          >
+            Back to homepage
+            <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </Link>
+          <a
+            href={`mailto:${SITE.email}`}
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
+          >
+            <Mail size={14} />
+            Email me directly
+          </a>
         </div>
       </div>
     </SubPageShell>
