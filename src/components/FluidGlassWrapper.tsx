@@ -1,16 +1,8 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import Reveal from "./Reveal";
-
-const FluidGlass = dynamic(() => import("./FluidGlass"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-[500px] w-full items-center justify-center rounded-3xl border border-line bg-surface p-8 text-center font-mono text-xs text-foreground/50">
-      Loading Interactive 3D Glass Lens…
-    </div>
-  ),
-});
+import FluidGlass from "./FluidGlass";
 
 const STATS = [
   { value: "8.37", label: "CGPA / 10", suffix: "" },
@@ -51,6 +43,12 @@ const PILLARS = [
 ];
 
 export default function FluidGlassWrapper() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <section id="lens" className="scroll-mt-24 space-y-10">
       {/* ── Section Header ── */}
@@ -97,16 +95,24 @@ export default function FluidGlassWrapper() {
 
       {/* ── 3D Glass Canvas ── */}
       <Reveal delay={0.1}>
-        <FluidGlass
-          mode="lens"
-          lensProps={{
-            scale: 0.25,
-            ior: 1.15,
-            thickness: 5,
-            chromaticAberration: 0.1,
-            anisotropy: 0.01,
-          }}
-        />
+        <div className="relative h-[600px] w-full overflow-hidden rounded-3xl border border-line shadow-2xl">
+          {mounted ? (
+            <FluidGlass
+              mode="lens"
+              lensProps={{
+                scale: 0.25,
+                ior: 1.15,
+                thickness: 5,
+                chromaticAberration: 0.1,
+                anisotropy: 0.01,
+              }}
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center rounded-3xl bg-surface p-8 text-center font-mono text-xs text-foreground/50">
+              Loading Interactive 3D Glass Lens…
+            </div>
+          )}
+        </div>
       </Reveal>
 
       {/* ── Project Spotlights ── */}

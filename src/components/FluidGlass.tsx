@@ -8,17 +8,17 @@ import {
   useFBO,
   useGLTF,
   useScroll,
+  Image,
   Scroll,
   Preload,
   ScrollControls,
   MeshTransmissionMaterial,
-  Text,
-  Float
+  Text
 } from '@react-three/drei';
 import { easing } from 'maath';
 
 export default function FluidGlass({
-  mode: initialMode = 'lens',
+  mode = 'lens',
   lensProps = {},
   barProps = {},
   cubeProps = {}
@@ -28,63 +28,35 @@ export default function FluidGlass({
   barProps?: Record<string, any>;
   cubeProps?: Record<string, any>;
 }) {
-  const [activeMode, setActiveMode] = useState<'lens' | 'bar' | 'cube'>(initialMode);
-
-  const Wrapper = activeMode === 'bar' ? Bar : activeMode === 'cube' ? Cube : Lens;
-  const rawOverrides = activeMode === 'bar' ? barProps : activeMode === 'cube' ? cubeProps : lensProps;
+  const Wrapper = mode === 'bar' ? Bar : mode === 'cube' ? Cube : Lens;
+  const rawOverrides = mode === 'bar' ? barProps : mode === 'cube' ? cubeProps : lensProps;
 
   const {
     navItems = [
-      { label: 'JobSnap (AI)', link: '#projects' },
-      { label: 'Togcode (Realtime)', link: '#projects' },
-      { label: 'TalkSphere (Security)', link: '#projects' },
-      { label: 'Luxure (Experience)', link: '#experience' }
+      { label: 'Projects', link: '#projects' },
+      { label: 'Experience', link: '#experience' },
+      { label: 'Skills', link: '#skills' },
+      { label: 'Contact', link: '#contact' }
     ],
     ...modeProps
   } = rawOverrides;
 
   return (
-    <div className="relative w-full h-[520px] lg:h-[580px] rounded-3xl overflow-hidden border border-line bg-[#0e0e11] shadow-2xl">
-      {/* Top Mode Switcher Bar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 rounded-full border border-line/60 bg-background/80 backdrop-blur-md p-1 font-mono text-[10px] uppercase tracking-wider">
-        {(['lens', 'bar', 'cube'] as const).map((m) => (
-          <button
-            key={m}
-            type="button"
-            onClick={() => setActiveMode(m)}
-            className={`rounded-full px-3 py-1 font-semibold transition-all ${
-              activeMode === m
-                ? 'bg-foreground text-background shadow-sm'
-                : 'text-foreground/70 hover:text-foreground'
-            }`}
-          >
-            {m}
-          </button>
-        ))}
-      </div>
-
-      <Canvas camera={{ position: [0, 0, 20], fov: 15 }} gl={{ alpha: true }}>
-        <ambientLight intensity={2} />
-        <directionalLight position={[10, 10, 10]} intensity={3} />
-        <pointLight position={[-10, -10, -10]} intensity={2} color="#6366f1" />
-        <ScrollControls damping={0.2} pages={2} distance={0.4}>
-          {activeMode === 'bar' && <NavItems items={navItems} />}
-          <Wrapper modeProps={modeProps}>
-            <Scroll>
-              <Typography />
-              <FloatingObjects />
-            </Scroll>
-            <Preload />
-          </Wrapper>
-        </ScrollControls>
-      </Canvas>
-
-      {/* Prominent High-Contrast Overlay Pill */}
-      <div className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-full border border-emerald-500/50 bg-[#091a13]/90 backdrop-blur-md px-5 py-2 font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-400 shadow-[0_4px_25px_rgba(16,185,129,0.3)]">
-        <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
-        <span>Move Mouse & Scroll to Refract 3D Glass</span>
-      </div>
-    </div>
+    <Canvas
+      camera={{ position: [0, 0, 20], fov: 15 }}
+      gl={{ alpha: true }}
+    >
+      <ScrollControls damping={0.2} pages={3} distance={0.4}>
+        {mode === 'bar' && <NavItems items={navItems} />}
+        <Wrapper modeProps={modeProps}>
+          <Scroll>
+            <Typography />
+            <Images />
+          </Scroll>
+          <Preload />
+        </Wrapper>
+      </ScrollControls>
+    </Canvas>
   );
 }
 
@@ -95,50 +67,41 @@ const ModeWrapper = memo(function ModeWrapper({
   lockToBottom = false,
   followPointer = true,
   modeProps = {},
-  defaultShape = 'cylinder',
   ...props
 }: {
   children?: React.ReactNode;
-  glb?: string;
-  geometryKey?: string;
+  glb: string;
+  geometryKey: string;
   lockToBottom?: boolean;
   followPointer?: boolean;
   modeProps?: Record<string, any>;
-  defaultShape?: 'cylinder' | 'box';
   [key: string]: any;
 }) {
   const ref = useRef<THREE.Mesh>(null!);
+  const { nodes } = useGLTF(glb);
   const buffer = useFBO();
   const { viewport: vp } = useThree();
   const [scene] = useState(() => new THREE.Scene());
   const geoWidthRef = useRef(1);
 
-  // Fallback procedural geometry if GLB is not loaded or missing
+  // Fallback procedural geometry so the lens always renders even if the GLB
+  // node name ever changes.
   const fallbackGeometry = useMemo(() => {
-    if (defaultShape === 'box') {
-      return new THREE.BoxGeometry(2.2, 2.2, 0.8);
+    if (geometryKey === 'lens') {
+      return new THREE.CylinderGeometry(1.4, 1.4, 0.5, 64);
     }
-    return new THREE.CylinderGeometry(1.4, 1.4, 0.5, 64);
-  }, [defaultShape]);
+    return new THREE.BoxGeometry(1, 1, 1);
+  }, [geometryKey]);
 
-  let loadedNodes: any = null;
-  try {
-    if (glb) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { nodes } = useGLTF(glb);
-      loadedNodes = nodes;
-    }
-  } catch (e) {
-    loadedNodes = null;
-  }
-
-  const geometry = (geometryKey && loadedNodes?.[geometryKey]?.geometry) || fallbackGeometry;
+  const glbMesh = nodes?.[geometryKey] as THREE.Mesh | undefined;
+  const geometry = glbMesh?.geometry ?? fallbackGeometry;
 
   useEffect(() => {
-    if (geometry) {
-      geometry.computeBoundingBox();
-      if (geometry.boundingBox) {
-        geoWidthRef.current = geometry.boundingBox.max.x - geometry.boundingBox.min.x || 1;
+    const geo = geometry;
+    if (geo) {
+      geo.computeBoundingBox();
+      if (geo.boundingBox) {
+        geoWidthRef.current = geo.boundingBox.max.x - geo.boundingBox.min.x || 1;
       }
     }
   }, [geometry]);
@@ -155,14 +118,15 @@ const ModeWrapper = memo(function ModeWrapper({
     if (modeProps.scale == null) {
       const maxWorld = v.width * 0.9;
       const desired = maxWorld / geoWidthRef.current;
-      ref.current.scale.setScalar(Math.min(0.25, desired));
+      ref.current.scale.setScalar(Math.min(0.15, desired));
     }
 
     gl.setRenderTarget(buffer);
     gl.render(scene, camera);
     gl.setRenderTarget(null);
 
-    gl.setClearColor(0x0e0e11, 1);
+    // Background Color
+    gl.setClearColor(0x5227ff, 1);
   });
 
   const { scale, ior, thickness, anisotropy, chromaticAberration, ...extraMat } = modeProps;
@@ -176,19 +140,17 @@ const ModeWrapper = memo(function ModeWrapper({
       </mesh>
       <mesh
         ref={ref}
-        scale={scale ?? 0.25}
+        scale={scale ?? 0.15}
         rotation-x={Math.PI / 2}
         geometry={geometry}
         {...props}
       >
         <MeshTransmissionMaterial
           buffer={buffer.texture}
-          ior={ior ?? 1.25}
-          thickness={thickness ?? 6}
-          anisotropy={anisotropy ?? 0.02}
-          chromaticAberration={chromaticAberration ?? 0.18}
-          roughness={0}
-          transmission={1}
+          ior={ior ?? 1.15}
+          thickness={thickness ?? 5}
+          anisotropy={anisotropy ?? 0.01}
+          chromaticAberration={chromaticAberration ?? 0.1}
           {...extraMat}
         />
       </mesh>
@@ -198,27 +160,13 @@ const ModeWrapper = memo(function ModeWrapper({
 
 function Lens({ modeProps, ...p }: { modeProps: Record<string, any>; [key: string]: any }) {
   return (
-    <ModeWrapper
-      glb="/assets/3d/lens.glb"
-      geometryKey="Cylinder"
-      defaultShape="cylinder"
-      followPointer
-      modeProps={modeProps}
-      {...p}
-    />
+    <ModeWrapper glb="/assets/3d/lens.glb" geometryKey="lens" followPointer modeProps={modeProps} {...p} />
   );
 }
 
 function Cube({ modeProps, ...p }: { modeProps: Record<string, any>; [key: string]: any }) {
   return (
-    <ModeWrapper
-      glb="/assets/3d/cube.glb"
-      geometryKey="Cube"
-      defaultShape="box"
-      followPointer
-      modeProps={modeProps}
-      {...p}
-    />
+    <ModeWrapper glb="/assets/3d/cube.glb" geometryKey="cube" followPointer modeProps={modeProps} {...p} />
   );
 }
 
@@ -236,8 +184,7 @@ function Bar({ modeProps = {}, ...p }: { modeProps?: Record<string, any>; [key: 
   return (
     <ModeWrapper
       glb="/assets/3d/bar.glb"
-      geometryKey="Cube"
-      defaultShape="box"
+      geometryKey="bar"
       lockToBottom
       followPointer={false}
       modeProps={{ ...defaultMat, ...modeProps }}
@@ -255,9 +202,7 @@ function NavItems({ items }: { items: { label: string; link: string }[] }) {
     tablet: { max: 1023, spacing: 0.24, fontSize: 0.035 },
     desktop: { max: Infinity, spacing: 0.3, fontSize: 0.035 }
   };
-
   const getDevice = () => {
-    if (typeof window === 'undefined') return 'desktop';
     const w = window.innerWidth;
     return w <= DEVICE.mobile.max ? 'mobile' : w <= DEVICE.tablet.max ? 'tablet' : 'desktop';
   };
@@ -268,6 +213,7 @@ function NavItems({ items }: { items: { label: string; link: string }[] }) {
     const onResize = () => setDevice(getDevice());
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { spacing, fontSize } = DEVICE[device as keyof typeof DEVICE];
@@ -284,10 +230,14 @@ function NavItems({ items }: { items: { label: string; link: string }[] }) {
 
   const handleNavigate = (link: string) => {
     if (!link) return;
-    link.startsWith('#') ? (window.location.hash = link) : (window.location.href = link);
+    if (link.startsWith('#')) {
+      window.location.hash = link;
+    } else {
+      window.location.href = link;
+    }
   };
 
-  const extraTextProps: any = {
+  const extraTextProps: Record<string, any> = {
     depthWrite: false,
     depthTest: false,
     renderOrder: 10
@@ -307,7 +257,7 @@ function NavItems({ items }: { items: { label: string; link: string }[] }) {
           outlineColor="#000"
           outlineOpacity={0.5}
           {...extraTextProps}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             handleNavigate(link);
           }}
@@ -321,49 +271,43 @@ function NavItems({ items }: { items: { label: string; link: string }[] }) {
   );
 }
 
-function FloatingObjects() {
-  const torusRef = useRef<THREE.Mesh>(null!);
-  const boxRef = useRef<THREE.Mesh>(null!);
+function Images() {
+  const group = useRef<THREE.Group>(null!);
+  const data = useScroll();
+  const { height } = useThree((s) => s.viewport);
 
-  useFrame((_, delta) => {
-    if (torusRef.current) {
-      torusRef.current.rotation.x += delta * 0.5;
-      torusRef.current.rotation.y += delta * 0.8;
-    }
-    if (boxRef.current) {
-      boxRef.current.rotation.x += delta * 0.6;
-      boxRef.current.rotation.z += delta * 0.4;
-    }
+  useFrame(() => {
+    if (!group.current || group.current.children.length < 5) return;
+    const c = group.current.children as THREE.Mesh[];
+    const mat = (m: THREE.Material | THREE.Material[]) =>
+      m as unknown as { zoom: number };
+    const r1 = data.range(0, 1 / 3) as number;
+    const r2 = data.range(1.15 / 3, 1 / 3) as number;
+    mat(c[0].material).zoom = 1 + r1 / 3;
+    mat(c[1].material).zoom = 1 + r1 / 3;
+    mat(c[2].material).zoom = 1 + r2 / 2;
+    mat(c[3].material).zoom = 1 + r2 / 2;
+    mat(c[4].material).zoom = 1 + r2 / 2;
   });
 
   return (
-    <group>
-      <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-        <mesh ref={torusRef} position={[-2, 0, 2]}>
-          <torusKnotGeometry args={[0.8, 0.25, 128, 32]} />
-          <meshStandardMaterial color="#6366f1" roughness={0.1} metalness={0.8} />
-        </mesh>
-      </Float>
-
-      <Float speed={2.5} rotationIntensity={2} floatIntensity={1.5}>
-        <mesh ref={boxRef} position={[2.2, 0.2, 3]}>
-          <octahedronGeometry args={[1.1]} />
-          <meshStandardMaterial color="#10b981" roughness={0.15} metalness={0.9} />
-        </mesh>
-      </Float>
+    <group ref={group}>
+      <Image position={[-2, 0, 0]} scale={[3, height / 1.1]} url="/assets/demo/cs1.webp" />
+      <Image position={[2, 0, 3]} scale={3} url="/assets/demo/cs2.webp" />
+      <Image position={[-2.05, -height, 6]} scale={[1, 3]} url="/assets/demo/cs3.webp" />
+      <Image position={[-0.6, -height, 9]} scale={[1, 2]} url="/assets/demo/cs1.webp" />
+      <Image position={[0.75, -height, 10.5]} scale={1.5} url="/assets/demo/cs2.webp" />
     </group>
   );
 }
 
 function Typography() {
   const DEVICE = {
-    mobile: { fontSize: 0.22 },
-    tablet: { fontSize: 0.38 },
-    desktop: { fontSize: 0.52 }
+    mobile: { fontSize: 0.2 },
+    tablet: { fontSize: 0.4 },
+    desktop: { fontSize: 0.6 }
   };
-
   const getDevice = () => {
-    if (typeof window === 'undefined') return 'desktop';
     const w = window.innerWidth;
     return w <= 639 ? 'mobile' : w <= 1023 ? 'tablet' : 'desktop';
   };
@@ -382,12 +326,12 @@ function Typography() {
     <Text
       position={[0, 0, 12]}
       fontSize={fontSize}
-      letterSpacing={-0.03}
+      letterSpacing={-0.05}
       outlineWidth={0}
       outlineBlur="20%"
       outlineColor="#000"
       outlineOpacity={0.5}
-      color="#ffffff"
+      color="white"
       anchorX="center"
       anchorY="middle"
     >
