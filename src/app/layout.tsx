@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -74,7 +75,7 @@ const personJsonLd = {
   "@type": "Person",
   name: "Mohammed Musab",
   alternateName: "Shaikh Mohammed Musab",
-  jobTitle: "Full-Stack Engineer & AI Builder",
+  jobTitle: "Software Engineer & Full-Stack Developer",
   description:
     "Computer Engineering graduate building AI-powered products, full-stack applications, real-time collaboration tools, and secure end-to-end encrypted systems.",
   address: {
@@ -103,7 +104,7 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: "Mohammed Musab — Portfolio",
   description:
-    "Portfolio of Mohammed Musab, Full-Stack Engineer & AI Builder based in Mumbai, India.",
+    "Portfolio of Mohammed Musab, Software Engineer & Full-Stack Developer based in Mumbai, India.",
   inLanguage: "en",
 };
 
@@ -119,8 +120,9 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Apply stored/system theme before paint to avoid a flash of the wrong theme */}
-        <script
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`,
           }}

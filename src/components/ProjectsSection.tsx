@@ -1,193 +1,183 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import AnimatedArrowBox from "./AnimatedArrowBox";
 import Reveal from "./Reveal";
+import { GithubIcon } from "./icons";
 import { SITE } from "@/lib/site";
 
-interface Project {
+export interface Project {
   id: string;
   name: string;
+  subtitle: string;
   tag: string;
-  date: string;
-  description: string;
   tech: string[];
   gradient: string;
   github: string;
   live: string;
   accent: string;
   glyph: string;
+  highlights: string[];
 }
 
-const PROJECTS: Project[] = [
+export const PROJECTS: Project[] = [
   {
     id: "jobsnap",
     name: "JobSnap",
-    tag: "Flagship AI Product",
-    date: "2024 — 2025",
-    description:
-      "AI job aggregator that parses CVs, extracts skill matrices, and semantically scores openings against developer roles.",
-    tech: ["LlamaIndex", "Node.js", "Flask", "MongoDB"],
+    subtitle: "Job Search Automation Platform",
+    tag: "AI & Automation Platform",
+    tech: ["Python", "Flask", "Celery", "Redis", "Selenium", "SQLite"],
     gradient:
       "bg-[linear-gradient(145deg,#1e3a8a_0%,#3b82f6_45%,#93c5fd_78%,#dbeafe_100%)]",
     github: "https://github.com/03musab/ai_job_agent",
     live: "https://aijobsnap.vercel.app/",
     accent: "#3b82f6",
-    glyph: "job",
+    glyph: "AI",
+    highlights: [
+      "Multi-platform job aggregation with AI-powered relevance scoring & background processing using Celery/Redis",
+      "Complete application pipeline management with email reporting, Excel exports, & experimental ATS form auto-filling",
+      "User authentication with saved search profiles, resume parsing, & personalized job matching algorithms"
+    ],
   },
   {
     id: "togcode",
     name: "Togcode",
+    subtitle: "Real-Time Collaborative Coding Platform",
     tag: "Real-Time Collaboration",
-    date: "2024 — 2025",
-    description:
-      "Real-time collaborative editor where remote users code together over encrypted WebSocket tunnels with sub-50ms sync.",
-    tech: ["Socket.io", "Monaco", "React", "Node.js"],
+    tech: ["React", "Firebase", "WebSocket", "Context API", "Monaco Editor"],
     gradient:
       "bg-[linear-gradient(145deg,#312e81_0%,#7c3aed_45%,#c4b5fd_78%,#ede9fe_100%)]",
     github: "https://github.com/03musab/togcode",
     live: "https://togcode.vercel.app",
     accent: "#8b5cf6",
     glyph: "</>",
+    highlights: [
+      "Live multi-user code collaboration with sub-50ms real-time sync via Firebase and WebSocket architecture",
+      "Global dark/light theme system via React Context API; full Settings page with token-based CSS design system",
+      "Bidirectional Living Blueprint canvas (visual project planner) with XSS sanitization, rate limiting, & WebP compression",
+      "Comprehensive UI components: Chat Panel, Join Page, AUTH Page with session management"
+    ],
   },
   {
     id: "talksphere",
     name: "TalkSphere",
+    subtitle: "Encrypted Chat Application",
     tag: "Security Engineering",
-    date: "2024 — 2025",
-    description:
-      "Chat gateway with strict end-to-end encryption — AES-GCM payload sealing, ephemeral ECDH keys, tamper detection on every packet.",
-    tech: ["CryptoAPI", "AES-GCM", "ECDH", "React"],
+    tech: ["React", "Node.js", "Stream Chat", "CryptoJS"],
     gradient:
       "bg-[linear-gradient(145deg,#831843_0%,#DB2777_45%,#f472b6_78%,#fbcfe8_100%)]",
     github: "https://github.com/03musab/APSIT-Chat-app",
     live: "https://apsit-chat-frontend.onrender.com/",
     accent: "#db2777",
     glyph: "🔒",
+    highlights: [
+      "End-to-end encryption with dedicated 'encrypted Data' payload sealing",
+      "File encryption/decryption + real-time tamper detection",
+      "DM toggle, security console, & bug resolution in file decryption"
+    ],
   },
 ];
 
-function BrowserMock({ accent, glyph, className = "" }: { accent: string; glyph: string; className?: string }) {
-  return (
-    <div
-      className={`pointer-events-none w-44 sm:w-52 overflow-hidden rounded-xl border-2 border-white/60 bg-white/95 shadow-[0_4px_20px_rgba(0,0,0,0.35),0_15px_50px_-5px_rgba(0,0,0,0.5)] backdrop-blur transition-[transform,filter] duration-500 ${className}`}
-    >
-      <div className="flex items-center gap-1.5 border-b border-neutral-200 px-3 py-2">
-        <span className="size-2 rounded-full bg-red-400" />
-        <span className="size-2 rounded-full bg-amber-400" />
-        <span className="size-2 rounded-full bg-green-400" />
-        <span className="ml-2 h-3 flex-1 rounded-full bg-neutral-200" />
-      </div>
-      <div className="space-y-2 p-3">
-        <div
-          className="h-1.5 w-2/3 rounded-full"
-          style={{ backgroundColor: accent }}
-        />
-        <div className="flex items-center gap-2">
-          <div
-            className="grid size-8 place-items-center rounded-lg text-white text-xs font-mono"
-            style={{ backgroundColor: accent }}
-          >
-            {glyph}
-          </div>
-          <div className="space-y-1 flex-1">
-            <div className="h-1.5 w-full rounded-full bg-neutral-300" />
-            <div className="h-1.5 w-2/3 rounded-full bg-neutral-200" />
-          </div>
-        </div>
-        <div className="h-1.5 w-full rounded-full bg-neutral-200" />
-        <div className="h-1.5 w-5/6 rounded-full bg-neutral-200" />
-      </div>
-    </div>
-  );
-}
-
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <a
-      href={project.live}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group relative block overflow-hidden rounded-2xl border border-line bg-surface p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] transition-transform duration-300 ease-in-out hover:-translate-y-2 lg:rounded-3xl lg:p-2 dark:bg-white/5"
-    >
-      {/* top hairline streak */}
-      <div className="absolute inset-x-0 top-0 z-20 h-px bg-gradient-to-r from-transparent via-foreground/70 to-transparent opacity-60" />
+    <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-foreground/30 lg:rounded-3xl lg:p-8">
+      {/* Top hairline gradient glow */}
+      <div
+        className="absolute inset-x-0 top-0 h-1 opacity-80"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${project.accent}, transparent)`,
+        }}
+      />
 
-      {/* gradient art + mock screens */}
-      <div className="relative aspect-[16/11] overflow-hidden rounded-[10px] lg:rounded-[16px]">
-        <div className={`absolute inset-0 ${project.gradient} transition-[transform,filter] duration-500 group-hover:scale-105 lg:group-hover:brightness-110 lg:group-hover:saturate-125`} />
-        {/* faint grid texture */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.25)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.25)_1px,transparent_1px)] bg-[size:24px_24px] opacity-30" />
-
-        {/* description row */}
-        <div className="relative z-10 flex items-start justify-between gap-3 p-4 text-white lg:p-6">
-          <div className="space-y-1">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/80">
-              {project.tag}
-            </p>
-            <h3 className="font-display text-2xl leading-none tracking-tight lg:text-3xl">
-              {project.name}
-            </h3>
-          </div>
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-white/20 text-white backdrop-blur transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-            <ArrowUpRight size={16} />
+      <div>
+        {/* Header bar */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <span
+            className="rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] font-semibold"
+            style={{
+              color: project.accent,
+              backgroundColor: `${project.accent}15`,
+              border: `1px solid ${project.accent}30`,
+            }}
+          >
+            {project.tag}
           </span>
-        </div>
-
-        <p className="relative z-10 hidden px-4 pb-2 text-xs leading-relaxed text-white/90 lg:block lg:px-6 lg:max-w-[26rem]">
-          {project.description}
-        </p>
-
-        {/* overlapping screens, parallax on hover */}
-        <div className="absolute inset-x-0 bottom-4 flex justify-center lg:bottom-6">
-          <div className="relative flex">
-            <BrowserMock
-              accent={project.accent}
-              glyph={project.glyph}
-              className="z-10 rotate-[-3deg] scale-[1.02] translate-x-4 translate-y-[2%] transition-transform duration-500 group-hover:-translate-x-2 group-hover:-translate-y-[4%] group-hover:rotate-[-6deg]"
-            />
-            <BrowserMock
-              accent={project.accent}
-              glyph={project.glyph}
-              className="-translate-x-4 rotate-[3deg] scale-95 translate-y-[4%] brightness-90 transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-[2%] group-hover:rotate-[6deg]"
-            />
+          <div className="flex items-center gap-2">
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grid size-8 place-items-center rounded-full border border-line bg-background/50 text-foreground/70 transition-colors hover:border-foreground hover:text-foreground"
+              title="View Source Code"
+            >
+              <GithubIcon size={14} />
+            </a>
+            <a
+              href={project.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grid size-8 place-items-center rounded-full border border-line bg-background/50 text-foreground/70 transition-colors hover:border-foreground hover:text-foreground"
+              title="Visit Live Application"
+            >
+              <ExternalLink size={14} />
+            </a>
           </div>
         </div>
+
+        {/* Title */}
+        <div className="mt-5 space-y-1">
+          <h3 className="font-display text-2xl font-bold tracking-tight text-foreground lg:text-3xl">
+            {project.name}
+          </h3>
+          <p className="font-mono text-xs text-foreground/60">
+            {project.subtitle}
+          </p>
+        </div>
+
+        {/* Highlights List */}
+        <ul className="mt-5 space-y-2 text-xs leading-relaxed text-foreground/75 lg:text-sm">
+          {project.highlights.map((bullet, idx) => (
+            <li key={idx} className="flex items-start gap-2">
+              <span className="mt-1.5 size-1 shrink-0 rounded-full bg-foreground/40" />
+              <span>{bullet}</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* footer: date badge + tech chips */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 px-2 py-3 lg:px-3">
-        <span className="rounded-full bg-muted px-3 py-1 font-mono text-[10px] uppercase tracking-[0.18em] text-foreground/70">
-          {project.date}
-        </span>
+      {/* Tech Chips Footer */}
+      <div className="mt-6 border-t border-line/60 pt-4">
         <div className="flex flex-wrap gap-1.5">
           {project.tech.map((t) => (
             <span
               key={t}
-              className="rounded-md bg-foreground/5 px-2 py-1 font-mono text-[10px] font-medium uppercase tracking-wide text-foreground/70"
+              className="rounded-md border border-line/50 bg-background/60 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wide text-foreground/70"
             >
               {t}
             </span>
           ))}
         </div>
       </div>
-    </a>
+    </div>
   );
 }
 
 export default function ProjectsSection() {
   return (
-    <section id="work" className="scroll-mt-24 space-y-pagebuilder">
+    <section id="projects" className="scroll-mt-24 space-y-10">
       <Reveal>
         <div className="space-y-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
-            Case Studies
+            Featured Projects
           </p>
           <h2 className="heading-glow font-display text-4xl tracking-tight lg:text-6xl">
-            Curated <em className="text-colorfull animate-gradient-x italic">work</em>
+            Production-grade <em className="text-colorfull animate-gradient-x italic">applications</em>
           </h2>
+          <p className="max-w-xl text-sm leading-relaxed text-foreground/60">
+            Built from scratch with focus on real-time sync, AI automation, and cryptographic security.
+          </p>
         </div>
       </Reveal>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-pagebuilder">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {PROJECTS.map((project, i) => (
           <Reveal key={project.id} delay={i * 0.08}>
             <ProjectCard project={project} />
@@ -202,7 +192,7 @@ export default function ProjectsSection() {
           rel="noopener noreferrer"
           className="group mx-auto flex w-fit items-center gap-3 font-mono text-[11px] uppercase tracking-[0.24em] text-foreground/70 transition-colors hover:text-foreground"
         >
-          <span>See more projects</span>
+          <span>Explore all repositories on GitHub</span>
           <AnimatedArrowBox direction="up-right" />
         </a>
       </Reveal>

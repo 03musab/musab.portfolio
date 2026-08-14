@@ -4,19 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Command, CornerDownLeft, Search } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
-import { SITE } from "@/lib/site";
-
-const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/#about" },
-  { label: "Work", href: "/#work" },
-  { label: "Contact", href: "/#contact" },
-];
+import { SITE, SECTION_LINKS } from "@/lib/site";
 
 const COMMANDS = [
-  { label: "Home", hint: "Go to homepage", href: "/" },
-  { label: "About me", hint: "Know about me", href: "/#about" },
-  { label: "Case studies", hint: "See my work", href: "/#work" },
+  { label: "Home", hint: "Go to top", href: "/" },
+  { label: "About", hint: "Profile summary & bio", href: "/#about" },
+  { label: "Technical Skills", hint: "Languages & Frameworks", href: "/#skills" },
+  { label: "Experience", hint: "Work history", href: "/#experience" },
+  { label: "Projects", hint: "Production-grade apps", href: "/#projects" },
+  { label: "Education", hint: "Academic background", href: "/#education" },
+  { label: "Certifications", hint: "AWS & Oracle credentials", href: "/#certifications" },
   { label: "Get in touch", hint: "Open contact", href: "/#contact" },
   { label: "GitHub", hint: "External link", href: SITE.github, external: true },
   { label: "LinkedIn", hint: "External link", href: SITE.linkedin, external: true },
@@ -58,20 +55,20 @@ export default function SiteHeader() {
             <span className="text-colorfull animate-gradient-x font-display text-lg italic">M</span>
           </span>
           <span className="hidden font-mono text-xs uppercase tracking-[0.24em] text-foreground/60 sm:block">
-            {SITE.name.split(" ")[0]} Musab
+            {SITE.name}
           </span>
         </Link>
 
         {/* Centered pill nav */}
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-1 rounded-full border border-line bg-surface px-1.5 py-1 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.22)] md:flex dark:bg-neutral-800"
+          className="hidden items-center gap-1 rounded-full border border-line bg-surface px-1.5 py-1 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.22)] md:flex"
         >
-          {NAV_LINKS.map((item) => (
+          {SECTION_LINKS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`rounded-full px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.18em] transition-colors ${
+              className={`rounded-full px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
                 item.label === "Contact"
                   ? "bg-foreground text-background hover:opacity-85"
                   : "text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
@@ -96,14 +93,14 @@ export default function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile nav — simple row under the bar */}
-      <div className="mx-auto mt-3 flex max-w-6xl items-center justify-between gap-2 md:hidden">
-        <nav aria-label="Primary mobile" className="flex items-center gap-1">
-          {NAV_LINKS.map((item) => (
+      {/* Mobile nav */}
+      <div className="mx-auto mt-3 flex max-w-6xl items-center justify-center gap-1.5 md:hidden">
+        <nav aria-label="Primary mobile" className="flex flex-wrap items-center justify-center gap-1">
+          {SECTION_LINKS.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full border border-line bg-surface px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] text-foreground/70"
+              className="rounded-full border border-line bg-surface px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-foreground/70"
             >
               {item.label}
             </Link>
