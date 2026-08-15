@@ -23,6 +23,43 @@ const COMMANDS = [
 export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Glass bar: turn on the frosted background once the page is scrolled.
+  // Also track overall page scroll progress for the header progress bar.
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
+  // Scroll-spy: highlight the nav item for the section currently in view.
+  useEffect(() => {
+    const ids = SECTION_LINKS.map((l) => l.href.replace("/#", ""));
+    const onScroll = () => {
+      let current: string | null = null;
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= 120) current = id;
+      }
+      setActiveSection(current);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const filtered = COMMANDS.filter((c) =>
     c.label.toLowerCase().includes(query.toLowerCase()),
@@ -47,11 +84,24 @@ export default function SiteHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full px-4 pt-4 lg:px-8">
+    <header
+      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+        scrolled
+          ? "border-b border-line/60 bg-background/60 px-4 pb-3 pt-3 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.25)] backdrop-blur-xl backdrop-saturate-150 lg:px-8"
+          : "bg-transparent px-4 pt-4 lg:px-8"
+      }`}
+    >
+      {/* Scroll progress bar (bottom edge of the header) */}
+      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-transparent">
+        <div
+          className="h-full bg-gradient-to-r from-[#ff8000] via-[#f0c] to-[#04f] transition-[width] duration-150 ease-out"
+          style={{ width: `${Math.round(progress * 100)}%` }}
+        />
+      </div>
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
         {/* Monogram */}
         <Link href="/" aria-label="Homepage" className="group flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-full border border-line bg-surface shadow-[0_2px_8px_rgba(0,0,0,0.06)] transition-transform duration-300 group-hover:-rotate-12">
+          <span className="grid size-10 place-items-center rounded-full border border-line/70 bg-background/50 shadow-[0_2px_8px_rgba(0,0,0,0.06)] backdrop-blur-md transition-transform duration-300 group-hover:-rotate-12">
             <span className="text-colorfull animate-gradient-x font-display text-lg italic">M</span>
           </span>
           <span className="hidden font-mono text-xs uppercase tracking-[0.24em] text-foreground/60 sm:block">
@@ -62,21 +112,24 @@ export default function SiteHeader() {
         {/* Centered pill nav */}
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-1 rounded-full border border-line bg-surface px-1.5 py-1 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.22)] md:flex"
+          className="hidden items-center gap-1 rounded-full border border-line/70 bg-background/50 px-1.5 py-1 shadow-[0_10px_30px_-14px_rgba(0,0,0,0.22)] backdrop-blur-xl backdrop-saturate-150 md:flex"
         >
-          {SECTION_LINKS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-full px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
-                item.label === "Contact"
-                  ? "bg-foreground text-background hover:opacity-85"
-                  : "text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {SECTION_LINKS.map((item) => {
+            const isActive = activeSection === item.href.replace("/#", "");
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-full px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors ${
+                  isActive
+                    ? "bg-foreground text-background hover:opacity-85"
+                    : "text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Actions */}
@@ -85,7 +138,7 @@ export default function SiteHeader() {
           <button
             type="button"
             onClick={openMenu}
-            className="grid size-9 place-items-center rounded-full border border-line bg-surface text-foreground/70 shadow-sm transition-colors hover:text-foreground"
+            className="grid size-9 place-items-center rounded-full border border-line/70 bg-background/50 text-foreground/70 shadow-sm backdrop-blur-md transition-colors hover:text-foreground"
             aria-label="Open command menu"
           >
             <Search size={15} />
@@ -100,7 +153,7 @@ export default function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-full border border-line bg-surface px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-foreground/70"
+              className="rounded-full border border-line/70 bg-background/40 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.14em] text-foreground/70 backdrop-blur-md"
             >
               {item.label}
             </Link>

@@ -4,44 +4,6 @@ import { useEffect, useState } from "react";
 import Reveal from "./Reveal";
 import FluidGlass from "./FluidGlass";
 
-const STATS = [
-  { value: "8.37", label: "CGPA / 10", suffix: "" },
-  { value: "50", label: "ms Collab Latency", suffix: "<" },
-  { value: "3+", label: "Cloud Certs", suffix: "" },
-  { value: "3", label: "Live Projects", suffix: "" },
-];
-
-const PROJECTS = [
-  {
-    tag: "AI Automation",
-    name: "JobSnap",
-    desc: "Autonomous job-hunting pipeline. Scrapes 1,000s of listings via Selenium, scores them with AI, and fires Celery + Redis workers to auto-apply — while you sleep.",
-    stack: ["Python", "Flask", "Celery", "Redis", "Selenium", "SQLite"],
-    color: "#f59e0b",
-  },
-  {
-    tag: "Real-time Systems",
-    name: "Togcode",
-    desc: "Sub-50 ms collaborative IDE in the browser. Operational-transform sync engine over WebSockets, Monaco Editor with multi-cursor, and instant Firebase auth.",
-    stack: ["React", "Firebase", "WebSocket", "Context API", "Monaco Editor"],
-    color: "#6366f1",
-  },
-  {
-    tag: "Secure Comms",
-    name: "TalkSphere",
-    desc: "End-to-end encrypted group chat. Every message wrapped in AES-GCM before hitting the wire, Stream Chat for delivery, and a zero-knowledge key handshake.",
-    stack: ["React", "Node.js", "Stream Chat", "CryptoJS", "AES-GCM"],
-    color: "#10b981",
-  },
-];
-
-const PILLARS = [
-  { icon: "⚙️", label: "Backend Systems", detail: "Flask · Node.js · REST APIs · Celery task queues" },
-  { icon: "🖥️", label: "Frontend Craft", detail: "React · Next.js · Monaco Editor · WebSockets" },
-  { icon: "☁️", label: "Cloud & DevOps", detail: "AWS (Foundations + Architecting) · Oracle OCI · Zscaler ZTNA" },
-  { icon: "🔒", label: "Security", detail: "AES-GCM encryption · Zero-knowledge key handshake · ZTNA" },
-];
-
 export default function FluidGlassWrapper() {
   const [mounted, setMounted] = useState(false);
 
@@ -61,41 +23,13 @@ export default function FluidGlassWrapper() {
             Software engineering through{" "}
             <em className="text-colorfull animate-gradient-x italic">a new lens</em>
           </h2>
-          <p className="max-w-2xl text-sm leading-relaxed text-foreground/60">
-            B.E. Computer Engineering &apos;26 · CGPA 8.37/10 · Mumbai, India.
-            I build systems that{" "}
-            <span className="font-semibold text-foreground">automate work</span>,{" "}
-            <span className="font-semibold text-foreground">sync in real-time</span>, and{" "}
-            <span className="font-semibold text-foreground">protect data at rest and in transit</span>.
-          </p>
-        </div>
-      </Reveal>
 
-      {/* ── Headline Stats ── */}
-      <Reveal delay={0.05}>
-        <div className="grid grid-cols-2 gap-px rounded-2xl overflow-hidden border border-line sm:grid-cols-4">
-          {STATS.map(({ value, label, suffix }) => (
-            <div
-              key={label}
-              className="flex flex-col items-center justify-center gap-1 bg-surface p-5 text-center"
-            >
-              <span className="font-display text-3xl font-bold tracking-tight text-foreground">
-                {suffix && (
-                  <span className="text-lg text-foreground/50 mr-0.5">{suffix}</span>
-                )}
-                {value}
-              </span>
-              <span className="font-mono text-[9px] uppercase tracking-widest text-foreground/45">
-                {label}
-              </span>
-            </div>
-          ))}
         </div>
       </Reveal>
 
       {/* ── 3D Glass Canvas ── */}
       <Reveal delay={0.1}>
-        <div className="relative h-[600px] w-full overflow-hidden rounded-3xl border border-line shadow-2xl">
+        <div className="relative h-[220px] w-full overflow-hidden rounded-2xl border border-line shadow-2xl">
           {mounted ? (
             <FluidGlass
               mode="lens"
@@ -108,75 +42,10 @@ export default function FluidGlassWrapper() {
               }}
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center rounded-3xl bg-surface p-8 text-center font-mono text-xs text-foreground/50">
+            <div className="flex h-full w-full items-center justify-center rounded-2xl bg-surface p-8 text-center font-mono text-xs text-foreground/50">
               Loading Interactive 3D Glass Lens…
             </div>
           )}
-        </div>
-      </Reveal>
-
-      {/* ── Project Spotlights ── */}
-      <Reveal delay={0.15}>
-        <div className="space-y-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-foreground/40">
-            Signature Work
-          </p>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {PROJECTS.map(({ tag, name, desc, stack, color }) => (
-              <div
-                key={name}
-                className="group relative flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              >
-                <div
-                  className="absolute top-0 left-6 right-6 h-[2px] rounded-full opacity-60 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{ background: color }}
-                />
-                <div className="flex items-center gap-2 pt-1">
-                  <span
-                    className="rounded-full px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider"
-                    style={{ background: `${color}18`, color }}
-                  >
-                    {tag}
-                  </span>
-                </div>
-                <h3 className="font-display text-xl font-semibold tracking-tight text-foreground">
-                  {name}
-                </h3>
-                <p className="text-xs leading-relaxed text-foreground/60">{desc}</p>
-                <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-                  {stack.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md border border-line bg-muted px-2 py-0.5 font-mono text-[9px] text-foreground/60"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Reveal>
-
-      {/* ── Technical Pillars ── */}
-      <Reveal delay={0.2}>
-        <div className="space-y-3">
-          <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-foreground/40">
-            Technical Pillars
-          </p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {PILLARS.map(({ icon, label, detail }) => (
-              <div
-                key={label}
-                className="flex flex-col gap-2 rounded-xl border border-line bg-surface p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-foreground/20"
-              >
-                <span className="text-2xl">{icon}</span>
-                <p className="text-xs font-semibold text-foreground">{label}</p>
-                <p className="text-[10px] leading-relaxed text-foreground/50">{detail}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </Reveal>
 

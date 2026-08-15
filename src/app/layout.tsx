@@ -116,7 +116,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${outfit.variable} ${instrument.variable} ${jetbrainsMono.variable} h-full antialiased w-full overflow-x-hidden`}
+      className={`${outfit.variable} ${instrument.variable} ${jetbrainsMono.variable} h-full antialiased w-full overflow-x-clip`}
       suppressHydrationWarning
     >
       <head>
@@ -128,7 +128,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col w-full overflow-x-hidden">
+      <body className="min-h-full flex flex-col w-full overflow-x-clip">
         {/* Structured data (JSON-LD) for search engines & AI */}
         <script
           type="application/ld+json"

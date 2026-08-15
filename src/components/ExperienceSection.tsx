@@ -32,7 +32,6 @@ export const EXPERIENCES: ExperienceItem[] = [
     role: "Digital Experience Developer [Freelance]",
     type: "Remote",
     dates: "Jan 2025 – Feb 2025",
-    link: "https://fzcreationbags.in",
     bullets: [
       "Developed a fully responsive e-commerce site for a bag/accessory business using HTML, CSS, JS, Bootstrap.",
       "Built product listing pages, enquiry system, and responsive design with fast load times.",

@@ -51,7 +51,9 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
-  overflow-x: hidden;
+  /* clip (not hidden): prevents horizontal overflow without creating a
+     scroll container, which would break position: sticky on the header. */
+  overflow-x: clip;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
@@ -176,18 +178,6 @@ body {
   }
 }
 
-/* ─── Hatched diagonal stripe divider ───────────────────────────────────── */
-.hatched-divider {
-  height: 1.75rem;
-  border-top: 1px solid var(--border);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--hairline) 0px,
-    var(--hairline) 1px,
-    transparent 1px,
-    transparent 6px
-  );
-}
 
 /* ─── Marquee (contact section) ─────────────────────────────────────────── */
 .marquee {

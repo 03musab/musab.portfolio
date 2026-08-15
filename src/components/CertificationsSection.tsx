@@ -1,13 +1,21 @@
 import React from "react";
 import Reveal from "./Reveal";
-import { Award, ExternalLink, ShieldCheck, Cloud } from "lucide-react";
+import {
+  Cloud,
+  ExternalLink,
+  GraduationCap,
+  Landmark,
+  ShieldCheck,
+  ShoppingBag,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export interface CertificationItem {
   title: string;
   issuer: string;
   date: string;
   link?: string;
-  badge: string;
+  badge: LucideIcon;
 }
 
 export const CERTIFICATIONS: CertificationItem[] = [
@@ -16,40 +24,40 @@ export const CERTIFICATIONS: CertificationItem[] = [
     issuer: "AWS – Amazon Web Services",
     date: "Dec 2024 & Apr 2025",
     link: "https://www.credly.com/badges/06cb6f51-843b-48ee-8398-89ab1948a18f/linked_in_profile",
-    badge: "☁️",
+    badge: Cloud,
   },
   {
     title: "AWS Academy Graduate – Cloud Architecting",
     issuer: "AWS – Amazon Web Services",
     date: "Dec 2024",
     link: "https://www.credly.com/badges/438571e8-3806-43b9-b9f7-9fbf30c8679a/print",
-    badge: "☁️",
+    badge: Cloud,
   },
   {
     title: "Oracle Cloud Infrastructure Classic 2025 Multicloud Architect Professional",
     issuer: "Oracle",
     date: "2025",
     link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=7496B34650FE9CF00F5504986C047DB8C91ABE28B7E8699EC404E5A1318AF8FA",
-    badge: "🏛️",
+    badge: Landmark,
   },
   {
     title: "Intro to Networking for Cyber Professionals",
     issuer: "Zscaler",
     date: "Aug 2024 – Aug 2027",
     link: "https://www.credly.com/badges/340bbf41-97ee-4ae2-89fa-05b641bd10b3/public_url",
-    badge: "🛡️",
+    badge: ShieldCheck,
   },
   {
     title: "Soft Skills & Employability Training",
     issuer: "Wadhwani Foundation",
     date: "Apr 2025",
-    badge: "🎓",
+    badge: GraduationCap,
   },
   {
     title: "Certificate in E-Commerce – Level 1",
     issuer: "Flipkart Grid",
     date: "Aug 2024",
-    badge: "🛍️",
+    badge: ShoppingBag,
   },
 ];
 
@@ -76,7 +84,7 @@ export default function CertificationsSection() {
             <div className="flex h-full flex-col justify-between space-y-3 rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-foreground/30">
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-2xl">{cert.badge}</span>
+                  <cert.badge size={24} className="text-foreground/80" strokeWidth={1.75} />
                   <span className="rounded-full border border-line/50 bg-background/60 px-2.5 py-0.5 font-mono text-[10px] text-foreground/60">
                     {cert.date}
                   </span>

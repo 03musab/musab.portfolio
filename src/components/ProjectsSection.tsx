@@ -89,9 +89,9 @@ function ProjectCard({ project }: { project: Project }) {
 
       <div>
         {/* Header bar */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3">
           <span
-            className="rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] font-semibold"
+            className="min-w-0 truncate rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] font-semibold"
             style={{
               color: project.accent,
               backgroundColor: `${project.accent}15`,
@@ -100,7 +100,7 @@ function ProjectCard({ project }: { project: Project }) {
           >
             {project.tag}
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <a
               href={project.github}
               target="_blank"

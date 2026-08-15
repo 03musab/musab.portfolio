@@ -35,7 +35,7 @@ export default function NotFound() {
             Back to homepage
           </Link>
           <Link
-            href="/#work"
+            href="/#projects"
             className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
           >
             View projects

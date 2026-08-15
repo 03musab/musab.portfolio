@@ -7,7 +7,7 @@ const LINK_CARDS = [
   {
     label: "Case studies",
     note: "Three systems built end-to-end",
-    href: "/#work",
+    href: "/#projects",
     external: false,
   },
   {
@@ -36,7 +36,7 @@ const COLUMNS = [
     links: [
       { label: "/", href: "/" },
       { label: "/about", href: "/#about" },
-      { label: "/work", href: "/#work" },
+      { label: "/projects", href: "/#projects" },
       { label: "/contact", href: "/#contact" },
     ],
   },
@@ -153,8 +153,6 @@ export default function SiteFooter() {
         </div>
       </div>
 
-      {/* Hatched stripe divider */}
-      <div className="hatched-divider" />
     </footer>
   );
 }

@@ -8,6 +8,7 @@ import ExperienceSection from "@/components/ExperienceSection";
 import EducationSection from "@/components/EducationSection";
 import CertificationsSection from "@/components/CertificationsSection";
 import FluidGlassWrapper from "@/components/FluidGlassWrapper";
+import GitHubSection from "@/components/GitHubSection";
 import Reveal from "@/components/Reveal";
 import OpenToWorkBadge from "@/components/OpenToWorkBadge";
 import { SITE } from "@/lib/site";
@@ -19,21 +20,17 @@ export default function Page() {
 
       <main className="flex-1">
         {/* ── HERO ─────────────────────────────────────────────── */}
-        <section id="hero" className="relative overflow-hidden pt-12 lg:pt-16">
-          {/* blurred background glow */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute top-[10%] -left-[18%] h-[min(42vw,420px)] w-[min(42vw,420px)] rounded-full bg-neutral-400/25 blur-3xl dark:bg-neutral-200/5"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute bottom-[4%] -right-[12%] h-[min(36vw,380px)] w-[min(36vw,380px)] rounded-full bg-neutral-400/20 blur-3xl dark:bg-neutral-200/4"
-          />
+        <section id="hero" className="relative pt-12 lg:pt-16">
+          {/* blurred background glow — clipped so they don't cause scroll */}
+          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+            <div className="pointer-events-none absolute top-[10%] -left-[18%] h-[min(42vw,420px)] w-[min(42vw,420px)] rounded-full bg-neutral-400/25 blur-3xl dark:bg-neutral-200/5" />
+            <div className="pointer-events-none absolute bottom-[4%] -right-[12%] h-[min(36vw,380px)] w-[min(36vw,380px)] rounded-full bg-neutral-400/20 blur-3xl dark:bg-neutral-200/4" />
+          </div>
 
           <div className="relative mx-auto max-w-6xl px-6 lg:px-8">
-            <div className="grid items-center gap-12 xl:grid-cols-12 xl:gap-8 xl:min-h-[calc(100svh-8rem)]">
+            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8 lg:min-h-[calc(100svh-8rem)]">
               {/* Left — headline */}
-              <div className="space-y-6 xl:col-span-7">
+              <div className="space-y-6 lg:col-span-7">
                 <span
                   className="fade-rise inline-flex w-fit items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.24em] text-foreground/70"
                   style={{ animationDelay: "0.1s" }}
@@ -46,7 +43,7 @@ export default function Page() {
                 </span>
 
                 <h1
-                  className="fade-rise font-display text-[clamp(2.8rem,10vw,6.5rem)] leading-[1.02] tracking-tight"
+                  className="fade-rise font-display text-[clamp(2.8rem,10vw,6.5rem)] leading-[1.18] tracking-tight pb-[0.06em]"
                   style={{ animationDelay: "0.2s" }}
                 >
                   <span className="block">Software</span>
@@ -129,48 +126,31 @@ export default function Page() {
                 </div>
               </div>
 
-              {/* Right — avatar/photo card */}
-              <div className="fade-rise flex justify-center xl:col-span-5" style={{ animationDelay: "0.5s" }}>
-                <div className="relative w-fit pb-16">
-                  {/* Photo frame */}
-                  <div className="relative w-56 rotate-[-2deg] rounded-[24px] border border-line bg-surface p-2.5 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] sm:w-64">
-                    <div className="relative aspect-[4/5] overflow-hidden rounded-[16px] bg-muted">
+              {/* Right — avatar photo */}
+              <div className="fade-rise flex justify-center lg:col-span-5" style={{ animationDelay: "0.5s" }}>
+                <div className="relative">
+                  <div className="relative w-64 rotate-[3deg] overflow-hidden rounded-[32px] border-2 border-line bg-surface shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] sm:w-72">
+                    <div className="relative aspect-[4/5] bg-muted">
                       <Image
                         src="/avatar.png"
                         alt="Mohammed Musab — Software Engineer"
                         fill
                         className="object-cover"
-                        sizes="256px"
+                        sizes="288px"
                         priority
                       />
                     </div>
                   </div>
-                  {/* Floating Academic Badge */}
-                  <div className="absolute -top-6 -left-8 hidden w-36 rotate-[-6deg] rounded-xl border border-line bg-surface p-3 shadow-lg sm:block">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-foreground/50">
-                      Degree
-                    </p>
-                    <p className="mt-1 font-display text-sm font-bold text-foreground">
-                      B.E. Computer Engineering
-                    </p>
-                    <p className="font-mono text-[10px] text-emerald-400 font-semibold mt-0.5">
-                      CGPA: 8.37 / 10
-                    </p>
-                  </div>
-                  {/* Status chip */}
-                  <div className="absolute -bottom-4 right-0 flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 shadow-md">
-                    <span className="size-2 rounded-full bg-emerald-500 animate-ping" />
-                    <span className="font-mono text-[9px] uppercase tracking-[0.2em] font-medium text-foreground/80">
-                      Available for full-time roles
-                    </span>
+                  {/* Floating badge */}
+                  <div className="absolute -bottom-3 -right-3 rounded-full border border-line bg-surface px-3 py-1.5 shadow-md">
+                    <span className="font-mono text-[9px] font-semibold text-foreground">🚀 Open to work</span>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </section>
-
-        <div className="hatched-divider" />
 
         {/* ── ABOUT ────────────────────────────────────────────── */}
         <section id="about" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-pagebuilder lg:px-8">
@@ -202,49 +182,40 @@ export default function Page() {
           </div>
         </section>
 
-        <div className="hatched-divider" />
-
         {/* ── SKILLS ───────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <SkillsSection />
         </div>
-
-        <div className="hatched-divider" />
 
         {/* ── 3D FLUID GLASS SHOWCASE ───────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <FluidGlassWrapper />
         </div>
 
-        <div className="hatched-divider" />
-
         {/* ── EXPERIENCE ───────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <ExperienceSection />
         </div>
-
-        <div className="hatched-divider" />
 
         {/* ── PROJECTS ─────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <ProjectsSection />
         </div>
 
-        <div className="hatched-divider" />
+        {/* ── GITHUB ─────────────────────────────────────────── */}
+        <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
+          <GitHubSection />
+        </div>
 
         {/* ── EDUCATION ────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <EducationSection />
         </div>
 
-        <div className="hatched-divider" />
-
         {/* ── CERTIFICATIONS ───────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <CertificationsSection />
         </div>
-
-        <div className="hatched-divider" />
 
         {/* ── CONTACT ──────────────────────────────────────────── */}
         <section id="contact" className="relative overflow-hidden pt-pagebuilder">

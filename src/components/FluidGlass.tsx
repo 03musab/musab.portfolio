@@ -7,15 +7,26 @@ import { Canvas, createPortal, useFrame, useThree } from '@react-three/fiber';
 import {
   useFBO,
   useGLTF,
-  useScroll,
   Image,
-  Scroll,
   Preload,
-  ScrollControls,
   MeshTransmissionMaterial,
   Text
 } from '@react-three/drei';
 import { easing } from 'maath';
+
+// three r185+ deprecated THREE.Clock, but @react-three/fiber (v9 — the latest
+// stable) still constructs one internally on every Canvas, which logs the
+// deprecation warning to the console. Route three's console output through a
+// filter that drops just that message and forwards everything else unchanged.
+// Remove this once fiber moves over to THREE.Timer.
+if (typeof THREE.setConsoleFunction === 'function') {
+  THREE.setConsoleFunction((type, message, ...params) => {
+    if (type === 'warn' && message.startsWith('THREE.Clock: This module has been deprecated')) {
+      return;
+    }
+    console[type](message, ...params);
+  });
+}
 
 export default function FluidGlass({
   mode = 'lens',
@@ -46,16 +57,11 @@ export default function FluidGlass({
       camera={{ position: [0, 0, 20], fov: 15 }}
       gl={{ alpha: true }}
     >
-      <ScrollControls damping={0.2} pages={3} distance={0.4}>
-        {mode === 'bar' && <NavItems items={navItems} />}
-        <Wrapper modeProps={modeProps}>
-          <Scroll>
-            <Typography />
-            <Images />
-          </Scroll>
-          <Preload />
-        </Wrapper>
-      </ScrollControls>
+      <Wrapper modeProps={modeProps}>
+        <Typography />
+        <Images />
+        <Preload />
+      </Wrapper>
     </Canvas>
   );
 }
@@ -84,8 +90,6 @@ const ModeWrapper = memo(function ModeWrapper({
   const [scene] = useState(() => new THREE.Scene());
   const geoWidthRef = useRef(1);
 
-  // Fallback procedural geometry so the lens always renders even if the GLB
-  // node name ever changes.
   const fallbackGeometry = useMemo(() => {
     if (geometryKey === 'lens') {
       return new THREE.CylinderGeometry(1.4, 1.4, 0.5, 64);
@@ -125,7 +129,6 @@ const ModeWrapper = memo(function ModeWrapper({
     gl.render(scene, camera);
     gl.setRenderTarget(null);
 
-    // Background Color
     gl.setClearColor(0x5227ff, 1);
   });
 
@@ -193,119 +196,42 @@ function Bar({ modeProps = {}, ...p }: { modeProps?: Record<string, any>; [key: 
   );
 }
 
-function NavItems({ items }: { items: { label: string; link: string }[] }) {
-  const group = useRef<THREE.Group>(null!);
-  const { viewport, camera } = useThree();
-
-  const DEVICE = {
-    mobile: { max: 639, spacing: 0.2, fontSize: 0.035 },
-    tablet: { max: 1023, spacing: 0.24, fontSize: 0.035 },
-    desktop: { max: Infinity, spacing: 0.3, fontSize: 0.035 }
-  };
-  const getDevice = () => {
-    const w = window.innerWidth;
-    return w <= DEVICE.mobile.max ? 'mobile' : w <= DEVICE.tablet.max ? 'tablet' : 'desktop';
-  };
-
-  const [device, setDevice] = useState(getDevice());
-
-  useEffect(() => {
-    const onResize = () => setDevice(getDevice());
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const { spacing, fontSize } = DEVICE[device as keyof typeof DEVICE];
-
-  useFrame(() => {
-    if (!group.current) return;
-    const v = viewport.getCurrentViewport(camera, [0, 0, 15]);
-    group.current.position.set(0, -v.height / 2 + 0.2, 15.1);
-
-    group.current.children.forEach((child, i) => {
-      child.position.x = (i - (items.length - 1) / 2) * spacing;
-    });
-  });
-
-  const handleNavigate = (link: string) => {
-    if (!link) return;
-    if (link.startsWith('#')) {
-      window.location.hash = link;
-    } else {
-      window.location.href = link;
-    }
-  };
-
-  const extraTextProps: Record<string, any> = {
-    depthWrite: false,
-    depthTest: false,
-    renderOrder: 10
-  };
-
-  return (
-    <group ref={group} renderOrder={10}>
-      {items.map(({ label, link }) => (
-        <Text
-          key={label}
-          fontSize={fontSize}
-          color="white"
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0}
-          outlineBlur="20%"
-          outlineColor="#000"
-          outlineOpacity={0.5}
-          {...extraTextProps}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNavigate(link);
-          }}
-          onPointerOver={() => (document.body.style.cursor = 'pointer')}
-          onPointerOut={() => (document.body.style.cursor = 'auto')}
-        >
-          {label}
-        </Text>
-      ))}
-    </group>
-  );
-}
-
 function Images() {
   const group = useRef<THREE.Group>(null!);
-  const data = useScroll();
   const { height } = useThree((s) => s.viewport);
 
   useFrame(() => {
-    if (!group.current || group.current.children.length < 5) return;
-    const c = group.current.children as THREE.Mesh[];
-    const mat = (m: THREE.Material | THREE.Material[]) =>
-      m as unknown as { zoom: number };
-    const r1 = data.range(0, 1 / 3) as number;
-    const r2 = data.range(1.15 / 3, 1 / 3) as number;
-    mat(c[0].material).zoom = 1 + r1 / 3;
-    mat(c[1].material).zoom = 1 + r1 / 3;
-    mat(c[2].material).zoom = 1 + r2 / 2;
-    mat(c[3].material).zoom = 1 + r2 / 2;
-    mat(c[4].material).zoom = 1 + r2 / 2;
+    if (!group.current) return;
+    // Subtle breathing animation
+    const t = performance.now() * 0.001;
+    const child0 = group.current.children[0] as THREE.Mesh;
+    const child1 = group.current.children[1] as THREE.Mesh;
+    if (child0) {
+      child0.position.x = -0.4 + Math.sin(t * 0.3) * 0.02;
+    }
+    if (child1) {
+      child1.position.x = 0.4 + Math.cos(t * 0.3) * 0.02;
+    }
   });
 
   return (
     <group ref={group}>
-      <Image position={[-2, 0, 0]} scale={[3, height / 1.1]} url="/assets/demo/cs1.webp" />
-      <Image position={[2, 0, 3]} scale={3} url="/assets/demo/cs2.webp" />
-      <Image position={[-2.05, -height, 6]} scale={[1, 3]} url="/assets/demo/cs3.webp" />
-      <Image position={[-0.6, -height, 9]} scale={[1, 2]} url="/assets/demo/cs1.webp" />
-      <Image position={[0.75, -height, 10.5]} scale={1.5} url="/assets/demo/cs2.webp" />
+      <Image position={[-0.4, 0, 0]} scale={[1.6, height / 3]} url="/assets/demo/cs1.webp" />
+      <Image position={[0.4, 0, 0]} scale={1.6} url="/assets/demo/cs2.webp" />
     </group>
   );
 }
 
+const LINE_1 = 'Musab \u2014 No cap in the bio, all facts in the repo,';
+const LINE_2 = "If I say I'm gonna build it, watch me ship that demo.";
+const CHAR_DELAY = 35; // ms per character
+const LINE_PAUSE = 400; // ms pause between lines
+
 function Typography() {
   const DEVICE = {
-    mobile: { fontSize: 0.2 },
-    tablet: { fontSize: 0.4 },
-    desktop: { fontSize: 0.6 }
+    mobile: { fontSize: 0.22 },
+    tablet: { fontSize: 0.38 },
+    desktop: { fontSize: 0.5 }
   };
   const getDevice = () => {
     const w = window.innerWidth;
@@ -313,6 +239,9 @@ function Typography() {
   };
 
   const [device, setDevice] = useState(getDevice());
+  const [line1Count, setLine1Count] = useState(0);
+  const [line2Count, setLine2Count] = useState(0);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
     const onResize = () => setDevice(getDevice());
@@ -320,22 +249,63 @@ function Typography() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // Typewriter for line 1
+  useEffect(() => {
+    if (line1Count >= LINE_1.length) return;
+    const t = setTimeout(() => setLine1Count((c) => c + 1), CHAR_DELAY);
+    return () => clearTimeout(t);
+  }, [line1Count]);
+
+  // Typewriter for line 2 (starts after line 1 finishes + pause)
+  useEffect(() => {
+    if (line1Count < LINE_1.length) return;
+    if (line2Count >= LINE_2.length) {
+      setDone(true);
+      return;
+    }
+    const t = setTimeout(
+      () => setLine2Count((c) => c + 1),
+      line2Count === 0 ? LINE_PAUSE : CHAR_DELAY
+    );
+    return () => clearTimeout(t);
+  }, [line1Count, line2Count]);
+
   const { fontSize } = DEVICE[device as keyof typeof DEVICE];
+  const showCursor1 = line1Count < LINE_1.length;
+  const showCursor2 = line1Count >= LINE_1.length && !done;
 
   return (
-    <Text
-      position={[0, 0, 12]}
-      fontSize={fontSize}
-      letterSpacing={-0.05}
-      outlineWidth={0}
-      outlineBlur="20%"
-      outlineColor="#000"
-      outlineOpacity={0.5}
-      color="white"
-      anchorX="center"
-      anchorY="middle"
-    >
-      MOHAMMED MUSAB
-    </Text>
+    <group>
+      <Text
+        position={[0, 0.12, 12]}
+        fontSize={fontSize * 0.65}
+        letterSpacing={-0.02}
+        outlineWidth={0}
+        outlineBlur="20%"
+        outlineColor="#000"
+        outlineOpacity={0.5}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {LINE_1.slice(0, line1Count)}
+        {showCursor1 ? '\u258c' : ''}
+      </Text>
+      <Text
+        position={[0, -0.12, 12]}
+        fontSize={fontSize * 0.65}
+        letterSpacing={-0.02}
+        outlineWidth={0}
+        outlineBlur="20%"
+        outlineColor="#000"
+        outlineOpacity={0.5}
+        color="white"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {LINE_2.slice(0, line2Count)}
+        {showCursor2 ? '\u258c' : ''}
+      </Text>
+    </group>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import Reveal from "./Reveal";
-import { GraduationCap, Award, BookOpen, CheckCircle } from "lucide-react";
+import { GraduationCap, CheckCircle } from "lucide-react";
 import { SITE } from "@/lib/site";
 
 export default function EducationSection() {
@@ -80,6 +80,7 @@ export default function EducationSection() {
           </div>
         </Reveal>
       </div>
+
     </section>
   );
 }

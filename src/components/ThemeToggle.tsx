@@ -28,7 +28,7 @@ export default function ThemeToggle() {
       <button
         type="button"
         aria-label="Toggle theme"
-        className="grid size-9 place-items-center rounded-full bg-surface text-foreground/70 shadow-sm border border-line"
+        className="grid size-9 place-items-center rounded-full bg-background/50 text-foreground/70 shadow-sm border border-line/70 backdrop-blur-md"
       >
         <Moon size={15} />
       </button>
@@ -40,7 +40,7 @@ export default function ThemeToggle() {
       type="button"
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className="grid size-9 place-items-center rounded-full bg-surface text-foreground/70 shadow-sm border border-line transition-colors hover:text-foreground"
+      className="grid size-9 place-items-center rounded-full bg-background/50 text-foreground/70 shadow-sm border border-line/70 backdrop-blur-md transition-colors hover:text-foreground"
     >
       {dark ? <Sun size={15} /> : <Moon size={15} />}
     </button>
