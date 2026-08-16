@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import Reveal from "./Reveal";
 import { ExternalLink, Star } from "lucide-react";
 import DriftWall from "./DriftWall";
+import { cardHoverProps, buttonHoverProps } from "@/lib/animations";
 
 const GITHUB_USERNAME = "03musab";
 
@@ -173,12 +175,13 @@ export default function GitHubSection() {
           </p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {REPOS.map(({ name, description, language, stars, url }) => (
-              <a
+              <motion.a
                 key={name}
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative flex flex-col gap-2 rounded-2xl border border-line bg-surface p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-foreground/20"
+                {...cardHoverProps}
+                className="group relative flex flex-col gap-2 rounded-2xl border border-line bg-surface p-5 transition-all duration-300 hover:shadow-lg hover:border-foreground/20"
               >
                 <div
                   className="absolute top-0 left-6 right-6 h-[2px] rounded-full opacity-0 transition-opacity duration-300 group-hover:opacity-60"
@@ -206,7 +209,7 @@ export default function GitHubSection() {
                     {language}
                   </span>
                 </div>
-              </a>
+              </motion.a>
             ))}
           </div>
         </div>
@@ -249,15 +252,16 @@ export default function GitHubSection() {
       {/* ── CTA ── */}
       <Reveal delay={0.15}>
         <div className="flex justify-center">
-          <a
+          <motion.a
             href={`https://github.com/${GITHUB_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
+            {...buttonHoverProps}
             className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-all hover:border-foreground/40 hover:text-foreground"
           >
             View all repos on GitHub
             <ExternalLink size={13} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+          </motion.a>
         </div>
       </Reveal>
     </section>

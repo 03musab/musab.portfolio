@@ -1,9 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import { ArrowRight, Mail, Phone, MapPin, ExternalLink, FileText } from "lucide-react";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ProjectsSection from "@/components/ProjectsSection";
 import SkillsSection from "@/components/SkillsSection";
+import BentoGridSection from "@/components/BentoGridSection";
 import ExperienceSection from "@/components/ExperienceSection";
 import EducationSection from "@/components/EducationSection";
 import CertificationsSection from "@/components/CertificationsSection";
@@ -11,11 +14,24 @@ import FluidGlassWrapper from "@/components/FluidGlassWrapper";
 import GitHubSection from "@/components/GitHubSection";
 import Reveal from "@/components/Reveal";
 import OpenToWorkBadge from "@/components/OpenToWorkBadge";
+import SendEmailButton from "@/components/SendEmailButton";
+import { motion } from "motion/react";
+import { Highlighter } from "@/components/ui/highlighter";
+import { KineticText } from "@/components/ui/kinetic-text";
+import { TextScramble } from "@/components/ui/text-scramble";
+import { WordRotate } from "@/components/ui/word-rotate";
+import { Magnetic } from "@/components/ui/magnetic";
+import { TiltCard } from "@/components/ui/tilt-card";
+import { CustomCursor } from "@/components/ui/custom-cursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { buttonHoverProps } from "@/lib/animations";
 import { SITE } from "@/lib/site";
 
 export default function Page() {
   return (
     <div className="relative min-h-screen flex flex-col bg-background text-foreground font-sans">
+      <ScrollProgress />
+      <CustomCursor />
       <SiteHeader />
 
       <main className="flex-1">
@@ -39,17 +55,24 @@ export default function Page() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-75" />
                     <span className="relative inline-flex size-1.5 rounded-full bg-emerald-500" />
                   </span>
-                  Open for Software Engineer / Full-Stack Roles
+                  <TextScramble>Available for Full-Stack &amp; AI Roles</TextScramble>
                 </span>
 
                 <h1
                   className="fade-rise font-display text-[clamp(2.8rem,10vw,6.5rem)] leading-[1.18] tracking-tight pb-[0.06em]"
                   style={{ animationDelay: "0.2s" }}
                 >
-                  <span className="block">Software</span>
-                  <span className="text-colorfull animate-gradient-x mask-reveal block italic">
-                    Engineer
+                  <span className="block">
+                    <KineticText text="Software" />
                   </span>
+                  <WordRotate
+                    words={[
+                      "Engineer",
+                      "Full-Stack",
+                      "AI Developer",
+                      "Architect",
+                    ]}
+                  />
                 </h1>
 
                 <p
@@ -67,10 +90,26 @@ export default function Page() {
                 </h2>
 
                 <p
-                  className="fade-rise max-w-xl text-base leading-relaxed text-foreground/65"
+                  className="fade-rise max-w-xl text-base leading-relaxed text-foreground/75"
                   style={{ animationDelay: "0.65s" }}
                 >
-                  Results-driven Computer Engineering graduate with proven experience in full-stack development, AI integration, and process automation. Comfortable owning the entire stack from UI to backend to cloud deployment.
+                  Results-driven{" "}
+                  <Highlighter action="underline" color="#FF9800">
+                    Computer Engineering
+                  </Highlighter>{" "}
+                  graduate with proven experience in{" "}
+                  <Highlighter action="highlight" color="#3b82f6">
+                    full-stack development
+                  </Highlighter>
+                  ,{" "}
+                  <Highlighter action="highlight" color="#8b5cf6">
+                    AI integration
+                  </Highlighter>
+                  , and{" "}
+                  <Highlighter action="highlight" color="#10b981">
+                    process automation
+                  </Highlighter>
+                  . Comfortable owning the entire stack from UI to backend to cloud deployment.
                 </p>
 
                 {/* Quick Contact Chips */}
@@ -78,13 +117,7 @@ export default function Page() {
                   className="fade-rise flex flex-wrap items-center gap-3 font-mono text-xs text-foreground/60"
                   style={{ animationDelay: "0.7s" }}
                 >
-                  <a
-                    href={`mailto:${SITE.email}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/60 px-3 py-1 hover:text-foreground transition-colors"
-                  >
-                    <Mail size={12} />
-                    {SITE.email}
-                  </a>
+                  <SendEmailButton variant="chip" />
                   <a
                     href={`tel:${SITE.phone}`}
                     className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/60 px-3 py-1 hover:text-foreground transition-colors"
@@ -103,49 +136,64 @@ export default function Page() {
                   className="fade-rise flex flex-wrap items-center gap-3 pt-2"
                   style={{ animationDelay: "0.75s" }}
                 >
-                  <a
-                    href="#projects"
-                    className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-85"
-                  >
-                    View Projects
-                    <ArrowRight
-                      size={14}
-                      className="transition-transform duration-300 group-hover:translate-x-1"
-                    />
-                  </a>
-                  <a
-                    href={SITE.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
-                  >
-                    <FileText size={14} />
-                    Resume (PDF)
-                    <ExternalLink size={12} />
-                  </a>
+                  <Magnetic>
+                    <motion.a
+                      href="#projects"
+                      {...buttonHoverProps}
+                      className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-85"
+                    >
+                      View Projects
+                      <ArrowRight
+                        size={14}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </motion.a>
+                  </Magnetic>
+                  <Magnetic>
+                    <motion.a
+                      href={SITE.resume}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      {...buttonHoverProps}
+                      className="group inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
+                    >
+                      <FileText size={14} />
+                      Resume (PDF)
+                      <ExternalLink size={12} />
+                    </motion.a>
+                  </Magnetic>
                 </div>
               </div>
 
               {/* Right — avatar photo */}
               <div className="fade-rise flex justify-center lg:col-span-5" style={{ animationDelay: "0.5s" }}>
-                <div className="relative">
-                  <div className="relative w-64 rotate-[3deg] overflow-hidden rounded-[32px] border-2 border-line bg-surface shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] sm:w-72">
-                    <div className="relative aspect-[4/5] bg-muted">
-                      <Image
-                        src="/avatar.png"
-                        alt="Mohammed Musab — Software Engineer"
-                        fill
-                        className="object-cover"
-                        sizes="288px"
-                        priority
-                      />
+                <TiltCard className="p-2 border-0 bg-transparent shadow-none" data-cursor-label="ME">
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative"
+                  >
+                    <div className="relative w-64 rotate-[3deg] overflow-hidden rounded-[32px] border-2 border-line bg-surface shadow-[0_20px_60px_-20px_rgba(0,0,0,0.35)] sm:w-72">
+                      <div className="relative aspect-[4/5] bg-muted">
+                        <Image
+                          src="/avatar.png"
+                          alt="Mohammed Musab — Software Engineer"
+                          fill
+                          className="object-cover"
+                          sizes="288px"
+                          priority
+                        />
+                      </div>
                     </div>
-                  </div>
-                  {/* Floating badge */}
-                  <div className="absolute -bottom-3 -right-3 rounded-full border border-line bg-surface px-3 py-1.5 shadow-md">
-                    <span className="font-mono text-[9px] font-semibold text-foreground">🚀 Open to work</span>
-                  </div>
-                </div>
+                    {/* Floating badge */}
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="absolute -bottom-3 -right-3 rounded-full border border-line bg-surface px-3 py-1.5 shadow-md cursor-pointer"
+                    >
+                      <span className="font-mono text-[9px] font-semibold text-foreground">🚀 Open to work</span>
+                    </motion.div>
+                  </motion.div>
+                </TiltCard>
               </div>
 
             </div>
@@ -182,6 +230,11 @@ export default function Page() {
           </div>
         </section>
 
+        {/* ── BENTO GRID ARCHITECTURE ──────────────────────────── */}
+        <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
+          <BentoGridSection />
+        </div>
+
         {/* ── SKILLS ───────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
           <SkillsSection />
@@ -198,9 +251,9 @@ export default function Page() {
         </div>
 
         {/* ── PROJECTS ─────────────────────────────────────────── */}
-        <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
-          <ProjectsSection />
-        </div>
+        {/* Owns its own full-width container so the accent background wash
+            can span the entire viewport width */}
+        <ProjectsSection />
 
         {/* ── GITHUB ─────────────────────────────────────────── */}
         <div className="mx-auto max-w-6xl px-6 py-pagebuilder lg:px-8">
@@ -241,12 +294,9 @@ export default function Page() {
                   </p>
 
                   <div className="space-y-3 font-mono text-xs text-foreground/75">
-                    <p className="flex items-center gap-2">
-                      <Mail size={14} className="text-foreground/50" />
-                      <a href={`mailto:${SITE.email}`} className="hover:text-foreground underline underline-offset-4">
-                        {SITE.email}
-                      </a>
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <SendEmailButton variant="text-link" />
+                    </div>
                     <p className="flex items-center gap-2">
                       <Phone size={14} className="text-foreground/50" />
                       <a href={`tel:${SITE.phone}`} className="hover:text-foreground underline underline-offset-4">
@@ -260,16 +310,7 @@ export default function Page() {
                   </div>
 
                   <div className="pt-2">
-                    <a
-                      href={`mailto:${SITE.email}`}
-                      className="group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-foreground/20 bg-surface px-7 py-3.5 font-mono text-xs uppercase tracking-[0.2em] text-foreground"
-                    >
-                      <span className="absolute inset-0 z-0 rounded-full bg-foreground transition-[clip-path] duration-500 ease-out [clip-path:circle(0%_at_100%_50%)] group-hover:[clip-path:circle(150%_at_100%_50%)]" />
-                      <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-background">
-                        Send Direct Email
-                      </span>
-                      <ArrowRight size={14} className="relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-background" />
-                    </a>
+                    <SendEmailButton variant="hero-cta" />
                   </div>
                 </div>
               </Reveal>

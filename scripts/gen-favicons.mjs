@@ -14,21 +14,14 @@ const C1 = [59, 130, 246]; // #3b82f6
 const C2 = [168, 85, 247]; // #a855f7
 const STROKE_HALF = 2.5; // M strokes: stroke-width 5
 
-// Linked "MM" monogram polylines (shared center stem at x=33)
+// Single "M" monogram polyline (Mohammed Musab)
 const MS = [
   [
-    [15, 45],
-    [15, 20],
-    [24, 45],
-    [33, 20],
-    [33, 45],
-  ],
-  [
-    [33, 45],
-    [33, 20],
-    [42, 45],
-    [51, 20],
-    [51, 45],
+    [14, 45],
+    [14, 20],
+    [32, 45],
+    [50, 20],
+    [50, 45],
   ],
 ];
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CheckCircle, Mail } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
+import SendEmailButton from "@/components/SendEmailButton";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -46,13 +47,7 @@ export default async function ThanksPage({
             Back to homepage
             <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
-          <a
-            href={`mailto:${SITE.email}`}
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
-          >
-            <Mail size={14} />
-            Email me directly
-          </a>
+          <SendEmailButton variant="button" />
         </div>
       </div>
     </SubPageShell>

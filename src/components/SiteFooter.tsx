@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
 import { SITE } from "@/lib/site";
+import SendEmailButton from "./SendEmailButton";
+import { LikeButton } from "./ui/like-button";
 
 const LINK_CARDS = [
   {
@@ -140,15 +142,18 @@ export default function SiteFooter() {
             </Link>
           </div>
           <div className="flex items-center gap-3">
+            <LikeButton initialCount={48} />
             <a href={SITE.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-foreground/50 transition-colors hover:text-foreground">
               <GithubIcon size={14} />
             </a>
             <a href={SITE.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-foreground/50 transition-colors hover:text-foreground">
               <LinkedinIcon size={14} />
             </a>
-            <a href={`mailto:${SITE.email}`} aria-label="Email" className="text-foreground/50 transition-colors hover:text-foreground">
-              <Mail size={14} />
-            </a>
+            <SendEmailButton variant="text-link" className="p-0 border-none no-underline flex items-center">
+              <span className="text-foreground/50 transition-colors hover:text-foreground">
+                <Mail size={14} />
+              </span>
+            </SendEmailButton>
           </div>
         </div>
       </div>

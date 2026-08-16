@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
+import SendEmailButton from "@/components/SendEmailButton";
 import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -73,12 +74,7 @@ export default function PrivacyPage() {
           </h2>
           <p className="text-sm leading-relaxed text-foreground/60">
             Questions about this policy? Reach out at{" "}
-            <a
-              href={`mailto:${SITE.email}`}
-              className="font-mono text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
-            >
-              {SITE.email}
-            </a>{" "}
+            <SendEmailButton variant="text-link" />{" "}
             or via the{" "}
             <Link
               href="/#contact"

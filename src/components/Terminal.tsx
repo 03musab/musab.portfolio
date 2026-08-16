@@ -192,7 +192,7 @@ export default function Terminal() {
               <p>• Zscaler ZTCA: <a href="https://www.credly.com/badges/340bbf41-97ee-4ae2-89fa-05b641bd10b3/public_url" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
               <p>• Wadhwani Softskills: <a href="https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
               <p>• GenAI 101 Pieces: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Profile</a></p>
-              <p>• Flipkart E-commerce: <a href="https://www.linkedin.com/in/devmusab/" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Profile</a></p>
+              <p>• Flipkart GRiD 6.0: <a href="https://unstop.com/certificate-preview/7caa6adc-072d-4ae9-9ec8-8fea62fd3930" target="_blank" rel="noopener noreferrer" className="text-blue-300 hover:underline">Verify</a></p>
             </div>
           </div>
         );
@@ -205,7 +205,7 @@ export default function Terminal() {
             <p>Actions:</p>
             <p className="pl-4">
               <a
-                href="https://drive.google.com/file/d/1ZvfUMpGDdJFGXA2mjfnwXyQcRbZ8HAoL/view?usp=sharing"
+                href="https://drive.google.com/file/d/1EO4AE-AMGJR9gsNdNjfAd3ngGGcotHLh/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-400 hover:underline inline-flex items-center gap-1 font-mono"

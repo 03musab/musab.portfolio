@@ -61,7 +61,11 @@ body {
   background: rgba(255, 0, 204, 0.25);
 }
 
-/* Scrollbar */
+/* Scrollbar — the main page scrollbar follows the theme (WebKit uses the
+   token vars below; Firefox/Safari use scrollbar-color). */
+html {
+  scrollbar-color: var(--border) var(--background);
+}
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -75,8 +79,9 @@ body {
   border: 2px solid var(--background);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a3a3a3;
+  background: color-mix(in srgb, var(--border) 55%, var(--foreground) 45%);
 }
+
 
 /* ─── Signature "colorfull" gradient accent ────────────────────────────────
    Orange → magenta → blue. Applied to clipped italic text on one word per
@@ -203,6 +208,41 @@ body {
   }
 }
 
+/* ─── MagicUI Marquee Keyframes ───────────────────────────────────────── */
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
+
+/* ─── Project Section Transitions ────────────────────────────────────────── */
+.project-theme-transition {
+  transition: background-color 800ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 800ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 800ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -222,4 +262,8 @@ body {
     -webkit-mask-size: 200% 100%;
     mask-size: 200% 100%;
   }
+  .project-theme-transition {
+    transition: none !important;
+  }
 }
+

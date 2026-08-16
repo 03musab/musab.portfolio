@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Reveal from "./Reveal";
 import FluidGlass from "./FluidGlass";
 
+import SendEmailButton from "./SendEmailButton";
+
 export default function FluidGlassWrapper() {
   const [mounted, setMounted] = useState(false);
 
@@ -62,12 +64,7 @@ export default function FluidGlassWrapper() {
             </p>
           </div>
           <div className="flex shrink-0 gap-3">
-            <a
-              href="mailto:musabimp.0@gmail.com"
-              className="rounded-full border border-foreground bg-foreground px-5 py-2.5 font-mono text-[11px] uppercase tracking-wider text-background transition-opacity hover:opacity-80"
-            >
-              Email Me
-            </a>
+            <SendEmailButton variant="button" />
             <a
               href="tel:+919152921715"
               className="rounded-full border border-line px-5 py-2.5 font-mono text-[11px] uppercase tracking-wider text-foreground/80 transition-all hover:border-foreground/40 hover:text-foreground"

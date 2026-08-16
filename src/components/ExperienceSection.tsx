@@ -1,6 +1,10 @@
+"use client";
+
 import React from "react";
 import Reveal from "./Reveal";
+import { motion } from "motion/react";
 import { Briefcase, MapPin, Calendar, ExternalLink } from "lucide-react";
+import { cardHoverProps } from "@/lib/animations";
 
 export interface ExperienceItem {
   company: string;
@@ -73,7 +77,10 @@ export default function ExperienceSection() {
       <div className="relative space-y-8 pl-4 border-l border-line/70 sm:pl-8">
         {EXPERIENCES.map((exp, idx) => (
           <Reveal key={exp.company + exp.role} delay={idx * 0.1}>
-            <div className="relative space-y-3 rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-foreground/30 sm:p-8">
+            <motion.div
+              {...cardHoverProps}
+              className="relative space-y-3 rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-foreground/30 sm:p-8"
+            >
               {/* Timeline Dot */}
               <div className="absolute -left-[25px] sm:-left-[41px] top-8 flex size-4 items-center justify-center rounded-full border border-line bg-background">
                 <span className={`size-2 rounded-full ${exp.current ? "bg-emerald-500 animate-ping" : "bg-foreground/50"}`} />
@@ -139,7 +146,7 @@ export default function ExperienceSection() {
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           </Reveal>
         ))}
       </div>

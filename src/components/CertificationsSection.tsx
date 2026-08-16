@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Reveal from "./Reveal";
 import {
@@ -9,6 +11,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { Marquee } from "./ui/marquee";
 
 export interface CertificationItem {
   title: string;
@@ -34,7 +37,7 @@ export const CERTIFICATIONS: CertificationItem[] = [
     badge: Cloud,
   },
   {
-    title: "Oracle Cloud Infrastructure Classic 2025 Multicloud Architect Professional",
+    title: "Oracle Cloud Infrastructure Multicloud Architect Professional",
     issuer: "Oracle",
     date: "2025",
     link: "https://catalog-education.oracle.com/ords/certview/sharebadge?id=7496B34650FE9CF00F5504986C047DB8C91ABE28B7E8699EC404E5A1318AF8FA",
@@ -51,26 +54,68 @@ export const CERTIFICATIONS: CertificationItem[] = [
     title: "Soft Skills & Employability Training",
     issuer: "Wadhwani Foundation",
     date: "Apr 2025",
+    link: "https://web.certificate.wfglobal.org/en/certificate?certificateId=6807ddcaeeacc2785e37ee9b",
     badge: GraduationCap,
   },
   {
-    title: "Certificate in E-Commerce – Level 1",
-    issuer: "Flipkart Grid",
+    title: "Flipkart GRiD 6.0 – E-Commerce & Tech Quiz (Level 1)",
+    issuer: "Flipkart / Unstop",
     date: "Aug 2024",
+    link: "https://unstop.com/certificate-preview/7caa6adc-072d-4ae9-9ec8-8fea62fd3930",
     badge: ShoppingBag,
   },
 ];
 
+const firstRow = CERTIFICATIONS.slice(0, Math.ceil(CERTIFICATIONS.length / 2));
+const secondRow = CERTIFICATIONS.slice(Math.ceil(CERTIFICATIONS.length / 2));
+
+function CertificationCard({ cert }: { cert: CertificationItem }) {
+  const BadgeIcon = cert.badge;
+  return (
+    <figure className="relative h-44 w-80 sm:w-96 cursor-pointer overflow-hidden rounded-2xl border border-line bg-surface p-5 transition-all duration-300 hover:border-foreground/40 hover:shadow-xl flex flex-col justify-between shrink-0 group">
+      <div>
+        <div className="flex items-center justify-between gap-2">
+          <div className="grid size-9 place-items-center rounded-xl bg-foreground/5 text-foreground border border-line/50 group-hover:border-foreground/30 transition-colors">
+            <BadgeIcon size={18} strokeWidth={1.75} />
+          </div>
+          <span className="rounded-full border border-line/50 bg-background/60 px-2.5 py-0.5 font-mono text-[10px] text-foreground/60">
+            {cert.date}
+          </span>
+        </div>
+        <h3 className="mt-3 font-display text-base font-bold tracking-tight text-foreground leading-snug line-clamp-2">
+          {cert.title}
+        </h3>
+        <p className="mt-1 font-mono text-xs text-foreground/60">{cert.issuer}</p>
+      </div>
+
+      {cert.link ? (
+        <div className="pt-2 border-t border-line/40 flex items-center justify-between">
+          <a
+            href={cert.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold text-foreground/70 transition-colors hover:text-foreground group-hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span>Verify Badge</span>
+            <ExternalLink size={12} />
+          </a>
+        </div>
+      ) : null}
+    </figure>
+  );
+}
+
 export default function CertificationsSection() {
   return (
-    <section id="certifications" className="scroll-mt-24 space-y-8">
+    <section id="certifications" className="scroll-mt-24 space-y-8 overflow-hidden">
       <Reveal>
         <div className="space-y-2">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
             Professional Credentials
           </p>
           <h2 className="heading-glow font-display text-4xl tracking-tight lg:text-6xl">
-            Certifications & <em className="text-colorfull animate-gradient-x italic">credentials</em>
+            Certifications &amp; <em className="text-colorfull animate-gradient-x italic">credentials</em>
           </h2>
           <p className="max-w-xl text-sm leading-relaxed text-foreground/60">
             Industry-recognized certifications in cloud engineering, cybersecurity, networking, and soft skills.
@@ -78,40 +123,24 @@ export default function CertificationsSection() {
         </div>
       </Reveal>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {CERTIFICATIONS.map((cert, idx) => (
-          <Reveal key={cert.title} delay={idx * 0.05}>
-            <div className="flex h-full flex-col justify-between space-y-3 rounded-2xl border border-line bg-surface p-6 transition-all duration-300 hover:-translate-y-1 hover:border-foreground/30">
-              <div>
-                <div className="flex items-center justify-between gap-2">
-                  <cert.badge size={24} className="text-foreground/80" strokeWidth={1.75} />
-                  <span className="rounded-full border border-line/50 bg-background/60 px-2.5 py-0.5 font-mono text-[10px] text-foreground/60">
-                    {cert.date}
-                  </span>
-                </div>
-                <h3 className="mt-3 font-display text-lg font-bold tracking-tight text-foreground leading-snug">
-                  {cert.title}
-                </h3>
-                <p className="mt-1 font-mono text-xs text-foreground/60">{cert.issuer}</p>
-              </div>
+      <Reveal delay={0.1}>
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden py-4">
+          <Marquee pauseOnHover className="[--duration:28s] py-2">
+            {firstRow.map((cert) => (
+              <CertificationCard key={cert.title} cert={cert} />
+            ))}
+          </Marquee>
+          <Marquee reverse pauseOnHover className="[--duration:28s] py-2">
+            {secondRow.map((cert) => (
+              <CertificationCard key={cert.title} cert={cert} />
+            ))}
+          </Marquee>
 
-              {cert.link && (
-                <div className="pt-2 border-t border-line/40">
-                  <a
-                    href={cert.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] font-semibold text-foreground/70 transition-colors hover:text-foreground"
-                  >
-                    <span>Verify Badge</span>
-                    <ExternalLink size={12} />
-                  </a>
-                </div>
-              )}
-            </div>
-          </Reveal>
-        ))}
-      </div>
+          {/* Left & Right gradient edge overlays for seamless fade effect */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/6 bg-gradient-to-r from-background to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-background to-transparent z-10" />
+        </div>
+      </Reveal>
     </section>
   );
 }

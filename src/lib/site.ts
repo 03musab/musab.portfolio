@@ -7,7 +7,7 @@ export const SITE = {
   github: "https://github.com/03musab",
   linkedin: "https://www.linkedin.com/in/devmusab/",
   resume:
-    "https://drive.google.com/file/d/1ZvfUMpGDdJFGXA2mjfnwXyQcRbZ8HAoL/view?usp=sharing",
+    "https://drive.google.com/file/d/1EO4AE-AMGJR9gsNdNjfAd3ngGGcotHLh/view?usp=sharing",
   location: "Mumbai, India",
   degree: "B.E. Computer Engineering '26",
   institution: "A. P. Shah Institute of Technology, Thane",
