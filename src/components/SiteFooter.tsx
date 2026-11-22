@@ -300,7 +300,7 @@ export default function SiteFooter() {
       <div className="section-container relative z-10 mt-2">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="font-editorial text-xl italic tracking-[-0.01em] text-white/95 drop-shadow-[0_2px_16px_rgba(56,189,248,0.22)] sm:text-2xl">
-            &ldquo; Not an average human.&rdquo;
+            &ldquo; Not an average guy.&rdquo;
           </p>
 
           <nav
