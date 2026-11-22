@@ -9,6 +9,13 @@ import { Toaster } from "sonner";
 
 gsap.registerPlugin(ScrollTrigger);
 
+if (typeof window !== "undefined") {
+  ScrollTrigger.config({
+    limitCallbacks: true,
+    ignoreMobileResize: true,
+  });
+}
+
 function subscribeReducedMotion(callback: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
   mq.addEventListener("change", callback);
@@ -24,7 +31,8 @@ function getReducedMotionServerSnapshot() {
 }
 
 /**
- * Keeps GSAP ScrollTrigger tightly synchronized in the exact same RAF tick as Lenis.
+ * Keeps GSAP ScrollTrigger tightly synchronized in the exact same RAF tick as Lenis
+ * and refreshes pin geometry whenever the browser zoom level (25%-200%) or viewport size changes.
  */
 function LenisGsapBridge() {
   useLenis(() => {
@@ -33,6 +41,41 @@ function LenisGsapBridge() {
 
   useEffect(() => {
     ScrollTrigger.refresh();
+
+    let refreshTimer: ReturnType<typeof setTimeout> | null = null;
+    let lastDpr = window.devicePixelRatio || 1;
+    let lastW = window.innerWidth;
+    let lastH = window.innerHeight;
+
+    const scheduleRefresh = () => {
+      const nextDpr = window.devicePixelRatio || 1;
+      const nextW = window.innerWidth;
+      const nextH = window.innerHeight;
+      const zoomChanged = Math.abs(nextDpr - lastDpr) > 0.01;
+      const sizeChanged =
+        Math.abs(nextW - lastW) > 2 || Math.abs(nextH - lastH) > 40;
+
+      if (!zoomChanged && !sizeChanged) return;
+      lastDpr = nextDpr;
+      lastW = nextW;
+      lastH = nextH;
+
+      if (refreshTimer) clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 120);
+    };
+
+    window.addEventListener("resize", scheduleRefresh, { passive: true });
+    window.visualViewport?.addEventListener("resize", scheduleRefresh, {
+      passive: true,
+    });
+
+    return () => {
+      if (refreshTimer) clearTimeout(refreshTimer);
+      window.removeEventListener("resize", scheduleRefresh);
+      window.visualViewport?.removeEventListener("resize", scheduleRefresh);
+    };
   }, []);
 
   return null;
@@ -41,10 +84,14 @@ function LenisGsapBridge() {
 /**
  * Global client provider wrapping:
  * - MotionConfig (honors OS reduced-motion preferences)
- * - Lenis smooth inertia scrolling driven directly by GSAP's ticker (zero frame desync)
+ * - Lenis 120fps smooth inertia scrolling driven directly by GSAP's ticker (zero frame desync)
  * - Sonner minimal toast notifications
  */
-export default function MotionProvider({ children }: { children: React.ReactNode }) {
+export default function MotionProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const lenisRef = useRef<LenisRef>(null);
 
   const reducedMotion = useSyncExternalStore(
@@ -96,8 +143,10 @@ export default function MotionProvider({ children }: { children: React.ReactNode
       root
       options={{
         autoRaf: false,
-        lerp: 0.1,
+        lerp: 0.115,
         smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
         anchors: { offset: -24 },
       }}
     >

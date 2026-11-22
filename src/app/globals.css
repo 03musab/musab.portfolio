@@ -211,13 +211,13 @@ body {
 }
 
 .white-mesh-mint {
-  animation: mesh-drift-a 22s ease-in-out infinite alternate;
-  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .white-mesh-aqua {
-  animation: mesh-drift-b 26s ease-in-out infinite alternate;
-  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
 }
 
 .editorial-ai-sheen {
@@ -250,6 +250,45 @@ body {
 
 /* ─── Authentic Liquid Glass & Non-Vibecoded Optical Controls ────────────── */
 @layer components {
+  /* Universal section container with right-sidebar clearance across 768px-1360px & all browser zoom levels */
+  .section-container {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 72rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .section-container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+  @media (min-width: 768px) {
+    .section-container {
+      padding-right: 4.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .section-container {
+      padding-left: 2rem;
+      padding-right: 4.75rem;
+    }
+  }
+  @media (min-width: 1340px) {
+    .section-container {
+      padding-right: 2rem;
+    }
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .liquid-glass,
   .liquid-glass-strong,
   .liquid-glass-fast {
@@ -282,6 +321,8 @@ body {
   /* Signature Right-Edge Liquid Glass Dock Capsule & Plush Active Orb */
   .liquid-glass-dock {
     position: relative;
+    transform: translateZ(0);
+    backface-visibility: hidden;
     background-color: rgba(14, 18, 28, 0.62);
     background-image: linear-gradient(
       180deg,

@@ -172,6 +172,7 @@ export default function SkillsBlackHoleStage({
   onInspectTool: (tool: ToolItem | null) => void;
 }) {
   const stageRef = useRef<HTMLDivElement>(null);
+  const stageRectRef = useRef<DOMRect | null>(null);
   const engineRef = useRef<Matter.Engine | null>(null);
   const bodiesRef = useRef<Matter.Body[]>([]);
   const elRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -300,6 +301,7 @@ export default function SkillsBlackHoleStage({
     engineRef.current = engine;
 
     const measureDims = () => {
+      stageRectRef.current = stage.getBoundingClientRect();
       const layer = SKILL_LAYERS[activeIdxRef.current] ?? SKILL_LAYERS[0];
       dimsRef.current = layer.items.map((_, idx) => {
         const el = elRefs.current[idx];
@@ -352,7 +354,9 @@ export default function SkillsBlackHoleStage({
         running = false;
         return;
       }
-      const dt = Math.min(24, Math.max(8, now - lastNow));
+      // Support true 120Hz/144Hz/240Hz frame intervals (2ms..24ms) with normalized force scaling
+      const dt = Math.min(24, Math.max(2, now - lastNow));
+      const dtScale = dt / 16.667;
       lastNow = now;
       const elapsedSec = (now - startNow) * 0.001;
 
@@ -439,8 +443,8 @@ export default function SkillsBlackHoleStage({
           itemTwistRad,
         );
 
-        const fx = (target.x - body.position.x) * itemStiffness;
-        const fy = (target.y - body.position.y) * itemStiffness;
+        const fx = (target.x - body.position.x) * itemStiffness * dtScale;
+        const fy = (target.y - body.position.y) * itemStiffness * dtScale;
         Matter.Body.applyForce(body, body.position, { x: fx, y: fy });
 
         if (ptr.active && tPull < 0.25 && tOut > 0.72) {
@@ -449,7 +453,7 @@ export default function SkillsBlackHoleStage({
           const distM = Math.hypot(dxM, dyM);
           const radius = 195;
           if (distM > 4 && distM < radius) {
-            const strength = (1 - distM / radius) * 0.0026;
+            const strength = (1 - distM / radius) * 0.0026 * dtScale;
             const nx = dxM / distM;
             const ny = dyM / distM;
             if (mouseModeRef.current === "repel") {
@@ -550,8 +554,12 @@ export default function SkillsBlackHoleStage({
   return (
     <div
       ref={stageRef}
+      onPointerEnter={(e) => {
+        stageRectRef.current = e.currentTarget.getBoundingClientRect();
+      }}
       onPointerMove={(e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
+        const rect =
+          stageRectRef.current ?? e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         pointerRef.current = {

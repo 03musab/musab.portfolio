@@ -43,7 +43,7 @@ export default function HeroSection() {
       id="hero"
       className="relative flex min-h-[100svh] items-center overflow-x-clip py-12 lg:py-16"
     >
-      <div className="mx-auto w-full max-w-6xl px-6 lg:px-8">
+      <div className="section-container">
         <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-8">
           {/* Left — Name Story & Editorial Craft Statement */}
           <div className="space-y-6 lg:col-span-7">

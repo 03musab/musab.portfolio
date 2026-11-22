@@ -494,8 +494,8 @@ export default function JourneySection() {
   const lastYear = visible[visible.length - 1]?.year ?? 2026;
 
   return (
-    <section ref={sectionRef} id="journey" className="scroll-mt-24 overflow-x-clip py-pagebuilder">
-      <div className="mx-auto max-w-6xl space-y-12 px-6 lg:px-8">
+    <section ref={sectionRef} id="journey" className="scroll-mt-24 overflow-x-clip pb-10 pt-pagebuilder">
+      <div className="mx-auto max-w-6xl space-y-12 px-6 md:pr-20 lg:px-8 lg:pr-20 xl:pr-8">
         {/* Section Header + Category Filter */}
         <Reveal>
           <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
@@ -746,7 +746,7 @@ export default function JourneySection() {
           </div>
 
           {/* Right Scrolling Chronology Spine */}
-          <div className="lg:col-span-7 lg:pb-14">
+          <div className="lg:col-span-7 lg:pb-4">
             <div ref={trackRef} className="relative">
               {/* Continuous vertical spine & animated Cobalt beam */}
               <div

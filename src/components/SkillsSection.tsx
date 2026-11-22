@@ -31,14 +31,16 @@ function getReducedMotionServerSnapshot(): boolean {
   return false;
 }
 
+const DESKTOP_SKILLS_QUERY = "(min-width: 1024px)";
+
 function subscribeDesktop(callback: () => void) {
-  const mq = window.matchMedia("(min-width: 1024px)");
+  const mq = window.matchMedia(DESKTOP_SKILLS_QUERY);
   mq.addEventListener("change", callback);
   return () => mq.removeEventListener("change", callback);
 }
 
 function getDesktopSnapshot(): boolean {
-  return window.matchMedia("(min-width: 1024px)").matches;
+  return window.matchMedia(DESKTOP_SKILLS_QUERY).matches;
 }
 
 function getDesktopServerSnapshot(): boolean {
@@ -52,7 +54,7 @@ function StaticSkillsFallback({
 }) {
   return (
     <section id="skills" className="scroll-mt-24 pb-pagebuilder">
-      <div className="mx-auto max-w-6xl space-y-10 px-6 lg:px-8">
+      <div className="section-container space-y-10">
         <div className="space-y-2 border-b border-line pb-5">
           <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground">
             Skills
@@ -238,11 +240,11 @@ function DesktopBlackHoleSkills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="scroll-mt-24 overflow-x-clip pb-pagebuilder pt-6"
+      className="scroll-mt-24 overflow-x-clip pb-6 pt-6"
     >
       <div
         ref={pinRef}
-        className="relative z-10 mx-auto max-w-6xl space-y-3.5 px-8 py-2"
+        className="section-container relative z-10 space-y-3.5 py-2"
       >
         {/* Compact Viewport-Safe Header + Scrubbed Scroll Progress Rail */}
         <div className="space-y-2.5">

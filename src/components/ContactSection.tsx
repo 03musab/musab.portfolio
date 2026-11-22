@@ -88,19 +88,24 @@ function MagneticAction({
   const y = useMotionValue(0);
   const springX = useSpring(x, { stiffness: 260, damping: 22, mass: 0.5 });
   const springY = useSpring(y, { stiffness: 260, damping: 22, mass: 0.5 });
+  const rectRef = useRef<DOMRect | null>(null);
 
   return (
     <motion.div
       style={{ x: springX, y: springY }}
+      onPointerEnter={(e) => {
+        rectRef.current = e.currentTarget.getBoundingClientRect();
+      }}
       onPointerMove={(e) => {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        const rect = e.currentTarget.getBoundingClientRect();
+        const rect = rectRef.current ?? e.currentTarget.getBoundingClientRect();
         const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.14;
         const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.14;
         x.set(Math.max(-4.5, Math.min(4.5, dx)));
         y.set(Math.max(-4.5, Math.min(4.5, dy)));
       }}
       onPointerLeave={() => {
+        rectRef.current = null;
         x.set(0);
         y.set(0);
       }}
@@ -113,6 +118,7 @@ function MagneticAction({
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const sectionRectRef = useRef<DOMRect | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [copiedPhone, setCopiedPhone] = useState(false);
 
@@ -253,17 +259,22 @@ export default function ContactSection() {
     <section
       ref={sectionRef}
       id="contact"
+      onPointerEnter={(e) => {
+        sectionRectRef.current = e.currentTarget.getBoundingClientRect();
+      }}
       onPointerMove={(e) => {
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        const rect = e.currentTarget.getBoundingClientRect();
+        const rect =
+          sectionRectRef.current ?? e.currentTarget.getBoundingClientRect();
         spotX.set(e.clientX - rect.left);
         spotY.set(e.clientY - rect.top);
         spotOpacity.set(1);
       }}
       onPointerLeave={() => {
+        sectionRectRef.current = null;
         spotOpacity.set(0);
       }}
-      className="relative scroll-mt-24 overflow-x-clip py-28 lg:py-36"
+      className="relative scroll-mt-24 overflow-x-clip pb-24 pt-12 lg:pb-28 lg:pt-16"
     >
       {/* Contained Cosmic Twilight anime character video backdrop (no top line, unclipped email popover) */}
       <div
@@ -277,7 +288,7 @@ export default function ContactSection() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-8">
+      <div className="section-container relative z-10">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-end">
           {/* Left — Editorial Headline & Availability */}
           <div className="space-y-6 lg:col-span-7">

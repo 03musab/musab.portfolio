@@ -431,7 +431,7 @@ export default function RightSidebar() {
         className="fixed right-2.5 top-1/2 z-50 hidden -translate-y-1/2 lg:right-3.5 md:block"
       >
         <FloatingDelayGroup delay={{ open: 100, close: 60 }}>
-          <nav className="liquid-glass-dock flex flex-col items-center gap-0.5 rounded-full p-1">
+          <nav className="liquid-glass-dock no-scrollbar flex max-h-[94svh] flex-col items-center gap-0.5 overflow-y-auto rounded-full p-1">
             {/* Primary Section Icons */}
             {CHAPTERS.map((chapter, idx) => {
               const isActive = activeId === chapter.id;

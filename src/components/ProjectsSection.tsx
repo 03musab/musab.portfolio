@@ -280,6 +280,9 @@ export default function ProjectsSection() {
           if (!pinEl || cards.some((c) => !c)) return;
 
           const [c0, c1, c2] = cards as HTMLDivElement[];
+          const d0 = c0.querySelector<HTMLElement>("[data-card-dimmer]");
+          const d1 = c1.querySelector<HTMLElement>("[data-card-dimmer]");
+          const d2 = c2.querySelector<HTMLElement>("[data-card-dimmer]");
 
           gsap.set(c0, {
             clipPath: "inset(0% 0% 0% 0% round 1rem)",
@@ -287,7 +290,7 @@ export default function ProjectsSection() {
             yPercent: 0,
             rotateX: 0,
             opacity: 1,
-            filter: "brightness(1)",
+            force3D: true,
           });
           gsap.set([c1, c2], {
             clipPath: "inset(100% 0% 0% 0% round 1rem)",
@@ -295,15 +298,18 @@ export default function ProjectsSection() {
             yPercent: 4,
             rotateX: 0,
             opacity: 1,
-            filter: "brightness(1)",
+            force3D: true,
           });
+          if (d0 && d1 && d2) {
+            gsap.set([d0, d1, d2], { opacity: 0 });
+          }
 
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: pinEl,
               pin: true,
               pinSpacing: true,
-              scrub: 0.65,
+              scrub: 0.55,
               anticipatePin: 1,
               invalidateOnRefresh: true,
               start: "top 24px",
@@ -322,15 +328,24 @@ export default function ProjectsSection() {
 
           // Initial dwell on Chapter 01 (0.0 -> 0.45)
           tl.to({}, { duration: 0.45 })
-            // Beat 1 -> Beat 2: Chapter 01 recedes, Chapter 02 wipes upward (0.45 -> 1.25)
+            // Beat 1 -> Beat 2: Chapter 01 recedes on GPU compositor, Chapter 02 wipes upward (0.45 -> 1.25)
             .to(
               c0,
               {
                 scale: 0.91,
                 yPercent: -5,
                 rotateX: 4,
-                opacity: 0.35,
-                filter: "brightness(0.55)",
+                opacity: 0.38,
+                duration: 0.8,
+                ease: "power2.inOut",
+                force3D: true,
+              },
+              0.45,
+            )
+            .to(
+              d0,
+              {
+                opacity: 0.42,
                 duration: 0.8,
                 ease: "power2.inOut",
               },
@@ -344,6 +359,7 @@ export default function ProjectsSection() {
                 yPercent: 0,
                 duration: 0.8,
                 ease: "power2.inOut",
+                force3D: true,
               },
               0.45,
             )
@@ -356,6 +372,7 @@ export default function ProjectsSection() {
                 opacity: 0,
                 duration: 0.8,
                 ease: "power2.inOut",
+                force3D: true,
               },
               1.75,
             )
@@ -365,8 +382,17 @@ export default function ProjectsSection() {
                 scale: 0.91,
                 yPercent: -5,
                 rotateX: 4,
-                opacity: 0.35,
-                filter: "brightness(0.55)",
+                opacity: 0.38,
+                duration: 0.8,
+                ease: "power2.inOut",
+                force3D: true,
+              },
+              1.75,
+            )
+            .to(
+              d1,
+              {
+                opacity: 0.42,
                 duration: 0.8,
                 ease: "power2.inOut",
               },
@@ -380,6 +406,7 @@ export default function ProjectsSection() {
                 yPercent: 0,
                 duration: 0.8,
                 ease: "power2.inOut",
+                force3D: true,
               },
               1.75,
             )
@@ -417,7 +444,7 @@ export default function ProjectsSection() {
             }}
           />
 
-          <div className="relative z-10 mx-auto max-w-6xl space-y-5 px-8">
+          <div className="section-container relative z-10 space-y-5">
             {/* Section Header */}
             <div className="flex items-end justify-between gap-6 border-b border-line pb-3.5">
               <div className="space-y-1">
@@ -609,6 +636,11 @@ export default function ProjectsSection() {
                         project={project}
                         onInspect={setDrawerProject}
                       />
+                      <div
+                        data-card-dimmer
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 z-20 rounded-2xl bg-black opacity-0 will-change-[opacity]"
+                      />
                     </div>
                   );
                 })}
@@ -619,7 +651,7 @@ export default function ProjectsSection() {
       </div>
 
       {/* Mobile & Tablet Swipeable Embla Story Carousel */}
-      <div className="mx-auto max-w-6xl space-y-8 px-6 lg:hidden">
+      <div className="section-container space-y-8 lg:hidden">
         <div className="flex items-end justify-between gap-4">
           <div className="space-y-1.5">
             <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground">

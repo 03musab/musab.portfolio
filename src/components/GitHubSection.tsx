@@ -236,7 +236,7 @@ export default function GitHubSection({ summary }: { summary: GitHubSummary }) {
 
   return (
     <section id="github" className="scroll-mt-24 py-pagebuilder">
-      <div className="mx-auto max-w-6xl space-y-14 px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-14 px-6 md:pr-20 lg:px-8 lg:pr-20 xl:pr-8">
         {/* Section Header */}
         <Reveal>
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">

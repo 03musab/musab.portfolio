@@ -43,17 +43,17 @@ export default function WhiteStageBackdrop() {
 
       {/* Zone 3 (My Journey / Lower): Upper-Left Mint & Lower-Right Ice-Aqua Blooms */}
       <div
-        className="white-mesh-mint absolute -left-[12%] bottom-[10%] h-[760px] w-[68vw] min-w-[420px] max-w-[980px]"
+        className="white-mesh-mint absolute -left-[12%] bottom-[4%] h-[820px] w-[68vw] min-w-[420px] max-w-[980px]"
         style={{
           background:
-            "radial-gradient(ellipse 68% 64% at 34% 44%, rgba(167, 243, 208, 0.48) 0%, rgba(187, 247, 208, 0.26) 36%, rgba(251, 253, 255, 0) 76%)",
+            "radial-gradient(ellipse 68% 64% at 34% 48%, rgba(167, 243, 208, 0.48) 0%, rgba(187, 247, 208, 0.26) 36%, rgba(251, 253, 255, 0) 76%)",
         }}
       />
       <div
-        className="white-mesh-aqua absolute -right-[12%] bottom-[4%] h-[780px] w-[74vw] min-w-[460px] max-w-[1080px]"
+        className="white-mesh-aqua absolute -right-[12%] -bottom-[2%] h-[860px] w-[74vw] min-w-[460px] max-w-[1080px]"
         style={{
           background:
-            "radial-gradient(ellipse 70% 66% at 68% 60%, rgba(103, 232, 249, 0.48) 0%, rgba(125, 211, 252, 0.26) 36%, rgba(251, 253, 255, 0) 78%)",
+            "radial-gradient(ellipse 70% 66% at 68% 56%, rgba(103, 232, 249, 0.48) 0%, rgba(125, 211, 252, 0.28) 38%, rgba(251, 253, 255, 0) 80%)",
         }}
       />
 
@@ -96,8 +96,8 @@ export default function WhiteStageBackdrop() {
       </svg>
 
       {/* Top & bottom feather fades so blooms melt invisibly into #fbfdff before the bridges */}
-      <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-[#fbfdff] via-[#fbfdff]/80 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-[#fbfdff] via-[#fbfdff]/80 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#fbfdff] via-[#fbfdff]/70 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fbfdff] via-[#fbfdff]/65 to-transparent" />
     </div>
   );
 }

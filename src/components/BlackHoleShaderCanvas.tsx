@@ -277,8 +277,15 @@ export default function BlackHoleShaderCanvas({
         if (!renderer || disposed) return;
         const w = Math.max(1, host.clientWidth);
         const h = Math.max(1, host.clientHeight);
+        // Cap internal WebGL buffer at 1920px so 25%-50% browser zoom-out never allocates oversized GPU textures
+        const maxDim = Math.max(w, h, 1);
+        const effectiveDpr = Math.min(dpr, 1920 / maxDim);
+        renderer.dpr = effectiveDpr;
         renderer.setSize(w, h);
-        uniforms.uResolution.value = [w, h];
+        uniforms.uResolution.value = [
+          w * effectiveDpr,
+          h * effectiveDpr,
+        ];
       };
 
       syncSize();

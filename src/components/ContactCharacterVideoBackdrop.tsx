@@ -47,12 +47,10 @@ const SECONDARY_COMETS: ShootingComet[] = [
 export default function ContactCharacterVideoBackdrop() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    const video = videoRef.current;
     if (!container || !canvas) return;
 
     const ctx = canvas.getContext("2d", { alpha: false });
@@ -67,7 +65,6 @@ export default function ContactCharacterVideoBackdrop() {
     let dpr = 1;
     let rafId: number | null = null;
     let isInViewport = false;
-    let streamAttached = false;
 
     const heroImage = new Image();
     heroImage.decoding = "async";
@@ -75,7 +72,7 @@ export default function ContactCharacterVideoBackdrop() {
     let imageLoaded = false;
 
     // Rising bioluminescent twilight bokeh motes matching the Shinkai artwork
-    const motes: StarlightMote[] = Array.from({ length: 34 }, (_, i) => ({
+    const motes: StarlightMote[] = Array.from({ length: 24 }, (_, i) => ({
       x: ((i * 67 + 13) % 100) / 100,
       y: ((i * 43 + 29) % 100) / 100,
       vx: (i % 2 === 0 ? 1 : -1) * (0.00008 + (i % 4) * 0.000025),
@@ -89,11 +86,13 @@ export default function ContactCharacterVideoBackdrop() {
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
-      width = Math.max(360, Math.floor(rect.width));
-      height = Math.max(360, Math.floor(rect.height));
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
+      width = Math.max(320, Math.floor(rect.width));
+      height = Math.max(320, Math.floor(rect.height));
+      // Cap internal backing buffer at 1920px wide & 1.5x DPR for locked 120fps across 25%-200% browser zoom
+      const rawDpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      dpr = Math.min(rawDpr, 1920 / Math.max(width, 1));
+      canvas.width = Math.max(1, Math.floor(width * dpr));
+      canvas.height = Math.max(1, Math.floor(height * dpr));
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
     };
@@ -101,25 +100,6 @@ export default function ContactCharacterVideoBackdrop() {
     resize();
     const resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
-
-    const attachVideoStream = () => {
-      if (streamAttached || !video) return;
-      try {
-        const streamableCanvas = canvas as HTMLCanvasElement & {
-          captureStream?: (frameRate?: number) => MediaStream;
-        };
-        if (typeof streamableCanvas.captureStream === "function") {
-          const stream = streamableCanvas.captureStream(30);
-          video.srcObject = stream;
-          video.play().catch(() => {
-            // Autoplay muted stream falls back to direct canvas display
-          });
-          streamAttached = true;
-        }
-      } catch {
-        // Ignore if captureStream is unavailable
-      }
-    };
 
     const renderFrame = (timestampMs: number) => {
       const t = timestampMs * 0.001;
@@ -135,25 +115,23 @@ export default function ContactCharacterVideoBackdrop() {
         const imgH = heroImage.naturalHeight;
 
         // Cover math with subtle cinematic camera breathing & drift
-        const breathScale = 1.055 + Math.sin(t * 0.45) * 0.018;
+        const breathScale = 1.05 + Math.sin(t * 0.45) * 0.016;
         const baseScale = Math.max(width / imgW, height / imgH) * breathScale;
         const drawW = imgW * baseScale;
         const drawH = imgH * baseScale;
 
-        const driftX = Math.sin(t * 0.38) * 10;
-        const driftY = Math.cos(t * 0.31) * 6;
-        // Anchor composition slightly right-center so the anime character & comet frame the headline
+        const driftX = Math.sin(t * 0.38) * 9;
+        const driftY = Math.cos(t * 0.31) * 5.5;
         const offsetX = (width - drawW) * 0.58 + driftX;
         const offsetY = (height - drawH) * 0.44 + driftY;
 
         // 1. Paint base studio-illustrated anime twilight frame
         ctx.drawImage(heroImage, offsetX, offsetY, drawW, drawH);
 
-        // 2. 2.5D Living Wind Ripple on Character Hair, Billowing Jacket & Cloud Sea
-        // Horizontal slice displacement over the mid-lower band where jacket, hair, and clouds sit
-        const sliceCount = 22;
-        const bandTopFrac = 0.28;
-        const bandBotFrac = 0.88;
+        // 2. 120fps 8-slice 2.5D Living Wind Ripple on Character Hair, Billowing Jacket & Cloud Sea
+        const sliceCount = 8;
+        const bandTopFrac = 0.3;
+        const bandBotFrac = 0.86;
         const sliceFracH = (bandBotFrac - bandTopFrac) / sliceCount;
 
         for (let i = 0; i < sliceCount; i++) {
@@ -161,12 +139,11 @@ export default function ContactCharacterVideoBackdrop() {
           const sy = v0 * imgH;
           const sh = sliceFracH * imgH;
           const dy = offsetY + v0 * drawH;
-          const dh = sliceFracH * drawH + 0.8;
+          const dh = sliceFracH * drawH + 1;
 
-          // Smooth travelling wind wave
           const windWave =
-            Math.sin(t * 2.4 - i * 0.42) * 2.4 +
-            Math.cos(t * 1.7 + i * 0.28) * 1.4;
+            Math.sin(t * 2.3 - i * 0.75) * 2.2 +
+            Math.cos(t * 1.6 + i * 0.5) * 1.2;
 
           ctx.drawImage(
             heroImage,
@@ -185,7 +162,6 @@ export default function ContactCharacterVideoBackdrop() {
         ctx.save();
         ctx.globalCompositeOperation = "screen";
 
-        // Comet head coordinates aligned with the illustration's main comet (u ≈ 0.314, v ≈ 0.348)
         const cometHeadX = offsetX + drawW * 0.314;
         const cometHeadY = offsetY + drawH * 0.348;
         const cometPulse = 0.78 + 0.22 * Math.sin(t * 3.4);
@@ -196,7 +172,7 @@ export default function ContactCharacterVideoBackdrop() {
           2,
           cometHeadX,
           cometHeadY,
-          95 * cometPulse,
+          92 * cometPulse,
         );
         cometGlow.addColorStop(0, "rgba(255, 255, 255, 0.85)");
         cometGlow.addColorStop(0.22, "rgba(56, 189, 248, 0.52)");
@@ -204,11 +180,11 @@ export default function ContactCharacterVideoBackdrop() {
         cometGlow.addColorStop(1, "rgba(18, 16, 43, 0)");
         ctx.fillStyle = cometGlow;
         ctx.beginPath();
-        ctx.arc(cometHeadX, cometHeadY, 95 * cometPulse, 0, Math.PI * 2);
+        ctx.arc(cometHeadX, cometHeadY, 92 * cometPulse, 0, Math.PI * 2);
         ctx.fill();
 
         // Horizontal anamorphic cinema lens streak across the comet head
-        const streakW = (130 + Math.sin(t * 4.1) * 28);
+        const streakW = 128 + Math.sin(t * 4.1) * 26;
         const streakGrad = ctx.createLinearGradient(
           cometHeadX - streakW,
           cometHeadY,
@@ -227,24 +203,25 @@ export default function ContactCharacterVideoBackdrop() {
 
         // Travelling shimmer pulse gliding along the comet tail arc
         const tailProgress = (t * 0.45) % 1;
-        const tailX =
-          cometHeadX + tailProgress * (drawW * 0.28);
+        const tailX = cometHeadX + tailProgress * (drawW * 0.28);
         const tailY =
-          cometHeadY - tailProgress * (drawH * 0.31) - Math.sin(tailProgress * Math.PI) * 18;
+          cometHeadY -
+          tailProgress * (drawH * 0.31) -
+          Math.sin(tailProgress * Math.PI) * 18;
         const tailShimmer = ctx.createRadialGradient(
           tailX,
           tailY,
           2,
           tailX,
           tailY,
-          75,
+          72,
         );
         tailShimmer.addColorStop(0, "rgba(125, 211, 252, 0.42)");
         tailShimmer.addColorStop(0.5, "rgba(196, 181, 253, 0.18)");
         tailShimmer.addColorStop(1, "rgba(18, 16, 43, 0)");
         ctx.fillStyle = tailShimmer;
         ctx.beginPath();
-        ctx.arc(tailX, tailY, 75, 0, Math.PI * 2);
+        ctx.arc(tailX, tailY, 72, 0, Math.PI * 2);
         ctx.fill();
 
         // 4. Secondary Soaring Shooting Stars across the Twilight Sky
@@ -291,7 +268,7 @@ export default function ContactCharacterVideoBackdrop() {
             0.5,
             mx,
             my,
-            m.radius * 3.4,
+            m.radius * 3.2,
           );
           orbGrad.addColorStop(0, "#ffffff");
           orbGrad.addColorStop(0.35, m.color);
@@ -300,7 +277,7 @@ export default function ContactCharacterVideoBackdrop() {
           ctx.globalAlpha = m.alpha * (0.55 + twinkle * 0.45);
           ctx.fillStyle = orbGrad;
           ctx.beginPath();
-          ctx.arc(mx, my, m.radius * 3.4, 0, Math.PI * 2);
+          ctx.arc(mx, my, m.radius * 3.2, 0, Math.PI * 2);
           ctx.fill();
         }
 
@@ -324,7 +301,6 @@ export default function ContactCharacterVideoBackdrop() {
         renderFrame(2000);
         return;
       }
-      attachVideoStream();
       if (rafId === null) {
         rafId = window.requestAnimationFrame(loop);
       }
@@ -356,7 +332,7 @@ export default function ContactCharacterVideoBackdrop() {
           stopLoop();
         }
       },
-      { threshold: 0.03, rootMargin: "160px 0px" },
+      { threshold: 0.02, rootMargin: "160px 0px" },
     );
 
     intersectionObserver.observe(container);
@@ -374,29 +350,18 @@ export default function ContactCharacterVideoBackdrop() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden select-none"
     >
-      {/* Synchronized HTML5 <video> element for native stream / custom MP4 playback */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-0"
-      />
-
-      {/* High-DPI 2.5D Living Makoto Shinkai Anime Twilight Cinema Canvas */}
+      {/* High-DPI 120fps 2.5D Living Makoto Shinkai Anime Twilight Cinema Canvas */}
       <canvas
         ref={canvasRef}
         className="pointer-events-none absolute inset-0 h-full w-full"
       />
 
-      {/* Seamless Top & Bottom Cosmic Twilight Indigo-Violet Edge Blending (#12102b) */}
+      {/* Seamless Top (#05070b from Skills) & Bottom (#1d2254 into luminous Twilight Footer) Edge Blending */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, #12102b 0%, rgba(18, 16, 43, 0.14) 16%, rgba(18, 16, 43, 0) 50%, rgba(18, 16, 43, 0.18) 84%, #12102b 100%)",
+            "linear-gradient(180deg, #05070b 0%, rgba(10, 10, 26, 0.5) 8%, rgba(18, 16, 43, 0) 22%, rgba(18, 16, 43, 0) 82%, rgba(29, 34, 84, 0.45) 93%, #1d2254 100%)",
         }}
       />
 

@@ -80,7 +80,7 @@ export default function StoryThesisSection() {
       id="thesis"
       className="scroll-mt-24 border-b border-line/70 pb-24 pt-12 lg:pb-36 lg:pt-16"
     >
-      <div className="mx-auto max-w-6xl space-y-16 px-6 lg:px-8">
+      <div className="section-container space-y-16">
         <div className="grid gap-8 lg:grid-cols-12">
           <div className="space-y-2.5 lg:col-span-3">
             <p className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground">

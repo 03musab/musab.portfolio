@@ -19,7 +19,7 @@ export default async function Page() {
       <ScrollProgress />
       <RightSidebar />
 
-      <main className="flex-1 md:pr-14 xl:pr-0">
+      <main className="flex-1">
         {/* ── STAGE 1: OBSIDIAN BLACK (INTRO & GLOBE) ─────────── */}
         <div data-theme="black" className="relative z-10 bg-[#05070b]">
           <HeroSection />
@@ -66,20 +66,10 @@ export default async function Page() {
           <SkillsSection />
         </div>
 
-        {/* ── SEAMLESS OBSIDIAN -> COSMIC TWILIGHT BRIDGE ─────── */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none relative z-10 h-36 w-full sm:h-48"
-          style={{
-            background:
-              "linear-gradient(to bottom, #05070b 0%, #070812 22%, #0b0b1d 48%, #0f0e26 75%, #12102b 100%)",
-          }}
-        />
-
         {/* ── STAGE 4: COSMIC TWILIGHT INDIGO-VIOLET (CONTACT) ── */}
         <div
           data-theme="black"
-          className="relative z-10 bg-gradient-to-b from-[#12102b] via-[#1b1842] to-[#12102b]"
+          className="relative z-10 bg-gradient-to-b from-[#05070b] via-[#1b2050] to-[#1d2254]"
         >
           <ContactSection />
         </div>
