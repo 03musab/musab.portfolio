@@ -1,10 +1,12 @@
 import React from "react";
-import SiteHeader from "./SiteHeader";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import RightSidebar from "./RightSidebar";
 import SiteFooter from "./SiteFooter";
 
 /**
  * Visual shell for non-home pages (404, thanks, privacy, ...):
- * shared header + footer on the new warm-neutral canvas.
+ * shared right sidebar + minimal back link + footer.
  */
 export default function SubPageShell({
   children,
@@ -14,10 +16,20 @@ export default function SubPageShell({
   maxWidth?: string;
 }) {
   return (
-    <div className="relative min-h-screen flex flex-col bg-background text-foreground font-sans">
-      <SiteHeader />
+    <div
+      data-theme="black"
+      className="relative flex min-h-screen flex-col bg-background font-sans text-foreground"
+    >
+      <RightSidebar />
 
-      <main className={`relative flex-1 w-full ${maxWidth} mx-auto px-6 py-16 lg:py-20`}>
+      <div className={`mx-auto w-full ${maxWidth} px-6 pt-10`}>
+        <Link href="/" className="editorial-link text-xs text-muted-foreground hover:text-foreground">
+          <ArrowLeft size={13} />
+          <span>Back to Portfolio</span>
+        </Link>
+      </div>
+
+      <main className={`relative mx-auto w-full flex-1 ${maxWidth} px-6 py-10 lg:py-14`}>
         {children}
       </main>
 

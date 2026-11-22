@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
 import SendEmailButton from "@/components/SendEmailButton";
-import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Mohammed Musab",
@@ -45,8 +44,8 @@ export default function PrivacyPage() {
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
             Legal — Document 001
           </p>
-          <h1 className="heading-glow font-display text-4xl tracking-tight lg:text-5xl">
-            Privacy <em className="text-colorfull animate-gradient-x italic">policy</em>
+          <h1 className="font-display text-4xl font-semibold tracking-[-0.025em] lg:text-5xl">
+            Privacy <span className="text-accent">policy</span>
           </h1>
           <p className="max-w-2xl leading-relaxed text-foreground/60">
             Last updated: August 2026. This policy explains what happens to the

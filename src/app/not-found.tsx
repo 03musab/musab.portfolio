@@ -15,30 +15,30 @@ export default function NotFound() {
       <div className="mx-auto max-w-xl space-y-8 text-center">
         <div className="space-y-3">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
-            Error 404 — Route Not Found
+            404 · Page Not Found
           </p>
-          <h1 className="heading-glow font-display text-8xl tracking-tight">
+          <h1 className="font-display text-8xl font-semibold tracking-[-0.03em] text-foreground">
             404
           </h1>
           <p className="mx-auto max-w-md leading-relaxed text-foreground/60">
-            This endpoint doesn&apos;t exist in the system. The page you&apos;re
-            looking for may have moved, or the link is broken.
+            Sorry, we couldn&apos;t find this page. It may have moved, or the link
+            might be broken.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-85"
+            className="btn-primary group px-5 py-3"
           >
             <Compass size={14} className="transition-transform duration-300 group-hover:rotate-45" />
-            Back to homepage
+            <span>Back to homepage</span>
           </Link>
           <Link
             href="/#projects"
-            className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-foreground/80 transition-colors hover:text-foreground"
+            className="btn-secondary px-5 py-3"
           >
-            View projects
+            <span>View projects</span>
             <ArrowRight size={14} />
           </Link>
         </div>

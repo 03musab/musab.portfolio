@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Mail, Check, Copy, ExternalLink, ArrowRight, X } from "lucide-react";
+import { toast } from "sonner";
 import { SITE } from "@/lib/site";
 
 interface SendEmailButtonProps {
@@ -45,9 +46,11 @@ export default function SendEmailButton({
     try {
       await navigator.clipboard.writeText(email);
       setCopied(true);
+      toast.success("Email copied to clipboard", { description: email });
       setTimeout(() => setCopied(false), 2500);
     } catch (err) {
       console.error("Failed to copy email:", err);
+      toast.error("Could not copy email");
     }
   };
 
@@ -92,17 +95,18 @@ export default function SendEmailButton({
           <button
             type="button"
             onClick={toggleOpen}
-            className={`group relative inline-flex items-center gap-3 overflow-hidden rounded-full border border-foreground/20 bg-surface px-7 py-3.5 font-mono text-xs uppercase tracking-[0.2em] text-foreground transition-all hover:border-foreground/40 cursor-pointer ${className}`}
+            className={`btn-accent group relative overflow-hidden py-2 pl-5 pr-2 ${className}`}
           >
-            <span className="absolute inset-0 z-0 rounded-full bg-foreground transition-[clip-path] duration-500 ease-out [clip-path:circle(0%_at_100%_50%)] group-hover:[clip-path:circle(150%_at_100%_50%)] pointer-events-none" />
-            <span className="relative z-10 flex items-center gap-2 transition-colors duration-300 group-hover:text-background">
+            <span className="relative z-10 flex items-center gap-2">
               <Mail size={14} />
-              Send Direct Email
+              <span>Send direct email</span>
             </span>
-            <ArrowRight
-              size={14}
-              className="relative z-10 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-background"
-            />
+            <span className="btn-lens-orb relative z-10">
+              <ArrowRight
+                size={13}
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
+              />
+            </span>
           </button>
         );
 
@@ -111,7 +115,7 @@ export default function SendEmailButton({
           <button
             type="button"
             onClick={toggleOpen}
-            className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/60 px-3 py-1 font-mono text-xs text-foreground/60 transition-colors hover:text-foreground cursor-pointer ${className}`}
+            className={`btn-secondary px-3.5 py-1.5 font-sans text-xs ${className}`}
           >
             <Mail size={12} />
             <span>{email}</span>
@@ -123,9 +127,9 @@ export default function SendEmailButton({
           <button
             type="button"
             onClick={toggleOpen}
-            className={`inline-flex items-center gap-1 text-foreground underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground transition-colors cursor-pointer ${className}`}
+            className={`editorial-link ${className}`}
           >
-            <Mail size={13} className="text-foreground/50" />
+            <Mail size={13} className="text-accent" />
             <span>{email}</span>
           </button>
         );
@@ -136,10 +140,10 @@ export default function SendEmailButton({
           <button
             type="button"
             onClick={toggleOpen}
-            className={`inline-flex items-center gap-2 rounded-full border border-foreground bg-foreground px-5 py-2.5 font-mono text-[11px] uppercase tracking-wider text-background transition-opacity hover:opacity-85 cursor-pointer ${className}`}
+            className={`btn-primary px-5 py-2.5 ${className}`}
           >
-            <Mail size={13} />
-            <span>Email Me</span>
+            <Mail size={14} />
+            <span>Email me</span>
           </button>
         );
     }
@@ -157,41 +161,41 @@ export default function SendEmailButton({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute bottom-full right-0 mb-3 z-50 w-72 origin-bottom-right rounded-2xl border border-line bg-surface p-4 shadow-2xl backdrop-blur-xl sm:right-auto sm:left-0 sm:origin-bottom-left block text-foreground font-sans font-normal"
+            className="liquid-glass-strong absolute bottom-full right-0 mb-3 z-50 w-72 origin-bottom-right rounded-3xl p-4 sm:right-auto sm:left-0 sm:origin-bottom-left block text-foreground font-sans font-normal"
           >
             <span className="flex items-center justify-between pb-3 border-b border-line mb-3">
               <span className="flex items-center gap-2">
-                <span className="grid size-6 place-items-center rounded-full bg-emerald-500/10 text-emerald-500">
+                <span className="grid size-6 place-items-center rounded-[8px] bg-accent-soft text-accent">
                   <Mail size={12} />
                 </span>
-                <span className="font-mono text-[11px] font-semibold tracking-wide text-foreground">
-                  Contact via Email
+                <span className="font-display text-xs font-semibold tracking-[-0.01em] text-foreground">
+                  Contact via email
                 </span>
               </span>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg p-1 text-foreground/40 hover:text-foreground hover:bg-foreground/5 transition-colors cursor-pointer"
+                className="rounded-[8px] p-1 text-foreground/40 hover:text-foreground hover:bg-foreground/5 transition-colors cursor-pointer"
                 aria-label="Close menu"
               >
                 <X size={14} />
               </button>
             </span>
 
-            <span className="font-mono text-[10px] text-foreground/50 mb-3 break-all bg-muted/50 p-2 rounded-lg border border-line/50 select-all block">
+            <span className="font-mono text-[11px] text-foreground/60 mb-3 break-all bg-muted/50 p-2 rounded-[10px] border border-line/50 select-all block">
               {email}
             </span>
 
-            <span className="space-y-1.5 font-mono text-xs block">
+            <span className="space-y-1 font-sans text-[13px] font-medium block">
               {/* 1. Open Gmail Web (Browser Direct - Guaranteed Working) */}
               <button
                 type="button"
                 onClick={handleDirectGmail}
-                className="w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground group cursor-pointer"
+                className="w-full flex items-center justify-between gap-2 rounded-[10px] px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground group cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <span className="font-semibold text-red-500">M</span>
-                  <span>Open in Gmail (Web)</span>
+                  <span className="font-display font-bold text-red-500">M</span>
+                  <span>Open in Gmail</span>
                 </span>
                 <ExternalLink size={12} className="text-foreground/40 group-hover:text-foreground transition-colors" />
               </button>
@@ -200,11 +204,11 @@ export default function SendEmailButton({
               <button
                 type="button"
                 onClick={handleDirectOutlook}
-                className="w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground group cursor-pointer"
+                className="w-full flex items-center justify-between gap-2 rounded-[10px] px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground group cursor-pointer"
               >
                 <span className="flex items-center gap-2">
-                  <span className="font-semibold text-blue-500">O</span>
-                  <span>Open in Outlook (Web)</span>
+                  <span className="font-display font-bold text-blue-500">O</span>
+                  <span>Open in Outlook</span>
                 </span>
                 <ExternalLink size={12} className="text-foreground/40 group-hover:text-foreground transition-colors" />
               </button>
@@ -213,7 +217,7 @@ export default function SendEmailButton({
               <button
                 type="button"
                 onClick={handleNativeMailto}
-                className="w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground/80 group cursor-pointer"
+                className="w-full flex items-center justify-between gap-2 rounded-[10px] px-3 py-2 text-left bg-surface hover:bg-foreground/5 transition-colors text-foreground/85 group cursor-pointer"
               >
                 <span className="flex items-center gap-2">
                   <Mail size={13} className="text-foreground/60" />
@@ -226,17 +230,17 @@ export default function SendEmailButton({
               <button
                 type="button"
                 onClick={handleCopy}
-                className={`w-full flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-left transition-colors cursor-pointer ${
+                className={`w-full flex items-center justify-between gap-2 rounded-[10px] px-3 py-2 text-left transition-colors cursor-pointer ${
                   copied
                     ? "bg-emerald-500/10 text-emerald-500 font-semibold"
-                    : "bg-surface hover:bg-foreground/5 text-foreground/80"
+                    : "bg-surface hover:bg-foreground/5 text-foreground/85"
                 }`}
               >
                 <span className="flex items-center gap-2">
                   {copied ? <Check size={13} /> : <Copy size={13} className="text-foreground/60" />}
-                  <span>{copied ? "Address Copied!" : "Copy Email Address"}</span>
+                  <span>{copied ? "Address copied!" : "Copy email address"}</span>
                 </span>
-                {copied && <span className="text-[10px] uppercase font-bold tracking-wider">Done</span>}
+                {copied && <span className="text-[11px] font-semibold">Done</span>}
               </button>
             </span>
           </motion.span>

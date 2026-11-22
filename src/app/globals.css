@@ -1,74 +1,167 @@
 @import "tailwindcss";
+@import "react-github-calendar/tooltips.css";
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* ─── Stage 1 & 3: Deep Graphite-Obsidian Black (Hero & Ending Stages) ───── */
+:root,
+[data-theme="black"] {
+  --background: #05070b;
+  --surface: #0c1018;
+  --surface-muted: #141a26;
+  --foreground: #f4f7fb;
+  --muted-foreground: #8b97ad;
+  --card: #0c1018;
+  --border: rgba(148, 163, 184, 0.16);
+  --hairline: rgba(148, 163, 184, 0.1);
+  --accent: #4f8cff;
+  --accent-soft: rgba(79, 140, 255, 0.15);
+  --accent-border: rgba(79, 140, 255, 0.42);
+  --highlight: #38bdf8;
+  --highlight-soft: rgba(56, 189, 248, 0.14);
+  --highlight-border: rgba(56, 189, 248, 0.38);
 
-/* ─── Design tokens (warm-neutral dual theme, inspired by the reference) ─── */
-:root {
-  --background: #f2f3f5;
-  --surface: #f9f9fa;
-  --surface-muted: #eeeef1;
-  --foreground: #0a0a0a;
-  --card: #f2f3f5;
-  --border: #d4d4d4;
-  --hairline: #d1d5db;
-  --colorfull: linear-gradient(288deg, #ff8000 0%, #f0c 53.24%, #04f 100%);
-  color-scheme: light;
+  /* Optical Liquid Glass Tokens (Obsidian Stage — Silver-Crystal & Cobalt) */
+  --glass-tint: rgba(14, 19, 30, 0.52);
+  --glass-tint-strong: rgba(10, 14, 22, 0.86);
+  --glass-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(79, 140, 255, 0.05) 48%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  --glass-rim-conic: conic-gradient(
+    from 135deg at 50% 50%,
+    rgba(255, 255, 255, 0.88) 0deg,
+    rgba(148, 163, 184, 0.14) 80deg,
+    rgba(79, 140, 255, 0.72) 172deg,
+    rgba(148, 163, 184, 0.1) 265deg,
+    rgba(255, 255, 255, 0.88) 360deg
+  );
+  --glass-meniscus-top: rgba(255, 255, 255, 0.7);
+  --glass-meniscus-bottom: rgba(79, 140, 255, 0.34);
+  --glass-caustic: rgba(148, 197, 255, 0.2);
+  --glass-shadow:
+    0 20px 48px -12px rgba(0, 0, 0, 0.85),
+    0 4px 14px -2px rgba(0, 0, 0, 0.62);
+  --btn-primary-bg: rgba(255, 255, 255, 0.12);
+  --btn-primary-fg: #f4f7fb;
+  --btn-accent-bg: rgba(37, 99, 235, 0.88);
+  --btn-accent-fg: #ffffff;
+  color: var(--foreground);
 }
 
-.dark {
-  --background: #121212;
-  --surface: #171717;
-  --surface-muted: #0f0f0f;
-  --foreground: #fafafa;
-  --card: #171717;
-  --border: #262626;
-  --hairline: rgba(255, 255, 255, 0.16);
+:root {
   color-scheme: dark;
 }
 
+/* ─── Stage 2: Crisp Architectural Studio White (About, Projects, Journey) ── */
+[data-theme="white"] {
+  --background: #fbfdff;
+  --surface: #ffffff;
+  --surface-muted: #eef3f9;
+  --foreground: #0b1220;
+  --muted-foreground: #526075;
+  --card: #ffffff;
+  --border: rgba(15, 23, 42, 0.12);
+  --hairline: rgba(15, 23, 42, 0.08);
+  --accent: #1d4ed8;
+  --accent-soft: rgba(29, 78, 216, 0.1);
+  --accent-border: rgba(29, 78, 216, 0.32);
+  --highlight: #0284c7;
+  --highlight-soft: rgba(2, 132, 199, 0.1);
+  --highlight-border: rgba(2, 132, 199, 0.32);
+
+  /* Optical Liquid Glass Tokens (Architectural White Stage) */
+  --glass-tint: rgba(255, 255, 255, 0.74);
+  --glass-tint-strong: rgba(255, 255, 255, 0.92);
+  --glass-sheen: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.64) 0%,
+    rgba(226, 236, 255, 0.24) 50%,
+    rgba(255, 255, 255, 0.42) 100%
+  );
+  --glass-rim-conic: conic-gradient(
+    from 135deg at 50% 50%,
+    rgba(255, 255, 255, 1) 0deg,
+    rgba(15, 23, 42, 0.14) 80deg,
+    rgba(29, 78, 216, 0.4) 170deg,
+    rgba(15, 23, 42, 0.12) 265deg,
+    rgba(255, 255, 255, 1) 360deg
+  );
+  --glass-meniscus-top: rgba(255, 255, 255, 0.98);
+  --glass-meniscus-bottom: rgba(29, 78, 216, 0.18);
+  --glass-caustic: rgba(255, 255, 255, 0.82);
+  --glass-shadow:
+    0 18px 40px -14px rgba(15, 23, 42, 0.14),
+    0 4px 12px -2px rgba(15, 23, 42, 0.06);
+  --btn-primary-bg: rgba(11, 18, 32, 0.94);
+  --btn-primary-fg: #f8fafc;
+  --btn-accent-bg: rgba(29, 78, 216, 0.94);
+  --btn-accent-fg: #ffffff;
+  color: var(--foreground);
+}
+
 @theme inline {
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-instrument), ui-serif, Georgia, serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-editorial: var(--font-instrument-serif), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-muted: var(--surface-muted);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
   --color-card: var(--card);
   --color-line: var(--border);
   --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-border: var(--accent-border);
+  --color-highlight: var(--highlight);
+  --color-highlight-soft: var(--highlight-soft);
+  --color-highlight-border: var(--highlight-border);
 
-  --spacing-pagebuilder: 4rem;
+  --spacing-pagebuilder: 5.5rem;
 }
 
 html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  scroll-padding-top: 28px;
+  scrollbar-color: var(--border) var(--background);
+  background-color: #05070b;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
 body {
-  background-color: var(--background);
+  background-color: #05070b;
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
-  /* clip (not hidden): prevents horizontal overflow without creating a
-     scroll container, which would break position: sticky on the header. */
   overflow-x: clip;
-  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Smooth transitions strictly scoped to the fixed right sidebar & top progress bar (~12 nodes) */
+#right-sidebar nav,
+#right-sidebar button,
+#right-sidebar a,
+#right-sidebar-mobile button,
+#scroll-progress {
+  transition:
+    color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 ::selection {
-  background: rgba(255, 0, 204, 0.25);
+  background: var(--accent-soft);
+  color: var(--foreground);
 }
 
-/* Scrollbar — the main page scrollbar follows the theme (WebKit uses the
-   token vars below; Firefox/Safari use scrollbar-color). */
-html {
-  scrollbar-color: var(--border) var(--background);
-}
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
 ::-webkit-scrollbar-track {
   background: var(--background);
@@ -82,188 +175,433 @@ html {
   background: color-mix(in srgb, var(--border) 55%, var(--foreground) 45%);
 }
 
-
-/* ─── Signature "colorfull" gradient accent ────────────────────────────────
-   Orange → magenta → blue. Applied to clipped italic text on one word per
-   section heading. Paired with animate-gradient-x for a slow sweep. */
-.text-colorfull {
-  background: var(--colorfull);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* ─── Subtle architectural grid backdrop (scoped to drawer blueprints) ───── */
+.bg-blueprint-grid {
+  background-image:
+    linear-gradient(to right, var(--hairline) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--hairline) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-.animate-gradient-x {
-  background-size: 200% 200%;
-  animation: gradient-x 6s ease-in-out infinite;
-}
-
-@keyframes gradient-x {
-  0%,
-  100% {
+@keyframes editorial-shimmer {
+  0% {
     background-position: 0% 50%;
   }
-  50% {
-    background-position: 100% 50%;
+  100% {
+    background-position: 200% 50%;
   }
 }
 
-/* Zinc gradient used for the giant name in the hero */
-.text-name-gradient {
-  background: linear-gradient(to bottom, #a1a1aa 0%, #52525b 50%, #18181b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.dark .text-name-gradient {
-  background: linear-gradient(to bottom, #3f3f46 0%, #e4e4e7 50%, #fafafa 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Soft white glow behind section titles */
-.heading-glow {
-  text-shadow:
-    0px 4px 8px rgba(255, 255, 255, 0.05),
-    0px 8px 30px rgba(255, 255, 255, 0.2);
-}
-
-/* ─── Hero entry animations ─────────────────────────────────────────────── */
-.fade-rise {
-  opacity: 0;
-  transform: translateY(18px);
-  animation: fade-rise 0.8s cubic-bezier(0.2, 0.65, 0.3, 0.9) forwards;
-}
-
-@keyframes fade-rise {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+@keyframes mesh-drift-a {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2.5%, 3%, 0) scale(1.06);
   }
 }
 
-/* Words wipe in from a left mask gradient */
-.mask-reveal {
-  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
-  mask-image: linear-gradient(to right, black 70%, transparent 100%);
-  -webkit-mask-size: 0% 100%;
-  mask-size: 0% 100%;
-  animation: mask-reveal 1.8s cubic-bezier(0.2, 0.65, 0.3, 0.9) forwards;
-}
-
-@keyframes mask-reveal {
-  to {
-    -webkit-mask-size: 200% 100%;
-    mask-size: 200% 100%;
+@keyframes mesh-drift-b {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(-2.5%, -3%, 0) scale(1.07);
   }
 }
 
-/* Shiny sweep for the hero "new launch" pill text */
-.shiny-text {
-  background: linear-gradient(
+.white-mesh-mint {
+  animation: mesh-drift-a 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.white-mesh-aqua {
+  animation: mesh-drift-b 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.editorial-ai-sheen {
+  background-image: linear-gradient(
     110deg,
-    var(--foreground) 35%,
-    rgba(255, 255, 255, 0.55) 50%,
-    var(--foreground) 65%
+    #f4f7fb 0%,
+    #93c5fd 32%,
+    #38bdf8 50%,
+    #4f8cff 68%,
+    #f4f7fb 100%
   );
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: shiny-text 4.5s ease-in-out infinite;
-}
-
-@keyframes shiny-text {
-  0% {
-    background-position: 180% 0;
-  }
-  100% {
-    background-position: -180% 0;
-  }
-}
-
-
-/* ─── Marquee (contact section) ─────────────────────────────────────────── */
-.marquee {
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.marquee-track {
-  display: inline-flex;
-  width: max-content;
-  animation: marquee-scroll 30s linear infinite;
-}
-
-@keyframes marquee-scroll {
-  to {
-    transform: translateX(-50%);
-  }
+  animation: editorial-shimmer 5.5s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .white-mesh-mint,
+  .white-mesh-aqua {
     animation: none;
   }
-}
-
-/* ─── MagicUI Marquee Keyframes ───────────────────────────────────────── */
-@keyframes marquee {
-  from {
-    transform: translateX(0%);
-  }
-  to {
-    transform: translateX(calc(-100% - var(--gap)));
-  }
-}
-
-@keyframes marquee-vertical {
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(calc(-100% - var(--gap)));
-  }
-}
-
-.animate-marquee {
-  animation: marquee var(--duration) linear infinite;
-}
-
-.animate-marquee-vertical {
-  animation: marquee-vertical var(--duration) linear infinite;
-}
-
-/* ─── Project Section Transitions ────────────────────────────────────────── */
-.project-theme-transition {
-  transition: background-color 800ms cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 800ms cubic-bezier(0.16, 1, 0.3, 1),
-              color 800ms cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 800ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .fade-rise,
-  .mask-reveal,
-  .shiny-text,
-  .animate-gradient-x {
+  .editorial-ai-sheen {
     animation: none;
+    background-image: none;
+    color: var(--accent);
   }
-  .fade-rise {
+}
+
+/* ─── Authentic Liquid Glass & Non-Vibecoded Optical Controls ────────────── */
+@layer components {
+  .liquid-glass,
+  .liquid-glass-strong,
+  .liquid-glass-fast {
+    position: relative;
+    background-color: var(--glass-tint);
+    background-image: var(--glass-sheen);
+    box-shadow:
+      inset 0 1.5px 1px 0 var(--glass-meniscus-top),
+      inset 0 -1.5px 2px 0 var(--glass-meniscus-bottom),
+      inset 2px 0 8px -2px var(--glass-caustic),
+      inset -2px 0 8px -2px var(--glass-caustic),
+      var(--glass-shadow);
+    transition:
+      background-color 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .liquid-glass,
+  .liquid-glass-strong {
+    backdrop-filter: blur(12px) saturate(165%);
+    -webkit-backdrop-filter: blur(12px) saturate(165%);
+  }
+
+  .liquid-glass-strong {
+    background-color: var(--glass-tint-strong);
+  }
+
+  /* Signature Right-Edge Liquid Glass Dock Capsule & Plush Active Orb */
+  .liquid-glass-dock {
+    position: relative;
+    background-color: rgba(14, 18, 28, 0.62);
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.14) 0%,
+      rgba(255, 255, 255, 0.03) 42%,
+      rgba(79, 140, 255, 0.06) 72%,
+      rgba(255, 255, 255, 0.07) 100%
+    );
+    backdrop-filter: blur(22px) saturate(190%);
+    -webkit-backdrop-filter: blur(22px) saturate(190%);
+    box-shadow:
+      inset 0 1.5px 1.2px 0 rgba(255, 255, 255, 0.38),
+      inset 0 -1.5px 2px 0 rgba(79, 140, 255, 0.22),
+      inset 1.5px 0 8px -2px rgba(255, 255, 255, 0.16),
+      inset -1.5px 0 8px -2px rgba(255, 255, 255, 0.12),
+      0 22px 48px -12px rgba(0, 0, 0, 0.82),
+      0 4px 16px -2px rgba(0, 0, 0, 0.55);
+  }
+  [data-theme="white"] .liquid-glass-dock {
+    background-color: rgba(255, 255, 255, 0.72);
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(236, 243, 255, 0.58) 55%,
+      rgba(255, 255, 255, 0.82) 100%
+    );
+    box-shadow:
+      inset 0 1.5px 1.2px 0 rgba(255, 255, 255, 1),
+      inset 0 -1.5px 2px 0 rgba(29, 78, 216, 0.14),
+      inset 1.5px 0 8px -2px rgba(255, 255, 255, 0.85),
+      inset -1.5px 0 8px -2px rgba(255, 255, 255, 0.7),
+      0 18px 40px -12px rgba(15, 23, 42, 0.16),
+      0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  }
+  .liquid-glass-dock::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.15px;
+    background: var(--glass-rim-conic);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .liquid-glass-orb {
+    background-color: rgba(255, 255, 255, 0.13);
+    background-image: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0.05) 55%,
+      rgba(79, 140, 255, 0.1) 100%
+    );
+    box-shadow:
+      inset 0 1.25px 1px 0 rgba(255, 255, 255, 0.45),
+      inset 0 -1px 1.5px 0 rgba(0, 0, 0, 0.28),
+      0 4px 12px -2px rgba(0, 0, 0, 0.35);
+  }
+  [data-theme="white"] .liquid-glass-orb {
+    background-color: rgba(15, 23, 42, 0.08);
+    background-image: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.85) 0%,
+      rgba(226, 236, 255, 0.45) 60%,
+      rgba(29, 78, 216, 0.08) 100%
+    );
+    box-shadow:
+      inset 0 1.25px 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1.5px 0 rgba(15, 23, 42, 0.1),
+      0 4px 12px -2px rgba(15, 23, 42, 0.1);
+  }
+
+  /* Conic Fresnel mirror reflection rim around curved glass edges */
+  .liquid-glass::before,
+  .liquid-glass-strong::before,
+  .liquid-glass-fast::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.15px;
+    background: var(--glass-rim-conic);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Non-Vibecoded Optical Liquid Glass Capsule Controls (no redundant blur over solid canvas) */
+  .btn-primary,
+  .btn-accent,
+  .btn-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 9999px;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.28s ease,
+      box-shadow 0.28s ease,
+      color 0.22s ease;
+  }
+
+  /* Conic Fresnel mirror rim on all optical lens buttons */
+  .btn-primary::before,
+  .btn-accent::before,
+  .btn-secondary::before,
+  .btn-icon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.2px;
+    background: var(--glass-rim-conic);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .btn-primary {
+    background-color: var(--btn-primary-bg);
+    background-image: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.04) 55%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
+    color: var(--btn-primary-fg);
+    box-shadow:
+      inset 0 1.75px 1.2px 0 var(--glass-meniscus-top),
+      inset 0 -1.75px 2.5px 0 var(--glass-meniscus-bottom),
+      inset 2px 0 10px -2px var(--glass-caustic),
+      inset -2px 0 10px -2px var(--glass-caustic),
+      var(--glass-shadow);
+  }
+
+  .btn-accent {
+    background-color: var(--btn-accent-bg);
+    background-image: linear-gradient(
+      165deg,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0.04) 55%,
+      rgba(255, 255, 255, 0.1) 100%
+    );
+    color: var(--btn-accent-fg);
+    box-shadow:
+      inset 0 1.75px 1.2px 0 rgba(255, 255, 255, 0.82),
+      inset 0 -1.75px 3px 0 var(--accent-border),
+      inset 2px 0 12px -2px var(--glass-caustic),
+      inset -2px 0 12px -2px var(--glass-caustic),
+      var(--glass-shadow);
+  }
+
+  .btn-secondary {
+    background-color: var(--glass-tint);
+    background-image: var(--glass-sheen);
+    color: var(--foreground);
+    box-shadow:
+      inset 0 1.5px 1px 0 var(--glass-meniscus-top),
+      inset 0 -1.5px 2px 0 var(--glass-meniscus-bottom),
+      inset 2px 0 8px -2px var(--glass-caustic),
+      inset -2px 0 8px -2px var(--glass-caustic),
+      var(--glass-shadow);
+  }
+
+  .btn-primary:hover,
+  .btn-accent:hover,
+  .btn-secondary:hover {
+    transform: translateY(-1.5px) scale(1.015);
+    box-shadow:
+      inset 0 2px 1.5px 0 rgba(255, 255, 255, 0.92),
+      inset 0 -2px 3px 0 var(--accent-border),
+      inset 3px 0 12px -2px var(--glass-caustic),
+      inset -3px 0 12px -2px var(--glass-caustic),
+      var(--glass-shadow);
+  }
+
+  .btn-primary:active,
+  .btn-accent:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-compact {
+    padding: 0.45rem 0.95rem;
+    font-size: 0.8125rem;
+    gap: 0.45rem;
+  }
+
+  /* Nested circular glass arrow lens inside optical CTAs */
+  .btn-lens-orb {
+    display: inline-grid;
+    place-items: center;
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow:
+      inset 0 1px 0.5px rgba(255, 255, 255, 0.72),
+      inset 0 -1px 1px rgba(255, 255, 255, 0.2);
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.22s ease;
+  }
+  .group:hover .btn-lens-orb {
+    transform: translateX(2px) scale(1.06);
+    background: rgba(255, 255, 255, 0.24);
+  }
+
+  /* Editorial non-boxy secondary ink link with sliding mirror underline */
+  .editorial-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.1rem;
+    font-family: var(--font-display);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--foreground);
+    cursor: pointer;
+    transition: color 0.22s ease;
+  }
+  .editorial-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1.25px;
+    background: linear-gradient(90deg, var(--accent), var(--highlight));
+    transform: scaleX(0.32);
+    transform-origin: left center;
+    opacity: 0.65;
+    transition:
+      transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease;
+  }
+  .editorial-link:hover::after {
+    transform: scaleX(1);
     opacity: 1;
-    transform: none;
   }
-  .mask-reveal {
-    -webkit-mask-size: 200% 100%;
-    mask-size: 200% 100%;
+
+  .btn-icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    border-radius: 9999px;
+    background-color: var(--glass-tint);
+    background-image: var(--glass-sheen);
+    color: var(--foreground);
+    box-shadow:
+      inset 0 1.5px 1px 0 var(--glass-meniscus-top),
+      inset 0 -1.5px 2px 0 var(--glass-meniscus-bottom),
+      inset 1.5px 0 6px -2px var(--glass-caustic),
+      inset -1.5px 0 6px -2px var(--glass-caustic),
+      var(--glass-shadow);
+    cursor: pointer;
+    user-select: none;
+    transition:
+      transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.28s ease,
+      box-shadow 0.28s ease,
+      color 0.22s ease,
+      opacity 0.18s ease;
   }
-  .project-theme-transition {
-    transition: none !important;
+  .btn-icon:hover {
+    transform: translateY(-1px) scale(1.04);
+  }
+  .btn-icon:active {
+    transform: scale(0.95);
+  }
+
+  .btn-primary:disabled,
+  .btn-accent:disabled,
+  .btn-secondary:disabled,
+  .btn-icon:disabled {
+    pointer-events: none;
+    opacity: 0.35;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body,
+    .btn-primary,
+    .btn-accent,
+    .btn-secondary,
+    .btn-icon {
+      transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+    }
+    .btn-primary:hover,
+    .btn-accent:hover,
+    .btn-secondary:hover,
+    .btn-icon:hover,
+    .btn-primary:active,
+    .btn-accent:active,
+    .btn-secondary:active,
+    .btn-icon:active {
+      transform: none;
+    }
   }
 }
-

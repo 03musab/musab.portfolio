@@ -1,215 +1,449 @@
 "use client";
 
-import React, { useState } from "react";
-import Reveal from "./Reveal";
-import { motion, type Variants } from "motion/react";
-import { cardHoverProps } from "@/lib/animations";
-import {
-  Code2,
-  Database,
-  ShieldCheck,
-  Cpu,
-  Layers,
-  Lock,
-  Server,
-  Network,
-  Binary,
-  Workflow,
-  Cloud,
-  Globe,
-  Terminal,
-  Flame,
-  FileCode,
-  Braces,
-  Boxes,
-} from "lucide-react";
+import { useCallback, useRef, useState, useSyncExternalStore } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { useLenis } from "lenis/react";
+import { AnimatePresence, motion, useMotionValue } from "motion/react";
+import { RotateCcw } from "lucide-react";
+import KineticHeading from "./KineticHeading";
+import SkillsBlackHoleStage, {
+  ToolIconGlyph,
+  type BlackHolePhase,
+} from "./SkillsBlackHoleStage";
+import { EASING_EDITORIAL, SPRING_TACTILE } from "@/lib/animations";
+import { SKILL_LAYERS, type ToolItem } from "@/lib/skills-data";
 
-interface SkillItem {
-  name: string;
-  iconUrl?: string;
-  lucideIcon: React.ReactNode;
+gsap.registerPlugin(ScrollTrigger);
+
+function subscribeReducedMotion(callback: () => void) {
+  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
 }
 
-interface SkillCategory {
-  title: string;
-  skills: SkillItem[];
+function getReducedMotionSnapshot(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-const SKILL_CATEGORIES: SkillCategory[] = [
-  {
-    title: "Languages & Programming",
-    skills: [
-      { name: "Python", iconUrl: "https://cdn.simpleicons.org/python", lucideIcon: <Terminal size={14} className="text-amber-400" /> },
-      { name: "JavaScript", iconUrl: "https://cdn.simpleicons.org/javascript", lucideIcon: <FileCode size={14} className="text-yellow-400" /> },
-      { name: "PHP", iconUrl: "https://cdn.simpleicons.org/php", lucideIcon: <Braces size={14} className="text-indigo-400" /> },
-      { name: "SQL", lucideIcon: <Database size={14} className="text-blue-400" /> },
-    ],
-  },
-  {
-    title: "Frontend",
-    skills: [
-      { name: "React", iconUrl: "https://cdn.simpleicons.org/react", lucideIcon: <Globe size={14} className="text-cyan-400" /> },
-      { name: "Tailwind CSS", iconUrl: "https://cdn.simpleicons.org/tailwindcss", lucideIcon: <Globe size={14} className="text-teal-400" /> },
-      { name: "Bootstrap", iconUrl: "https://cdn.simpleicons.org/bootstrap", lucideIcon: <Globe size={14} className="text-purple-400" /> },
-      { name: "HTML5", iconUrl: "https://cdn.simpleicons.org/html5", lucideIcon: <Globe size={14} className="text-orange-400" /> },
-      { name: "CSS3", iconUrl: "https://cdn.simpleicons.org/css3", lucideIcon: <Globe size={14} className="text-blue-400" /> },
-    ],
-  },
-  {
-    title: "Backend & Frameworks",
-    skills: [
-      { name: "Node.js", iconUrl: "https://cdn.simpleicons.org/nodedotjs", lucideIcon: <Server size={14} className="text-emerald-400" /> },
-      { name: "Express.js", iconUrl: "https://cdn.simpleicons.org/express", lucideIcon: <Server size={14} className="text-gray-400" /> },
-      { name: "Flask", iconUrl: "https://cdn.simpleicons.org/flask", lucideIcon: <Server size={14} className="text-red-400" /> },
-      { name: "REST APIs", lucideIcon: <Network size={14} className="text-emerald-400" /> },
-      { name: "WebSocket", lucideIcon: <Server size={14} className="text-purple-400" /> },
-    ],
-  },
-  {
-    title: "Databases",
-    skills: [
-      { name: "MongoDB", iconUrl: "https://cdn.simpleicons.org/mongodb", lucideIcon: <Database size={14} className="text-emerald-400" /> },
-      { name: "MySQL", iconUrl: "https://cdn.simpleicons.org/mysql", lucideIcon: <Database size={14} className="text-blue-400" /> },
-      { name: "SQLite", iconUrl: "https://cdn.simpleicons.org/sqlite", lucideIcon: <Database size={14} className="text-cyan-400" /> },
-      { name: "Redis", iconUrl: "https://cdn.simpleicons.org/redis", lucideIcon: <Database size={14} className="text-red-400" /> },
-      { name: "Firebase", iconUrl: "https://cdn.simpleicons.org/firebase", lucideIcon: <Flame size={14} className="text-amber-400" /> },
-    ],
-  },
-  {
-    title: "Tools & Libraries",
-    skills: [
-      { name: "Git / GitHub", iconUrl: "https://cdn.simpleicons.org/github", lucideIcon: <Boxes size={14} className="text-neutral-400" /> },
-      { name: "Celery", lucideIcon: <Workflow size={14} className="text-green-400" /> },
-      { name: "Selenium", iconUrl: "https://cdn.simpleicons.org/selenium", lucideIcon: <Cpu size={14} className="text-emerald-400" /> },
-      { name: "CryptoJS", lucideIcon: <Lock size={14} className="text-amber-400" /> },
-      { name: "Chart.js", iconUrl: "https://cdn.simpleicons.org/chartdotjs", lucideIcon: <Layers size={14} className="text-pink-400" /> },
-      { name: "Canva", iconUrl: "https://cdn.simpleicons.org/canva", lucideIcon: <Globe size={14} className="text-cyan-400" /> },
-    ],
-  },
-  {
-    title: "Cloud & Security",
-    skills: [
-      { name: "AWS (S3, Lambda, Polly)", iconUrl: "https://cdn.simpleicons.org/amazonaws", lucideIcon: <Cloud size={14} className="text-amber-400" /> },
-      { name: "Oracle Cloud", iconUrl: "https://cdn.simpleicons.org/oracle", lucideIcon: <Cloud size={14} className="text-red-400" /> },
-      { name: "Cybersecurity", lucideIcon: <ShieldCheck size={14} className="text-emerald-400" /> },
-      { name: "Encrypted Communication", lucideIcon: <Lock size={14} className="text-cyan-400" /> },
-    ],
-  },
-  {
-    title: "Problem Solving",
-    skills: [
-      { name: "Data Structures & Algorithms", lucideIcon: <Cpu size={14} className="text-violet-400" /> },
-      { name: "Arrays", lucideIcon: <Binary size={14} className="text-sky-400" /> },
-      { name: "Linked Lists", lucideIcon: <Workflow size={14} className="text-emerald-400" /> },
-      { name: "Stacks & Queues", lucideIcon: <Layers size={14} className="text-amber-400" /> },
-      { name: "Sliding Window", lucideIcon: <Code2 size={14} className="text-pink-400" /> },
-    ],
-  },
-];
+function getReducedMotionServerSnapshot(): boolean {
+  return false;
+}
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.04,
+function subscribeDesktop(callback: () => void) {
+  const mq = window.matchMedia("(min-width: 1024px)");
+  mq.addEventListener("change", callback);
+  return () => mq.removeEventListener("change", callback);
+}
+
+function getDesktopSnapshot(): boolean {
+  return window.matchMedia("(min-width: 1024px)").matches;
+}
+
+function getDesktopServerSnapshot(): boolean {
+  return false;
+}
+
+function StaticSkillsFallback({
+  reducedMotion,
+}: {
+  reducedMotion: boolean;
+}) {
+  return (
+    <section id="skills" className="scroll-mt-24 pb-pagebuilder">
+      <div className="mx-auto max-w-6xl space-y-10 px-6 lg:px-8">
+        <div className="space-y-2 border-b border-line pb-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground">
+            Skills
+          </p>
+          <KineticHeading
+            text="Tools & technologies I use"
+            accentWords={["technologies"]}
+            className="font-display text-3xl font-semibold tracking-[-0.025em] text-foreground sm:text-4xl"
+          />
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+            {reducedMotion
+              ? "Six layers working together — from screens users tap down to cloud safety and core problem solving."
+              : "How six layers work together behind every app — from screens users tap down to cloud safety and core problem solving."}
+          </p>
+        </div>
+
+        <div className="space-y-10">
+          {SKILL_LAYERS.map((layer) => (
+            <div key={layer.id} className="space-y-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                  <span
+                    className="size-1.5 rounded-full"
+                    style={{ backgroundColor: layer.accentHex }}
+                  />
+                  <span>
+                    {layer.step} · {layer.domain}
+                  </span>
+                </div>
+                <h3 className="font-display text-xl font-semibold tracking-[-0.015em] text-foreground">
+                  {layer.storyTitle}
+                </h3>
+                <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+                  {layer.storyText}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                {layer.items.map((tool) => (
+                  <div
+                    key={tool.id}
+                    className="liquid-glass flex items-start gap-3 rounded-2xl p-3.5"
+                  >
+                    <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl border border-line bg-background/60">
+                      <ToolIconGlyph tool={tool} size={20} />
+                    </span>
+                    <div className="min-w-0 space-y-0.5">
+                      <p className="font-mono text-xs font-semibold text-foreground">
+                        {tool.name}
+                      </p>
+                      <p className="text-xs leading-relaxed text-muted-foreground">
+                        {tool.meaning}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DesktopBlackHoleSkills() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<ScrollTrigger | null>(null);
+  const scrollScaledRef = useRef(0);
+  const lenis = useLenis();
+  const scrollProgress = useMotionValue(0);
+
+  const [activeLayerIdx, setActiveLayerIdx] = useState(0);
+  const [phaseLabel, setPhaseLabel] = useState<BlackHolePhase>("Orbiting");
+  const [inspectedTool, setInspectedTool] = useState<ToolItem | null>(null);
+
+  useGSAP(
+    () => {
+      const pinEl = pinRef.current;
+      if (!pinEl) return;
+
+      let lastIdx = -1;
+      let lastPhase: BlackHolePhase | "" = "";
+
+      const applyScrollProgress = (p: number) => {
+        const clamped = Math.min(1, Math.max(0, p));
+        const scaled = clamped * (SKILL_LAYERS.length - 1);
+        scrollScaledRef.current = scaled;
+        scrollProgress.set(clamped);
+
+        const k = Math.min(SKILL_LAYERS.length - 2, Math.floor(scaled));
+        const frac = scaled - k;
+        const nextIdx = frac < 0.5 ? k : k + 1;
+        const nextPhase: BlackHolePhase =
+          frac >= 0.14 && frac < 0.5
+            ? "Gravity Pull"
+            : frac >= 0.5 && frac <= 0.9
+              ? "Supernova"
+              : "Orbiting";
+
+        if (nextIdx !== lastIdx) {
+          lastIdx = nextIdx;
+          setActiveLayerIdx(nextIdx);
+          setInspectedTool(null);
+        }
+        if (nextPhase !== lastPhase) {
+          lastPhase = nextPhase;
+          setPhaseLabel(nextPhase);
+        }
+      };
+
+      const st = ScrollTrigger.create({
+        trigger: pinEl,
+        start: "top 24px",
+        end: "+=5200",
+        pin: true,
+        scrub: 1.35,
+        invalidateOnRefresh: true,
+        snap: {
+          snapTo: [0, 0.2, 0.4, 0.6, 0.8, 1],
+          duration: { min: 0.55, max: 1.05 },
+          delay: 0.38,
+          ease: "power3.out",
+        },
+        onUpdate: (self) => applyScrollProgress(self.progress),
+        onLeave: () => applyScrollProgress(1),
+        onLeaveBack: () => applyScrollProgress(0),
+      });
+
+      triggerRef.current = st;
+
+      // Refresh cached pin start offset whenever upstream #github section height changes
+      const upstreamEl = document.getElementById("github");
+      let prevUpstreamH = upstreamEl?.getBoundingClientRect().height ?? 0;
+      let refreshRaf = 0;
+      const ro = upstreamEl
+        ? new ResizeObserver((entries) => {
+            const nextH = entries[0]?.contentRect.height ?? prevUpstreamH;
+            if (Math.abs(nextH - prevUpstreamH) > 4) {
+              prevUpstreamH = nextH;
+              cancelAnimationFrame(refreshRaf);
+              refreshRaf = requestAnimationFrame(() => ScrollTrigger.refresh());
+            }
+          })
+        : null;
+      if (upstreamEl && ro) ro.observe(upstreamEl);
+
+      return () => {
+        cancelAnimationFrame(refreshRaf);
+        ro?.disconnect();
+        triggerRef.current = null;
+        st.kill();
+      };
     },
-  },
-};
+    { scope: sectionRef },
+  );
 
-const badgeVariants: Variants = {
-  hidden: { opacity: 0, y: 10, scale: 0.9 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      type: "spring",
-      damping: 15,
-      stiffness: 150,
+  const jumpToLayer = useCallback(
+    (idx: number) => {
+      const st = triggerRef.current;
+      if (!st) {
+        scrollScaledRef.current = idx;
+        scrollProgress.set(idx / (SKILL_LAYERS.length - 1));
+        setActiveLayerIdx(idx);
+        return;
+      }
+
+      const targetProgress = idx / (SKILL_LAYERS.length - 1);
+      const targetY = st.start + (st.end - st.start) * targetProgress;
+      if (lenis) {
+        lenis.scrollTo(targetY, { duration: 1.15 });
+      } else {
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      }
     },
-  },
-};
+    [lenis, scrollProgress],
+  );
 
-function SkillBadge({ skill }: { skill: SkillItem }) {
-  const [imgFailed, setImgFailed] = useState(false);
+  const activeLayer = SKILL_LAYERS[activeLayerIdx] ?? SKILL_LAYERS[0];
 
   return (
-    <motion.span
-      variants={badgeVariants}
-      whileHover={{
-        scale: 1.08,
-        y: -3,
-        borderColor: "var(--foreground)",
-      }}
-      whileTap={{ scale: 0.95 }}
-      className="group inline-flex items-center gap-2 rounded-xl border border-line/70 bg-background/70 px-3.5 py-1.5 font-mono text-xs font-medium text-foreground/85 shadow-sm transition-colors cursor-pointer"
+    <section
+      ref={sectionRef}
+      id="skills"
+      className="scroll-mt-24 overflow-x-clip pb-pagebuilder pt-6"
     >
-      {skill.iconUrl && !imgFailed ? (
-        <motion.img
-          whileHover={{ rotate: 15, scale: 1.2 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          src={skill.iconUrl}
-          alt=""
-          className="size-3.5 object-contain filter dark:invert-0 brightness-95 transition-transform group-hover:scale-110"
-          onError={() => setImgFailed(true)}
-        />
-      ) : (
-        <motion.span
-          whileHover={{ rotate: 15, scale: 1.2 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="inline-block"
-        >
-          {skill.lucideIcon}
-        </motion.span>
-      )}
-      <span>{skill.name}</span>
-    </motion.span>
+      <div
+        ref={pinRef}
+        className="relative z-10 mx-auto max-w-6xl space-y-3.5 px-8 py-2"
+      >
+        {/* Compact Viewport-Safe Header + Scrubbed Scroll Progress Rail */}
+        <div className="space-y-2.5">
+          <div className="flex items-end justify-between gap-6">
+            <div className="space-y-0.5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-muted-foreground">
+                Skills
+              </p>
+              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <KineticHeading
+                  text="Tools & technologies I use"
+                  accentWords={["technologies"]}
+                  className="font-display text-2xl font-semibold tracking-[-0.025em] text-foreground xl:text-3xl"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Scroll to pull each layer into the gravity well and burst into the next stage.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex shrink-0 items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em]">
+              <span className="liquid-glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-foreground">
+                <span
+                  className="size-1.5 rounded-full"
+                  style={{ backgroundColor: activeLayer.accentHex }}
+                />
+                Layer {activeLayer.step} / {String(SKILL_LAYERS.length).padStart(2, "0")}
+              </span>
+              {activeLayerIdx > 0 && (
+                <button
+                  type="button"
+                  onClick={() => jumpToLayer(0)}
+                  aria-label="Back to layer 01"
+                  className="btn-icon size-8"
+                >
+                  <RotateCcw size={12} />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <div className="h-[2px] w-full overflow-hidden rounded-full bg-line">
+            <motion.div
+              className="h-full origin-left rounded-full transition-colors duration-300"
+              style={{
+                scaleX: scrollProgress,
+                backgroundColor: activeLayer.accentHex,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* 12-Col Pinned Stage: Left Side Layer Tabs + Narrative | Right Borderless Singularity */}
+        <div className="grid grid-cols-12 items-start gap-7">
+          {/* Left Side Clickable Layer Tabs & Compact Narrative */}
+          <div className="col-span-4 space-y-3.5">
+            <nav
+              aria-label="Skill layers"
+              className="divide-y divide-line border-y border-line"
+            >
+              {SKILL_LAYERS.map((layer, idx) => {
+                const isActive = idx === activeLayerIdx;
+                return (
+                  <button
+                    key={layer.id}
+                    type="button"
+                    onClick={() => jumpToLayer(idx)}
+                    className={`group relative flex w-full items-center justify-between py-2 pl-3.5 pr-2 text-left transition-opacity cursor-pointer ${
+                      isActive ? "opacity-100" : "opacity-55 hover:opacity-90"
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="skills-side-tab"
+                        transition={SPRING_TACTILE}
+                        aria-hidden="true"
+                        className="absolute bottom-1.5 left-0 top-1.5 w-0.5 rounded-full"
+                        style={{ backgroundColor: activeLayer.accentHex }}
+                      />
+                    )}
+                    <span className="flex items-center gap-2.5">
+                      <span
+                        className="font-mono text-[10px] font-semibold"
+                        style={{
+                          color: isActive
+                            ? activeLayer.accentHex
+                            : "var(--muted-foreground)",
+                        }}
+                      >
+                        {layer.step}
+                      </span>
+                      <span className="text-[13px] font-medium text-foreground">
+                        {layer.domain}
+                      </span>
+                    </span>
+                    <span className="font-mono text-[10px] text-muted-foreground">
+                      {layer.items.length}
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+
+            <div className="min-h-[104px]">
+              <motion.div
+                key={activeLayer.id}
+                initial={{ opacity: 0.35, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.16, ease: EASING_EDITORIAL }}
+                className="space-y-1"
+              >
+                <div
+                  className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em]"
+                  style={{ color: activeLayer.accentHex }}
+                >
+                  <span
+                    className="size-1.5 rounded-full"
+                    style={{ backgroundColor: activeLayer.accentHex }}
+                  />
+                  <span>
+                    Layer {activeLayer.step} · {activeLayer.shortLabel}
+                  </span>
+                </div>
+                <h3 className="font-display text-lg font-semibold tracking-[-0.015em] text-foreground">
+                  {activeLayer.storyTitle}
+                </h3>
+                <p className="text-xs leading-relaxed text-foreground/80">
+                  {activeLayer.storyText}
+                </p>
+                <p className="font-mono text-[10px] text-muted-foreground">
+                  {activeLayer.realExample}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Right Borderless Black Hole Singularity + Hairline Tool Explainer */}
+          <div className="col-span-8 space-y-2">
+            <SkillsBlackHoleStage
+              scrollScaledRef={scrollScaledRef}
+              activeLayerIdx={activeLayerIdx}
+              phaseLabel={phaseLabel}
+              inspectedTool={inspectedTool}
+              onInspectTool={setInspectedTool}
+            />
+
+            <div className="flex min-h-8 items-center border-t border-line/60 pt-2">
+              <AnimatePresence mode="wait">
+                {inspectedTool ? (
+                  <motion.div
+                    key={inspectedTool.id}
+                    initial={{ opacity: 0, y: 3 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -3 }}
+                    transition={{ duration: 0.15, ease: EASING_EDITORIAL }}
+                    className="flex items-center gap-2.5 text-xs leading-relaxed text-foreground/85"
+                  >
+                    <ToolIconGlyph tool={inspectedTool} size={18} />
+                    <span>
+                      <strong className="font-mono text-foreground">
+                        {inspectedTool.name}
+                      </strong>{" "}
+                      — {inspectedTool.meaning}
+                    </span>
+                  </motion.div>
+                ) : (
+                  <motion.p
+                    key="hint"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="font-mono text-[11px] text-muted-foreground"
+                  >
+                    Hover or click any orbiting capsule to see what it does, or move your mouse across the gravity well.
+                  </motion.p>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
 export default function SkillsSection() {
-  return (
-    <section id="skills" className="scroll-mt-24 space-y-8">
-      <Reveal>
-        <div className="space-y-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
-            Technical Stack
-          </p>
-          <h2 className="heading-glow font-display text-4xl tracking-tight lg:text-6xl">
-            Skills &amp; <em className="text-colorfull animate-gradient-x italic">technologies</em>
-          </h2>
-          <p className="max-w-xl text-sm leading-relaxed text-foreground/60">
-            Comprehensive toolkit spanning full-stack engineering, AI automation, databases, and cloud infrastructure.
-          </p>
-        </div>
-      </Reveal>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {SKILL_CATEGORIES.map((cat, idx) => (
-          <Reveal key={cat.title} delay={idx * 0.05}>
-            <motion.div
-              {...cardHoverProps}
-              className="h-full rounded-2xl border border-line bg-surface p-6 transition-colors duration-300 hover:border-foreground/30"
-            >
-              <h3 className="font-mono text-xs uppercase tracking-[0.2em] font-semibold text-foreground/80">
-                {cat.title}
-              </h3>
-              <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-40px" }}
-                className="mt-4 flex flex-wrap gap-2"
-              >
-                {cat.skills.map((skill) => (
-                  <SkillBadge key={skill.name} skill={skill} />
-                ))}
-              </motion.div>
-            </motion.div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    getDesktopSnapshot,
+    getDesktopServerSnapshot,
   );
+  const reducedMotion = useSyncExternalStore(
+    subscribeReducedMotion,
+    getReducedMotionSnapshot,
+    getReducedMotionServerSnapshot,
+  );
+
+  if (!isDesktop || reducedMotion) {
+    return <StaticSkillsFallback reducedMotion={reducedMotion} />;
+  }
+
+  return <DesktopBlackHoleSkills />;
 }

@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CheckCircle, Mail } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 import SubPageShell from "@/components/SubPageShell";
 import SendEmailButton from "@/components/SendEmailButton";
-import { SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Thank You | Mohammed Musab",
@@ -30,7 +29,7 @@ export default async function ThanksPage({
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-foreground/50">
             Message Received
           </p>
-          <h1 className="heading-glow font-display text-4xl tracking-tight lg:text-5xl">
+          <h1 className="font-display text-4xl font-semibold tracking-[-0.025em] lg:text-5xl">
             Thank you{firstName !== "there" ? `, ${firstName}` : ""}!
           </h1>
           <p className="mx-auto max-w-md leading-relaxed text-foreground/60">
@@ -42,9 +41,9 @@ export default async function ThanksPage({
         <div className="flex flex-wrap items-center justify-center gap-3">
           <Link
             href="/"
-            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-85"
+            className="btn-primary group px-5 py-3"
           >
-            Back to homepage
+            <span>Back to homepage</span>
             <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
           <SendEmailButton variant="button" />
