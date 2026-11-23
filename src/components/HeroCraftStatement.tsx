@@ -199,11 +199,11 @@ export default function HeroCraftStatement() {
             ) : (
               <motion.span
                 key="hint"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.72 }}
+                initial={false}
+                animate={{ opacity: 0.75 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.18 }}
-                className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground"
+                className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/80"
               >
                 Hover any highlighted phrase to preview the build behind it
               </motion.span>

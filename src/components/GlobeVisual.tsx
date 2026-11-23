@@ -90,13 +90,14 @@ export default function GlobeVisual() {
     if (!canvas || !container) return;
 
     let width = container.offsetWidth || 320;
+    let lastUpdatedWidth = width;
     let currentPhi = MUMBAI_PHI;
     let rafId = 0;
 
     const onResize = () => {
       if (container) width = container.offsetWidth || 320;
     };
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
 
     const cobePalette = {
       dark: 1,
@@ -148,12 +149,18 @@ export default function GlobeVisual() {
       if (settledRef.current && pointerInteracting.current === null && !reducedMotion) {
         currentPhi += 0.0012;
       }
-      globe.update({
-        phi: currentPhi + phiOffset.current,
-        width,
-        height: width,
-        ...cobePalette,
-      });
+      if (width !== lastUpdatedWidth) {
+        lastUpdatedWidth = width;
+        globe.update({
+          phi: currentPhi + phiOffset.current,
+          width,
+          height: width,
+        });
+      } else {
+        globe.update({
+          phi: currentPhi + phiOffset.current,
+        });
+      }
       rafId = requestAnimationFrame(animate);
     };
 
@@ -559,7 +566,7 @@ export default function GlobeVisual() {
   );
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex w-full flex-col items-center">
       <div
         ref={containerRef}
         className="relative aspect-square w-full max-w-[290px] select-none sm:max-w-[320px] lg:max-w-[340px]"

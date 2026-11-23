@@ -21,15 +21,22 @@ export default function HeroSection() {
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const isDesktop = window.innerWidth >= 1024;
-        gsap.from("[data-hero-reveal]", {
-          y: 22,
-          opacity: 0,
-          duration: 0.85,
-          delay: isDesktop ? 2.7 : 0.85,
-          stagger: 0.09,
-          ease: "power3.out",
-          clearProps: "transform,opacity",
-        });
+        gsap.fromTo(
+          "[data-hero-reveal]",
+          {
+            y: 22,
+            opacity: 0,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.85,
+            delay: isDesktop ? 2.7 : 0.85,
+            stagger: 0.09,
+            ease: "power3.out",
+            clearProps: "transform",
+          },
+        );
       });
 
       return () => mm.revert();

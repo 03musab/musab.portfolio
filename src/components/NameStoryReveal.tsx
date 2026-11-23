@@ -65,12 +65,17 @@ export default function NameStoryReveal() {
           });
         }
 
-        gsap.set(tracerLineRef.current, { scaleX: 0, transformOrigin: "left center" });
+        gsap.set(tracerLineRef.current, {
+          scaleX: 0,
+          autoAlpha: 1,
+          transformOrigin: "left center",
+        });
         gsap.set(tracerDotRef.current, { autoAlpha: 0, scale: 0 });
         gsap.set(originTextRef.current, { autoAlpha: 0, x: -8 });
         gsap.set(outlineRef.current, { yPercent: 105, autoAlpha: 1 });
         gsap.set(inkRef.current, {
           yPercent: 105,
+          autoAlpha: 1,
           clipPath: "inset(0 100% 0 0)",
         });
 
@@ -193,14 +198,19 @@ export default function NameStoryReveal() {
       <div className="flex items-center gap-2.5 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
         <span
           ref={tracerDotRef}
+          data-name-init-hidden
           className="size-1.5 shrink-0 rounded-full bg-highlight"
         />
-        <span ref={originTextRef} className="inline-block min-h-4 shrink-0 overflow-hidden">
+        <span
+          ref={originTextRef}
+          data-name-init-hidden
+          className="inline-block min-h-4 shrink-0 overflow-hidden"
+        >
           <motion.span
             key={reducedMotion ? "ready" : storyPhase}
-            initial={reducedMotion ? false : { opacity: 0, y: 4 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
             className={`inline-block ${
               (reducedMotion || storyPhase === "ready") ? "text-foreground/80" : ""
             }`}
@@ -210,6 +220,7 @@ export default function NameStoryReveal() {
         </span>
         <div
           ref={tracerLineRef}
+          data-name-init-hidden
           aria-hidden="true"
           className="h-px max-w-[140px] flex-1 bg-gradient-to-r from-accent/60 to-transparent"
         />
@@ -224,10 +235,11 @@ export default function NameStoryReveal() {
           className="relative font-display text-[clamp(2.9rem,6.8vw,5.1rem)] font-semibold leading-[0.98] tracking-[-0.03em] text-foreground select-none"
           style={{ fontVariationSettings: "'wght' 600, 'opsz' 72" }}
         >
-          {/* Layer 1: Blueprint Draft Outline (pixel-matched DOM structure) */}
+          {/* Layer 1: Blueprint Draft Outline (hidden in SSR HTML until GSAP animates) */}
           {!reducedMotion && (
             <span
               ref={outlineRef}
+              data-name-init-hidden
               aria-hidden="true"
               className="pointer-events-none block"
               style={{
@@ -247,6 +259,7 @@ export default function NameStoryReveal() {
           {/* Layer 2: Compiled Ink Fill + Interactive Character Weight Wave */}
           <span
             ref={inkRef}
+            data-name-init-hidden={!reducedMotion ? "" : undefined}
             className={reducedMotion ? "block" : "absolute inset-0 block"}
           >
             {WORDS.map((word, wIdx) => (
